@@ -1,37 +1,37 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
 use Otp;
 use Mail;
+use Hash;
+use Auth;
+use App\Models\User;
+use App\Rules\ChangePassEmailValidate;
+use App\Rules\OtpTokenCheck;
+use App\Rules\UserNotExistRule;
+use App\Helpers\UniqueString;
 class ForgotPasswordController extends Controller
 {
-    public function passwordChangeOtp(Request $request){
-        // return $request->all();
+    public function changePassword(Request $request,$token_type)
+    {
         $validator=Validator::make($request->all(),[
-            'email'=>["required","email","max:100","min:1"],
+            'token'=>["required","max:100","min:1",new OtpTokenCheck($request->email,$token_type)],
+            'password'=>"required|confirmed"
         ]);
         if($validator->passes()){
-            $fromEmail='noreply@ongsho.com';
-            $code=Otp::generate('change_pass:'.$request->email);
-            $message="<p style='background: #e5e5e5; padding: 10px; display: inline-block; margin: 4px 0px;'>".$code."</p>";
-            Mail::send('email.pass_change_email',[
-                'data'=>$message,
-                'name'=>'Ongsho'
-              ],function($message) use ($request,$fromEmail){
-                $message->to($request->email);
-                $message->subject("[Ongsho] Please reset your password");
-              });
-              return response()->json(['status'=>true,'message'=>"send email success"]);
+            $user=User::where('email',$request->email)->first();
+            $user->password=Hash::make($request->password);
+            $user->save();
+            if($user){
+                return response()->json(['status'=>true,'message'=>"Your email varified success"]);
+            }
+    //    return $fromEmail->email;
         }
-        return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
+        return response()->json(['error'=>$validator->getMessageBag()]);
     }
 
-    public function changePassword()
-    {
-        
-    }
 }

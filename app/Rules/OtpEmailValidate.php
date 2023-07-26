@@ -4,8 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 use Otp;
-use App\Models\User;
-class EmailValidate implements Rule
+class OtpEmailValidate implements Rule
 {
     /**
      * Create a new rule instance.
@@ -14,9 +13,11 @@ class EmailValidate implements Rule
      */
     protected $email;
     protected $message;
-    public function __construct($email)
+    protected $type;
+    public function __construct($email,$type)
     {
         $this->email=$email;
+        $this->type=$type;
     }
 
     /**
@@ -28,8 +29,12 @@ class EmailValidate implements Rule
      */
     public function passes($attribute, $value)
     {
-        
-        $result = Otp::validate('email:'.$this->email,$value);
+        if($this->type=='password_change'){
+            $result = Otp::validate('change_pass:'.$this->email,$value);
+        }
+        if($this->type=='email'){
+            $result = Otp::validate('email:'.$this->email,$value);
+        }
         // return $result->status;
         $condition=true;
         if($result->status==false){

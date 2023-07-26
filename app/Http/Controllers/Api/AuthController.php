@@ -8,8 +8,9 @@ use Validator;
 use App\Models\User;
 use Hash;
 use Auth;
-use App\Rules\EmailValidate;
+use App\Rules\OtpTokenCheck;
 use App\Rules\UserNotExistRule;
+use Illuminate\Support\Carbon;
 class AuthController extends Controller
 {
     
@@ -35,7 +36,7 @@ class AuthController extends Controller
            'last_name'=>'required|max:100|min:1',
            'email'=>['required','max:100','min:1','email','unique:users,email'],
            'terms_agreed'=>'required',
-           'otp'=>['required',new EmailValidate($requestData['email'])],
+           'otp'=>['required',new OtpTokenCheck($requestData['email'],'email')],
            'gender'=>'nullable|regex:/^([0-9]+)$/',
            'password'=>"required|max:50|min:6|confirmed"
        ]);
@@ -49,6 +50,7 @@ class AuthController extends Controller
            $user->gender=$requestData['gender'];
            $user->password=Hash::make($requestData['password']);
            $user->terms_agreed=1;
+           $user->email_verified_at=Carbon::now()->toDateTimeString();
            $user->save();
            if($user){
                return response()->json(['status'=>true,'message'=>'Your Sign Up Success']);

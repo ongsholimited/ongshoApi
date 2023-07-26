@@ -15,8 +15,9 @@ class TestController extends Controller
         // $this->middleware('auth:admin');
     }
 
-    public function test($qr=null)
+    public function test(Request $request,$qr=null)
     {
+        return $request->ip();
         return $all_users_with_all_their_roles = User::with('roles')->get();
         $all_users_with_all_direct_permissions = User::with('permissions')->get();
         $all_roles_in_database = Role::all()->pluck('name');

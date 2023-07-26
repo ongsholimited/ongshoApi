@@ -52,15 +52,26 @@ Route::group([
     Route::post('testapi/edit/{url}', 'CustomApiTableController@updateApi');
     Route::get('testapi/{url}', 'CustomApiTableController@getApi');
 });
+
+// otp module
+Route::group([
+    'middleware' => 'api',
+    'namespace' => 'App\Http\Controllers\Api'
+], function ($router) {
+    Route::post('send_otp', 'EmailVerificationController@setOtp')->middleware('auth:api');
+    Route::post('send_otp_email/{otp_type}', 'EmailVerificationController@sendEmailOtp');
+    Route::post('varify_email', 'EmailVerificationController@varifyEmail')->middleware('auth:api');
+    Route::post('check_otp/{type}', 'OtpController@checkOtp');
+    Route::post('change-password', 'ForgotPasswordController@changePassword');
+});
+
+// user profile 
 Route::group([
     'middleware' => 'api',
     'namespace' => 'App\Http\Controllers\Api'
 ], function ($router) {
     Route::post('profile-update', 'ProfileController@profileUpdate');
-    Route::post('send_otp', 'EmailVerificationController@setOtp')->middleware('auth:api');
-    Route::post('send_otp_email', 'EmailVerificationController@emailOtp');
-    Route::post('password_change_otp_email', 'ForgotPasswordController@passwordChangeOtp');
-    Route::post('varify_email', 'EmailVerificationController@varifyEmail')->middleware('auth:api');
+    Route::resource('social-account','SocialsController')->middleware('auth:api');
 });
 
 include('institute.php');

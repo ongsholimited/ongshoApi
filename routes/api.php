@@ -74,6 +74,7 @@ Route::group([
     Route::resource('social-account','SocialsController')->middleware('auth:api');
 });
 
+include('newsapi.php');
 include('institute.php');
 
 

@@ -92,12 +92,7 @@ Route::group([
     Route::post('send_otp_email', 'OtpController@emailOtp')->middleware('auth:api');
     Route::post('varify_email', 'OtpController@varifyEmail')->middleware('auth:api');
 });
-Route::group([
-    'namespace' => 'App\Http\Controllers\Api\News',
-    'prefix' => 'news'
-], function ($router) {
-    Route::get('get-post', 'NewsController@getPost');
-});
+
 Route::group([
     'namespace' => 'App\Http\Controllers\Institute',
     'prefix' => 'institute'

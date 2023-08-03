@@ -8,6 +8,7 @@ use App\Models\News\Post;
 use Storage;
 use Validator;
 use Auth;
+use Str;
 class NewsController extends Controller
 {
     /**
@@ -15,6 +16,9 @@ class NewsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct() {
+        $this->middleware('auth:api')->only('store');
+    }
     public function index()
     {
         $post=Post::with('category','author')->take(20)->get();
@@ -50,7 +54,7 @@ class NewsController extends Controller
             'slug'=>"required|max:250|min:1",
         ]);
         if($validator->passes()){
-                
+                $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
                 $post=new Post;
                 $post->category_id=$request->category;
                 $post->title=$request->title;
@@ -58,6 +62,7 @@ class NewsController extends Controller
                 $post->content=$request->content;
                 $post->tags=$request->tags;
                 $post->date=strtotime(date('d-m-Y'));
+                $post->slug=Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):'');
                 $post->author_id=Auth::user()->id;
                 $post->status=1;
                 if($request->hasFile('feature_image')){
@@ -69,7 +74,7 @@ class NewsController extends Controller
                 }
                 $post->save();
             if ($post) {
-                return response()->json(['message'=>'Post Added Success']);
+                return response()->json(['status'=>true,'message'=>'Post Added Success']);
             }
         }
         return response()->json(['error'=>$validator->getMessageBag()]);
@@ -106,7 +111,39 @@ class NewsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator=Validator::make($request->all(),[
+            'feature_image'=>"required|mimes:jpg,jpeg,png,gif|max:2048",
+            'category'=>"required|max:20|min:1",
+            'title'=>"required|max:250|min:1",
+            'short_description'=>"required|max:250|min:1",
+            'content'=>"required|max:1000|min:1",
+            'tags'=>"required|max:500|min:1",
+            'slug'=>"required|max:250|min:1|unique:ongsho_news.posts",
+        ]);
+        if($validator->passes()){
+                $post=new Post;
+                $post->category_id=$request->category;
+                $post->title=$request->title;
+                $post->short_description=$request->short_description;
+                $post->content=$request->content;
+                $post->tags=$request->tags;
+                $post->date=strtotime(date('d-m-Y'));
+                $post->slug=Str::slug($request->slug,'-');
+                $post->author_id=Auth::user()->id;
+                $post->status=1;
+                if($request->hasFile('feature_image')){
+                    $img=$request->feature_image;
+                    $ext= $img->getClientOriginalExtension();
+                    $f_name=time().'_'.date('d_m_Y');
+                   Storage::putFileAs('public/post_images',$img,$f_name.'.'.$ext);
+                   $post->feature_image=$f_name.'.'.$ext;
+                }
+                $post->save();
+            if ($post) {
+                return response()->json(['status'=>true,'message'=>'Post Added Success']);
+            }
+        }
+        return response()->json(['error'=>$validator->getMessageBag()]);
     }
 
     /**

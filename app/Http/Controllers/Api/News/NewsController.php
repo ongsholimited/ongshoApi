@@ -17,7 +17,7 @@ class NewsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function __construct() {
-        $this->middleware('auth:api')->only('store');
+        $this->middleware('auth:api')->only(['store','destroy','update']);
     }
     public function index()
     {
@@ -121,7 +121,7 @@ class NewsController extends Controller
             'slug'=>"required|max:250|min:1|unique:ongsho_news.posts",
         ]);
         if($validator->passes()){
-                $post=new Post;
+                $post=Post::find($id);
                 $post->category_id=$request->category;
                 $post->title=$request->title;
                 $post->short_description=$request->short_description;
@@ -154,7 +154,16 @@ class NewsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post=Post::where('id',$id)->where('author_id',Auth::user()->id)->first();
+        if(isset($post->feature_image) and $post->feature_image!=null){
+            unlink(storage_path('app/public/post_images/'.$post->feature_image));
+        }
+        $post->delete();
+        if($post){
+            return response()->json(['status'=>true,'message'=>'Post Deleted Success']);
+        }
+        return response()->json(['status'=>false,'error'=>'Something Went Wrong']);
+
     }
     public function getPostByCat($category_id){
         $post=Post::where('category_id',$category_id)->get();

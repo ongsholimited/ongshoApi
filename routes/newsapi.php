@@ -10,6 +10,7 @@ Route::group([
     Route::get('get-image-by-folder/{folder_id}', 'ImageController@getImageByFolderId')->middleware('auth:api');
     Route::get('get-posts', 'NewsController@getPost');
     Route::resource('post', 'NewsController');
+    Route::get('category', 'CategoryController@getCategory');
     Route::get('get-post-by-category/{category_id}', 'NewsController@getPostByCat');
 });
 

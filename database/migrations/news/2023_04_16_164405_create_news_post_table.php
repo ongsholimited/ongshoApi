@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('short_description',500)->nullable();
             $table->text('content',1000);
             $table->string('slug',250);
+            $table->tinyInteger('post_type');
             $table->text('tags',500)->nullable();
             $table->unsignedBigInteger('author_id');
             $table->tinyInteger('status');

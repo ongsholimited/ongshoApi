@@ -44,11 +44,11 @@ class ProfileController extends Controller
            $user->birth_date=($requestData['birth_date']!=null ? strtotime($requestData['birth_date']) : null);
            if($request->hasFile('image')) {
                 if($user->photo!=null){
-                    unlink(storage_path('app/public/images/users/'.$user->photo));
+                    unlink(storage_path('app/public/media/images/users/'.$user->photo));
                 }
                 $ext = $request->image->getClientOriginalExtension();
                 $name =auth()->user()->id  .'_'. time() . '.' . $ext;
-                $request->image->storeAs('public/images/users', $name);
+                $request->image->storeAs('public/media/images/users', $name);
                 $user->photo = $name;
             }
            $user->save();

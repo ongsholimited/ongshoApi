@@ -27,6 +27,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/login',[LoginController::class,'showLoginForm'])->name('login');
 Route::post('/login',[LoginController::class,'login'])->name('login');
+
+// institute
+
 Route::group([
     "prefix"=>"institute",
     'namespace' => 'App\Http\Controllers\Admin\Institute',
@@ -64,6 +67,8 @@ Route::group([
     Route::get('/get-folder','FolderController@getFolder');
     Route::resource('/images','ImagesController');
     Route::get('/get-images/{folder}','ImagesController@getImages');
+    Route::resource('/menu','MenuController');
+
 });
 
 Route::group([

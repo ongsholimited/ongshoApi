@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 class Constant{
+    // NEWS CONSTANTS
     const POST_TYPE=[
         'feature_post'=>0,
         'pinned_post'=>1,
@@ -15,4 +16,5 @@ class Constant{
         'draft'=>4,
         'rejected'=>5,
     ];
+    
 }

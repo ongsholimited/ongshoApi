@@ -166,7 +166,6 @@ class NewsController extends Controller
 
     }
     public function getPostByCat($category_id){
-        $post=Post::where('category_id',$category_id)->get();
-        return response()->json($post);
+        
     }
 }

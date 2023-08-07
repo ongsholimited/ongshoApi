@@ -24,6 +24,10 @@
             name:'category',
           },
           {
+            data:'serial',
+            name:'serial',
+          },
+          {
             data:'action',
             name:'action',
           }

@@ -49,6 +49,14 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="{{URL::to('/news/menu')}}" class="nav-link">
+              <i class="nav-icon fas fa-donate"></i>
+              <p>
+                Manage Menu
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="{{ route('logout') }}"
             onclick="event.preventDefault();
                           document.getElementById('logout-form').submit();" class="nav-link">

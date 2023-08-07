@@ -45,6 +45,7 @@
                     <th>SL</th>
                     <th>Menu</th>
                     <th>Category</th>
+                    <th>Serial</th>
                     <th>Action</th>
                   </tr>
                 </thead>

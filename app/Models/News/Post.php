@@ -16,6 +16,6 @@ class Post extends Model
         return $this->belongsTo(Category::class,'category_id','id');
     }
     public function author(){
-        return $this->setConnection('mysql')->belongsTo('App\Models\Admin','author_id','id');
+        return $this->setConnection('mysql')->belongsTo('App\Models\User','author_id','id');
     }
 }

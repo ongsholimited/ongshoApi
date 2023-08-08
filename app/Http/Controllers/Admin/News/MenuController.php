@@ -23,7 +23,7 @@ class MenuController extends Controller
     {
         // return $get=Category::with('parent')->get();
         if(request()->ajax()){
-            $get=Menu::all();
+            $get=Menu::with('category')->get();
             return DataTables::of($get)
               ->addIndexColumn()
               ->addColumn('action',function($get){
@@ -36,7 +36,7 @@ class MenuController extends Controller
           ->addColumn('category',function($get){
           return $get->category->name;
         })
-          ->rawColumns(['action'])->make(true);
+        ->rawColumns(['action'])->make(true);
         }
         return view('news.menu.menu');
     }

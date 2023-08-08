@@ -18,12 +18,12 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->string('date',200);
             $table->string('feature_image',250);
-            $table->text('title',250);
-            $table->text('short_description',500)->nullable();
+            $table->string('title',250);
+            $table->string('short_description',250)->nullable();
             $table->text('content',1000);
             $table->string('slug',250);
             $table->tinyInteger('post_type');
-            $table->text('tags',500)->nullable();
+            $table->string('tags',250)->nullable();
             $table->unsignedBigInteger('author_id');
             $table->tinyInteger('status');
             $table->timestamps();

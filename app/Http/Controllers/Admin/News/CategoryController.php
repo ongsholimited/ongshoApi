@@ -8,6 +8,7 @@ use App\Models\News\Category;
 use DataTables;
 use DB;
 use Validator;
+use Str;
 class CategoryController extends Controller
 {
     /**
@@ -71,6 +72,7 @@ class CategoryController extends Controller
             if($request->parent_category=='null'){
                 $cat=new Category;
                 $cat->name=$request->name;
+                $cat->slug=Str::slug($request->name,'-');
                 $cat->author_id=auth()->user()->id;
                 $cat->status=1;
                 $cat->save();

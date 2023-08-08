@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('menus');
+        Schema::connection('ongsho_news')->dropIfExists('menus');
     }
 };

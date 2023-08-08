@@ -49,7 +49,7 @@ class NewsController extends Controller
             'category'=>"required|max:20|min:1",
             'title'=>"required|max:250|min:1",
             'short_description'=>"required|max:250|min:1",
-            'content'=>"required|max:1000|min:1",
+            'content'=>"required|max:5000|min:1",
             'tags'=>"required|max:500|min:1",
             'slug'=>"required|max:250|min:1",
         ]);
@@ -116,9 +116,9 @@ class NewsController extends Controller
             'category'=>"required|max:20|min:1",
             'title'=>"required|max:250|min:1",
             'short_description'=>"required|max:250|min:1",
-            'content'=>"required|max:1000|min:1",
+            'content'=>"required|max:5000|min:1",
             'tags'=>"required|max:500|min:1",
-            'slug'=>"required|max:250|min:1|unique:ongsho_news.posts",
+            'slug'=>"required|max:250|min:1|unique:ongsho_news.posts,slug,".$id,
         ]);
         if($validator->passes()){
                 $post=Post::find($id);

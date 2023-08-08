@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::connection('ongsho_news')->dropIfExists('category');
+        Schema::connection('ongsho_news')->dropIfExists('categories');
     }
 };

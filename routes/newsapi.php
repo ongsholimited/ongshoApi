@@ -13,8 +13,8 @@ Route::group([
     Route::get('get-image-by-folder/{folder_id}', 'ImageController@getImageByFolderId')->middleware('auth:api');
     Route::get('get-posts', 'NewsController@getPost');
     Route::resource('post', 'NewsController');
+    Route::get('get-post/{limit}/{offset}', 'NewsController@getPost');
     Route::get('get-post-types', 'CategoryController@getPostType');
-    
 });
 
   

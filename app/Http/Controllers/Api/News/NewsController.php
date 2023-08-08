@@ -168,4 +168,13 @@ class NewsController extends Controller
     public function getPostByCat($category_id){
         
     }
+    public function getPost($limit=10,$offset=0)
+    {
+        if($limit<=200){
+            $post=Post::with('category','author')->skip($offset)->take($limit)->orderBy('id','desc')->get();
+            return response()->json($post);
+        }else{
+            return response()->json(['status'=>false,'error'=>'data limit exceeded']);
+        }
+    }
 }

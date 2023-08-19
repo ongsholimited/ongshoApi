@@ -29,8 +29,8 @@ class CategoryController extends Controller
               ->addIndexColumn()
               ->addColumn('action',function($get){
               $button  ='<div class="d-flex justify-content-center">';
-                $button.='<a data-url="'.route('category.edit',$get->id).'"  href="javascript:void(0)" class="btn btn-primary shadow btn-xs sharp me-1 editRow"><i class="fas fa-pencil-alt"></i></a>
-              <a data-url="'.route('category.destroy',$get->id).'" href="javascript:void(0)" class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
+                $button.='<a data-url="'.route('news.category.edit',$get->id).'"  href="javascript:void(0)" class="btn btn-primary shadow btn-xs sharp me-1 editRow"><i class="fas fa-pencil-alt"></i></a>
+              <a data-url="'.route('news.category.destroy',$get->id).'" href="javascript:void(0)" class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
               $button.='</div>';
             return $button;
           })
@@ -111,7 +111,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        return response()->json(Category::find($id));
     }
 
     /**
@@ -123,7 +123,32 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator=Validator::make($request->all(),[
+            'parent_category'=>"nullable|max:200|min:1",
+            'name'=>"required|max:200|min:1",
+        ]);
+        if($validator->passes()){
+            if($request->parent_category=='null'){
+                $cat=new Category;
+                $cat->name=$request->name;
+                $cat->slug=Str::slug($request->name,'-');
+                $cat->author_id=auth()->user()->id;
+                $cat->status=1;
+                $cat->save();
+            }else{
+                $cat=new Category;
+                $cat->name=$request->name;
+                $cat->parent_id=$request->parent_category;
+                $cat->author_id=auth()->user()->id;
+                $cat->status=1;
+                $cat->save();
+            }
+            
+            if ($cat) {
+                return response()->json(['message'=>'Course Category Added Success']);
+            }
+        }
+        return response()->json(['error'=>$validator->getMessageBag()]);
     }
 
     /**

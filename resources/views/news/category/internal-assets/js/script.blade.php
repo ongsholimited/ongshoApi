@@ -58,7 +58,7 @@ window.formRequest= function(){
             }
         })
     }else{
-      axios.post("{{URL::to('category/')}}/"+id,formData)
+      axios.post("{{URL::to('news/category/')}}/"+id,formData)
         .then(function (response){
           if(response.data.message){
               toastr.success(response.data.message);

@@ -13,8 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::connection('ongsho_news')->table('categories', function (Blueprint $table) {
-            $table->string('slug',250)->after('name')->unique();
+        Schema::create('user_has_badges', function (Blueprint $table) {
+            $table->id();
+            $table->string('badge_key',250);
+            $table->tinyInteger('status')->default(1);
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('author_id');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::connection('ongsho_news')->table('categories', function (Blueprint $table) {
-            $table->dropColumn('slug');
-        });
+        Schema::dropIfExists('user_has_badges');
     }
 };

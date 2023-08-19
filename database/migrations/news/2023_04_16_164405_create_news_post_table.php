@@ -15,17 +15,17 @@ return new class extends Migration
     {
         Schema::connection('ongsho_news')->create('posts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('category_id');
             $table->string('date',200);
             $table->string('feature_image',250);
-            $table->string('title',250);
-            $table->string('short_description',250)->nullable();
-            $table->text('content',1000);
-            $table->string('slug',250);
+            $table->text('title',1000);
+            $table->text('meta_description',1000)->nullable();
+            $table->longText('content',1000);
+            $table->string('slug',250)->unique();
             $table->tinyInteger('post_type');
-            $table->string('tags',250)->nullable();
+            $table->text('focus_keyword',1000)->nullable();
+            $table->decimal('views',20,2)->nullable();
+            $table->tinyInteger('status')->default(0);
             $table->unsignedBigInteger('author_id');
-            $table->tinyInteger('status');
             $table->timestamps();
         });
     }

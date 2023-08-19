@@ -10,11 +10,13 @@ class Constant{
         'general'=>2,
     ];
     const POST_STATUS=[
-        'review'=>1,
+        'review'=>0,
+        'public'=>1,
         'correction_review'=>2,
         'published'=>3,
         'draft'=>4,
         'rejected'=>5,
+        'private'=>6,
     ];
     
 }

@@ -13,8 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::connection('ongsho_news')->table('categories', function (Blueprint $table) {
-            $table->string('slug',250)->after('name')->unique();
+        Schema::create('post_views', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::connection('ongsho_news')->table('categories', function (Blueprint $table) {
-            $table->dropColumn('slug');
-        });
+        Schema::dropIfExists('post_views');
     }
 };

@@ -9,6 +9,11 @@ use Storage;
 use Validator;
 use Auth;
 use Str;
+use App\Models\News\Category;
+use App\Models\News\PostHasCategory;
+use App\Models\News\PostHasAuthor;
+use App\Models\News\Slug;
+use App\Helpers\Constant;
 class NewsController extends Controller
 {
     /**
@@ -43,15 +48,17 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-         // return $request->all();
+         return $request->all();
+
          $validator=Validator::make($request->all(),[
             'feature_image'=>"required|mimes:jpg,jpeg,png,gif|max:2048",
-            'category'=>"required|max:20|min:1",
+            'category'=>"required|array",
+            'category.*'=>"required|regex:/^([0-9]+)$/",
             'title'=>"required|max:250|min:1",
-            'short_description'=>"required|max:250|min:1",
+            'meta_description'=>"required|max:250|min:1",
             'content'=>"required|max:5000|min:1",
-            'tags'=>"required|max:500|min:1",
-            'slug'=>"required|max:250|min:1",
+            'focus_keyword'=>"required|max:500|min:1",
+            'slug'=>"required|max:250|min:1|unique:ongsho_news.posts,slug",
         ]);
         if($validator->passes()){
                 $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
@@ -64,16 +71,30 @@ class NewsController extends Controller
                 $post->date=strtotime(date('d-m-Y'));
                 $post->slug=Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):'');
                 $post->author_id=Auth::user()->id;
-                $post->status=1;
+                $post->status=Constant::POST_STATUS['review'];
                 if($request->hasFile('feature_image')){
                     $img=$request->feature_image;
                     $ext= $img->getClientOriginalExtension();
                     $f_name=time().'_'.date('d_m_Y');
-                   Storage::putFileAs('public/post_images',$img,$f_name.'.'.$ext);
-                   $post->feature_image=$f_name.'.'.$ext;
+                    Storage::putFileAs('public/post_images',$img,$f_name.'.'.$ext);
+                    $post->feature_image=$f_name.'.'.$ext;
                 }
                 $post->save();
             if ($post) {
+                $slug=new Slug;
+                $slug->slug_name= Str::slug($request->title,'-');
+                $slug->author_id= Auth::user()->id;
+                $slug->save();
+                for($i=0;count($request->category);$i++){
+                    $postHasCat=new PostHasCategory;
+                    $postHasCat->post_id=$post->id;
+                    $postHasCat->category_id=$request->category[$i];
+                    $postHasCat->save();
+                }
+                $author=new PostHasAuthor;
+                $author->post_id= $post->id;
+                $author->author_id= Auth::user()->id;
+                $author->save();
                 return response()->json(['status'=>true,'message'=>'Post Added Success']);
             }
         }
@@ -165,16 +186,41 @@ class NewsController extends Controller
         return response()->json(['status'=>false,'error'=>'Something Went Wrong']);
 
     }
-    public function getPostByCat($category_id){
-        
+    public function getPostByCat($category_slug,$limit=0,$offset=0){
+        $category_id=Category::where('slug',$category_slug)->first()->id;
+        if($limit<=50){
+            $post=Post::with('category','author')->where('category_id',$category_id)->skip($offset)->take($limit)->orderBy('id','desc')->get();
+            return response()->json($post);
+        }
+        return response()->json(['status'=>false,'error'=>'data limit exceeded']);
     }
     public function getPost($limit=10,$offset=0)
     {
-        if($limit<=200){
+        if($limit<=50){
             $post=Post::with('category','author')->skip($offset)->take($limit)->orderBy('id','desc')->get();
             return response()->json($post);
-        }else{
-            return response()->json(['status'=>false,'error'=>'data limit exceeded']);
         }
+        return response()->json(['status'=>false,'error'=>'data limit exceeded']);
+    }
+    public function getPostBySlug($slug=null)
+    {
+        $get_slug=Slug::where('slug_name',$slug)->first();
+        switch ($get_slug) {
+            case null:
+              $data= ['status'=>false,'message'=>'data not found'];
+                break;
+            case $get_slug->slug_type=='post':
+                $post=Post::with('author','category')->where('slug',$get_slug->slug_name)->first();
+                $data= ['status'=>true,'data'=>$post];
+                break;
+            case $get_slug->slug_type=='category':
+                $post=Post::with('author','categories')->where('slug',$get_slug->slug_name)->first();
+                $data= ['status'=>true,'data'=>$post];
+                    break;
+            default:
+                # code...
+                break;
+        }
+        return response()->json($data);
     }
 }

@@ -13,8 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::connection('ongsho_news')->table('categories', function (Blueprint $table) {
-            $table->string('slug',250)->after('name')->unique();
+        Schema::create('post_has_reacts', function (Blueprint $table) {
+            $table->id();
+            $table->string('react_key');
+            $table->tinyInteger('status');
+            $table->string('ip');
+            $table->unsignedBigInteger('user_id');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::connection('ongsho_news')->table('categories', function (Blueprint $table) {
-            $table->dropColumn('slug');
-        });
+        Schema::dropIfExists('post_has_reacts');
     }
 };

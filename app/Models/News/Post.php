@@ -13,9 +13,12 @@ class Post extends Model
     protected $fillable=['category_id','title','content','tags','author_id'];
 
     public function category(){
-        return $this->belongsTo(Category::class,'category_id','id');
+        return $this->hasMany(PostHasCategory::class,'post_id','id');
     }
+    // public function author(){
+    //     return $this->setConnection('mysql')->belongsTo('App\Models\User','author_id','id');
+    // }
     public function author(){
-        return $this->setConnection('mysql')->belongsTo('App\Models\User','author_id','id');
+        return $this->hasMany(PostHasAuthor::class,'post_id','id');
     }
 }

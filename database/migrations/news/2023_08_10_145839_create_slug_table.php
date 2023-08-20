@@ -17,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string('slug_name',250)->unique();
             $table->string('slug_type',250);
+            $table->unsignedBigInteger('post_id')->nullable();
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->timestamps();
-            $table->foreign('slug_name','post_slug')->references('slug')->on('posts')->onDelete('cascade');
-            // $table->foreign('slug_name','category_slug_name')->references('slug')->on('categories')->onDelete('cascade');
+             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
+             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });
     }
 

@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('post_views', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('post_id');
+            $table->string('ip');
+            $table->string('user');
             $table->timestamps();
         });
     }

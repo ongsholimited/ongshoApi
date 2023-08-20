@@ -28,6 +28,7 @@ class OtpTokenCheck implements Rule
      */
     public function passes($attribute, $value)
     {
+        // note that the $value is hash code otp_token
         if($this->token_type=='password_change'){
             $key='pass:'.$this->email.':'.$value;
         }

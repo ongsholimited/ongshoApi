@@ -14,6 +14,7 @@ use App\Models\News\PostHasCategory;
 use App\Models\News\PostHasAuthor;
 use App\Models\News\Slug;
 use App\Helpers\Constant;
+use DB;
 class NewsController extends Controller
 {
     /**
@@ -61,6 +62,9 @@ class NewsController extends Controller
             'slug'=>"required|max:250|min:1|unique:ongsho_news.posts,slug",
         ]);
         if($validator->passes()){
+            DB::transaction(function () {
+   
+            });
                 $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
                 $post=new Post;
                 $post->category_id=$request->category;
@@ -84,6 +88,7 @@ class NewsController extends Controller
                 $slug=new Slug;
                 $slug->slug_name= Str::slug($request->title,'-');
                 $slug->author_id= Auth::user()->id;
+                $slug->post_id= $post->id;
                 $slug->save();
                 for($i=0;count($request->category);$i++){
                     $postHasCat=new PostHasCategory;
@@ -214,7 +219,9 @@ class NewsController extends Controller
                 $data= ['status'=>true,'data'=>$post];
                 break;
             case $get_slug->slug_type=='category':
-                $post=Post::with('author','categories')->where('slug',$get_slug->slug_name)->first();
+                $post=Post::with('author','categories')->where('categories',function($query) use ($get_slug){
+                    return $query->where('slug',$get_slug->slug_name);
+                })->take(20)->get();
                 $data= ['status'=>true,'data'=>$post];
                     break;
             default:

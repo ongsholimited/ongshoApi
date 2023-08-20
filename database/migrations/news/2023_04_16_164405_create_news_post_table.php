@@ -25,7 +25,6 @@ return new class extends Migration
             $table->text('focus_keyword',1000)->nullable();
             $table->decimal('views',20,2)->nullable();
             $table->tinyInteger('status')->default(0);
-            $table->unsignedBigInteger('author_id');
             $table->timestamps();
         });
     }

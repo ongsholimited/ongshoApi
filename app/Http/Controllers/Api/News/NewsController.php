@@ -27,7 +27,9 @@ class NewsController extends Controller
     }
     public function index()
     {
-        $post=Post::with('category','author')->take(20)->get();
+        $post=Post::with(['category','author.user'=>function($query){
+          $query->with('badges')->select('id','first_name','last_name','photo');  
+        }])->take(20)->get();
         return response()->json($post);
     }
 
@@ -191,13 +193,24 @@ class NewsController extends Controller
         return response()->json(['status'=>false,'error'=>'Something Went Wrong']);
 
     }
-    public function getPostByCat($category_slug,$limit=0,$offset=0){
-        $category_id=Category::where('slug',$category_slug)->first()->id;
-        if($limit<=50){
-            $post=Post::with('category','author')->where('category_id',$category_id)->skip($offset)->take($limit)->orderBy('id','desc')->get();
+    public function getPostByCat(Request $request,$category_slug){
+        
+        $validator=Validator::make($request->all(),[
+            'limit'=>"required|numeric|min:1|max:50",
+            'offset'=>"required|numeric|min:1|max:50",
+        ]);
+        
+        if($validator->passes()){
+            $category=Category::where('slug',$category_slug)->first();
+            if($category==null){
+                return response()->json(['status'=>false,'message'=>'data not found']);
+            }
+            $post=Post::with(['category','author.user'=>function(){
+                
+            }])->where('category_id',$category->id)->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
             return response()->json($post);
         }
-        return response()->json(['status'=>false,'error'=>'data limit exceeded']);
+        return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
     }
     public function getPost(Request $request)
     {

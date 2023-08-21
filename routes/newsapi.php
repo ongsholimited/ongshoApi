@@ -15,7 +15,7 @@ Route::group([
     Route::post('get-posts', 'NewsController@getPost');
     Route::resource('post', 'NewsController');
     // Route::get('get-post/{limit}/{offset}', 'NewsController@getPost');
-    Route::get('get-post-by-category/{category_slug}/{limit}/{offset}', 'NewsController@getPostByCat');
+    Route::post('get-posts/{category_slug}', 'NewsController@getPostByCat');
     Route::get('get-post-types', 'CategoryController@getPostType');
     Route::get('/{slug}', 'NewsController@getPostBySlug');
 });

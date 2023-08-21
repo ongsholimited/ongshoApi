@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('user_has_badges', function (Blueprint $table) {
             $table->id();
             $table->string('badge_key',250);
-            $table->tinyInteger('status')->default(1);
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('author_id');
             $table->timestamps();

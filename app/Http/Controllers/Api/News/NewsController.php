@@ -27,7 +27,7 @@ class NewsController extends Controller
     }
     public function index()
     {
-        $post=Post::with(['category','author.user'=>function($query){
+        $post=Post::with(['categories.category','author.user'=>function($query){
           $query->with('badges')->select('id','first_name','last_name','photo');  
         }])->take(20)->get();
         return response()->json($post);
@@ -205,7 +205,7 @@ class NewsController extends Controller
             if($category==null){
                 return response()->json(['status'=>false,'message'=>'data not found']);
             }
-            $post=Post::with(['category','author.user'=>function(){
+            $post=Post::with(['categories.category','author.user'=>function(){
                 
             }])->where('category_id',$category->id)->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
             return response()->json($post);
@@ -220,7 +220,7 @@ class NewsController extends Controller
         ]);
         
         if($validator->passes()){
-            $post=Post::with('category','author')->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
+            $post=Post::with('categories.category','author')->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
             return response()->json($post);
         }
         return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
@@ -233,11 +233,11 @@ class NewsController extends Controller
               $data= ['status'=>false,'message'=>'data not found'];
                 break;
             case $get_slug->slug_type=='post':
-                $post=Post::with('author','category')->where('slug',$get_slug->slug_name)->first();
+                $post=Post::with('author','categories.category')->where('slug',$get_slug->slug_name)->first();
                 $data= ['status'=>true,'data'=>$post];
                 break;
             case $get_slug->slug_type=='category':
-                $post=Post::with('author','categories')->where('categories',function($query) use ($get_slug){
+                $post=Post::with('author','categories.category')->where('categories',function($query) use ($get_slug){
                     return $query->where('slug',$get_slug->slug_name);
                 })->take(20)->get();
                 $data= ['status'=>true,'data'=>$post];

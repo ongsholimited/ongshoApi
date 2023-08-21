@@ -11,7 +11,7 @@ class PostHasCategory extends Model
     protected $connection='ongsho_news';
     public function category()
     {
-        return $this->hasMany(PostHasCategory::class,'category_id','id');
+        return $this->belongsTo(Category::class,'category_id','id');
     }
     public function post()
     {

@@ -12,7 +12,7 @@ class Post extends Model
     protected $connection='ongsho_news';
     protected $fillable=['category_id','title','content','tags','author_id'];
 
-    public function category(){
+    public function categories(){
         return $this->hasMany(PostHasCategory::class,'post_id','id');
     }
     // public function author(){

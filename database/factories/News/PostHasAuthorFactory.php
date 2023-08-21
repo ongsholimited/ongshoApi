@@ -18,7 +18,7 @@ class PostHasAuthorFactory extends Factory
     public function definition()
     {
         return [
-            'author_id'=>User::all()->random()->id,
+            'author_id'=>User::all()->random()->unique()->id,
             'post_id'=>Post::all()->random()->id,
         ];
     }

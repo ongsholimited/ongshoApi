@@ -19,7 +19,7 @@ class UserHasBadgeFactory extends Factory
     {
         return [ 
             'badge_key'=>'news',
-            'user_id'=>User::all()->random()->id,
+            'user_id'=>User::all()->random()->unique()->id,
             'status'=>rand(0,1),
             'author_id'=>Admin::all()->random()->id,
         ];

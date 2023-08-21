@@ -9,7 +9,7 @@ class PostHasAuthor extends Model
 {
     use HasFactory;
     protected $connection='ongsho_news';
-    public function user(){
+    public function details(){
         return $this->setConnection('mysql')->belongsTo('App\Models\User','author_id','id');
     }
     

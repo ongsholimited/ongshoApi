@@ -199,10 +199,15 @@ class NewsController extends Controller
         }
         return response()->json(['status'=>false,'error'=>'data limit exceeded']);
     }
-    public function getPost($limit=10,$offset=0)
+    public function getPost(Request $request)
     {
-        if($limit<=50){
-            $post=Post::with('category','author')->skip($offset)->take($limit)->orderBy('id','desc')->get();
+        $validator=Validator::make($request->all(),[
+            'limit'=>"required|numeric|min:1|max:50",
+            'offset'=>"required|numeric|min:1|max:50",
+        ]);
+        
+        if($validator->passes()){
+            $post=Post::with('category','author')->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
             return response()->json($post);
         }
         return response()->json(['status'=>false,'error'=>'data limit exceeded']);

@@ -223,7 +223,7 @@ class NewsController extends Controller
             $post=Post::with('category','author')->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
             return response()->json($post);
         }
-        return response()->json(['status'=>false,'error'=>'data limit exceeded']);
+        return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
     }
     public function getPostBySlug($slug=null)
     {

@@ -201,7 +201,7 @@ class NewsController extends Controller
         
         $validator=Validator::make($request->all(),[
             'limit'=>"required|numeric|min:1|max:50",
-            'offset'=>"required|numeric|min:1|max:50",
+            'offset'=>"required|numeric|min:0|max:50",
         ]);
         if($validator->passes()){
             $category=Category::where('slug',$category_slug)->first();
@@ -219,7 +219,7 @@ class NewsController extends Controller
     {
         $validator=Validator::make($request->all(),[
             'limit'=>"required|numeric|min:1|max:50",
-            'offset'=>"required|numeric|min:1|max:50",
+            'offset'=>"required|numeric|min:0|max:50",
         ]);
         
         if($validator->passes()){
@@ -253,10 +253,20 @@ class NewsController extends Controller
         }
         return response()->json($data);
     }
-    public function getSection($serial){
-        $post=HomeSection::with(['hasCategory'=>function($query){
-            $query->with('post','post.author');
-        }])->where('serial',$serial)->get();
-        return response()->json($post);
+    public function getSection(Request $request,$serial){
+        $validator=Validator::make($request->all(),[
+            'limit'=>"required|numeric|min:1|max:50",
+            'offset'=>"required|numeric|min:0|max:50",
+        ]);
+        if($validator->passes()){
+            $post=HomeSection::with(['hasCategory'=>function($query) use ($request){
+                $query->with('post','post.author')->take($request->limit)->skip($request->offset)->orderBy('id','desc');
+            }])->where('serial',$serial)->get();
+            return response()->json($post);
+        }
+        return response()->json(['status'=>false,'error'=>'something went wrong']);
+    }
+    public function getPinPost(){
+        
     }
 }

@@ -14,6 +14,7 @@ use App\Models\News\PostHasCategory;
 use App\Models\News\PostHasAuthor;
 use App\Models\News\Slug;
 use App\Helpers\Constant;
+use App\Models\News\HomeSection;
 use DB;
 class NewsController extends Controller
 {
@@ -65,7 +66,10 @@ class NewsController extends Controller
         ]);
         if($validator->passes()){
             DB::transaction(function () {
-   
+                post::create([
+                    'title'=>$request->title,
+                    
+                ]);
             });
                 $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
                 $post=new Post;
@@ -199,7 +203,6 @@ class NewsController extends Controller
             'limit'=>"required|numeric|min:1|max:50",
             'offset'=>"required|numeric|min:1|max:50",
         ]);
-        
         if($validator->passes()){
             $category=Category::where('slug',$category_slug)->first();
             if($category==null){
@@ -249,5 +252,11 @@ class NewsController extends Controller
                 break;
         }
         return response()->json($data);
+    }
+    public function getSection($serial){
+        $post=HomeSection::with(['hasCategory'=>function($query){
+            $query->with('post');
+        }])->where('serial',$serial)->get();
+        return response()->json($post);
     }
 }

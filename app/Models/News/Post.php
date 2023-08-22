@@ -21,4 +21,5 @@ class Post extends Model
     public function author(){
         return $this->hasMany(PostHasAuthor::class,'post_id','id');
     }
+   
 }

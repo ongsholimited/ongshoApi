@@ -255,7 +255,7 @@ class NewsController extends Controller
     }
     public function getSection($serial){
         $post=HomeSection::with(['hasCategory'=>function($query){
-            $query->with('post');
+            $query->with('post','post.author');
         }])->where('serial',$serial)->get();
         return response()->json($post);
     }

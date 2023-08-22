@@ -11,6 +11,6 @@ class HomeSection extends Model
     protected $connection='ongsho_news';
     public function hasCategory()
     {
-        return $this->hasMany(PostHasCategory::class,'category_id','category_id');
+        return $this->hasMany(PostHasCategory::class,'category_id','category_id')->select('id','category_id','post_id');
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 Route::group([
-    'middleware' => ['api','throttle:5'],
+    'middleware' => ['api','throttle:40'],
     'namespace' => 'App\Http\Controllers\Api\News',
     'prefix' => 'news'
     

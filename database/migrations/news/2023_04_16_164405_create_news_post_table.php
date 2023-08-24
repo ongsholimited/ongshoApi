@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::connection('ongsho_news')->create('posts', function (Blueprint $table) {
             $table->id();
             $table->string('date',200);
-            $table->string('feature_image',250);
-            $table->text('title',1000);
+            $table->string('feature_image',250)->nullable();
+            $table->text('title',1000)->nullabl;
             $table->text('meta_description',1000)->nullable();
             $table->longText('content',1000);
             $table->string('slug',250)->unique();
@@ -26,7 +26,6 @@ return new class extends Migration
             $table->decimal('views',20,2)->nullable();
             $table->tinyInteger('status')->default(0);
             $table->tinyInteger('visibility')->default(0);
-            $table->string('publish_at')->default(0);
             $table->timestamps();
         });
     }

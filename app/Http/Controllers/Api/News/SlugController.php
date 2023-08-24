@@ -17,6 +17,6 @@ class SlugController extends Controller
         if($existance>0){
             return response()->json(['status'=>true,'message'=>'the slug already exist']);
         }
-        return response()->json(['status'=>false,'message'=>'the slug is available']);
+        return response()->json(['status'=>false,'message'=>'the slug is not exist']);
     }
 }

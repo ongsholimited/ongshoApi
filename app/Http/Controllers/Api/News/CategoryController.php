@@ -9,7 +9,7 @@ use App\Helpers\Constant;
 class CategoryController extends Controller
 {
     public function getCategory(){
-        $category=Category::all();
+        $category=Category::where('status',1)->get();
         return response()->json($category);
     }
     public function getPostType()

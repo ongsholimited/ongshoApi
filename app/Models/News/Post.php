@@ -10,8 +10,8 @@ class Post extends Model
 {
     use HasFactory;
     protected $connection='ongsho_news';
-    protected $fillable=['category_id','title','content','tags','author_id'];
-
+    protected $fillable=['title','slug','content','focus_keyword','date','meta_description','feature_image','post_type'];
+    
     public function categories(){
         return $this->hasMany(PostHasCategory::class,'post_id','id');
     }
@@ -21,5 +21,7 @@ class Post extends Model
     public function author(){
         return $this->hasMany(PostHasAuthor::class,'post_id','id');
     }
-   
+    public function getCreatedAtAttribute(){
+        return $this->scheduled_at!==null? $this->scheduled_at : $this->date;
+    }
 }

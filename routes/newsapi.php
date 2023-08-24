@@ -19,7 +19,10 @@ Route::group([
     Route::post('get-posts/{category_slug}', 'NewsController@getPostByCat');
     
     Route::get('get-post-types', 'CategoryController@getPostType');
+    Route::get('/check-slug/{slug}', 'SlugController@checkSlug');
     Route::get('/{slug}', 'NewsController@getPostBySlug');
+  
+    
 });
 
   

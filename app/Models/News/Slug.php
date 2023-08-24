@@ -9,4 +9,9 @@ class Slug extends Model
 {
     use HasFactory;
     protected $connection='ongsho_news';
+    protected $fillable=[
+                    'slug_name',
+                    'slug_type',
+                    'post_id'
+                ];
 }

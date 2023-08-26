@@ -43,10 +43,11 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request->file('images')->getSize();
         $validator=Validator::make($request->all(),[
             "images"=>"required|max:2048|mimes:jpg,png,gif,jpeg",
             "folder"=>"nullable|max:20",
-            "size"=>"required|max:20",
+            // "size"=>"required|max:20",
             "alt"=>"nullable|max:20",
         ]);
         if($validator->passes()){
@@ -55,7 +56,7 @@ class ImageController extends Controller
                $f_name=Str::slug($img->getClientOriginalName(),'-').'_'.time().'_'.date('d_m_Y');
                $image=new Image;
                $image->name=$f_name.'.'.$ext;
-               $image->size=$request->size;
+               $image->size=$request->file('images')->getSize();
                $image->alt=$request->alt;
                $image->folder_id=$request->folder;
                $image->author_id=auth()->user()->id;

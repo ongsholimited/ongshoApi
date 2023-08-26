@@ -8,6 +8,7 @@ use Validator;
 use App\Models\News\Image;
 use Storage;
 use Str;
+use Auth;
 class ImageController extends Controller
 {
     /**
@@ -20,8 +21,8 @@ class ImageController extends Controller
     }
     public function index()
     {
-        $image=Image::select('id');
-        return response();
+        $image=Image::where('author_id',Auth::user()->id)->get();
+        return response()->json($image);
     }
 
     /**
@@ -60,7 +61,7 @@ class ImageController extends Controller
                $image->author_id=auth()->user()->id;
                $image->save();
                if($image){
-                   Storage::putFileAs('public/media/news/galary',$img,$f_name.'.'.$ext);
+                   Storage::putFileAs('public/media/images/news/galary',$img,$f_name.'.'.$ext);
                    return response()->json(['message'=>'Photo Uploaded Success']);
                 }
         }
@@ -98,7 +99,19 @@ class ImageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator=Validator::make($request->all(),[
+            "alt"=>"nullable|max:20",
+        ]);
+        if($validator->passes()){
+               $image=Image::find($id);
+               $image->alt=$request->alt;
+               $image->save();
+               if($image){
+                  
+                   return response()->json(['message'=>'Photo Updated Success']);
+                }
+        }
+        return response()->json(['error'=>$validator->getMessagebag()]);
     }
 
     /**
@@ -114,5 +127,17 @@ class ImageController extends Controller
     public function getImageByFolderId($folder_id){
         $image=Image::where('folder_id',$folder_id)->get();
         return response()->json($image);
+    }
+    public function getImage(Request $request)
+    {
+        $validator=Validator::make($request->all(),[
+            'limit'=>"required|numeric|min:1|max:50",
+            'offset'=>"required|numeric|min:0|max:50",
+        ]);
+        if($validator->passes()){
+            $image=Image::where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->get();
+            return response()->json($image);
+        }
+        return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
     }
 }

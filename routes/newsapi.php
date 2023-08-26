@@ -11,6 +11,7 @@ Route::group([
     Route::get('get-menu', 'MenuController@getMenu');
     Route::resource('folder', 'FolderController')->middleware('auth:api');
     Route::resource('image', 'ImageController')->middleware('auth:api');
+    Route::post('get-images', 'ImageController@getImage')->middleware('auth:api');
     Route::get('get-image-by-folder/{folder_id}', 'ImageController@getImageByFolderId')->middleware('auth:api');
     Route::post('get-posts', 'NewsController@getPost');
     Route::resource('post', 'NewsController');

@@ -53,7 +53,7 @@ class ImageController extends Controller
         if($validator->passes()){
                $img=$request->images;
                $ext= $img->getClientOriginalExtension();
-               $f_name=Str::slug($img->getClientOriginalName(),'-').'_'.time().'_'.date('d_m_Y');
+               $f_name=str_replace($ext,'',Str::slug($img->getClientOriginalName(),'-')).'_'.time().'_'.date('d_m_Y');
                $image=new Image;
                $image->name=$f_name.'.'.$ext;
                $image->size=$request->file('images')->getSize();

@@ -85,7 +85,7 @@ class NewsController extends Controller
                     'post_type'=>$request->post_type
                 ]);
                 if($post){
-                    Storage::putFileAs('public/post_images',$img,$f_name.'.'.$ext);
+                    Storage::putFileAs('public/media/images/news/post_images',$img,$f_name.'.'.$ext);
                 }
                 Slug::create([
                     'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
@@ -103,40 +103,7 @@ class NewsController extends Controller
                     'author_id'=> Auth::user()->id,
                 ]);
             });
-            //     $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
-            //     $post=new Post;
-            //     $post->title=$request->title;
-            //     $post->short_description=$request->short_description;
-            //     $post->content=$request->content;
-            //     $post->tags=$request->tags;
-            //     $post->date=strtotime(date('d-m-Y'));
-            //     $post->slug=Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):'');
-            //     $post->author_id=Auth::user()->id;
-            //     $post->status=Constant::POST_STATUS['review'];
-            //     if($request->hasFile('feature_image')){
-            //         $img=$request->feature_image;
-            //         $ext= $img->getClientOriginalExtension();
-            //         $f_name=time().'_'.date('d_m_Y');
-            //         Storage::putFileAs('public/post_images',$img,$f_name.'.'.$ext);
-            //         $post->feature_image=$f_name.'.'.$ext;
-            //     }
-            //     $post->save();
-            // if ($post) {
-            //     $slug=new Slug;
-            //     $slug->slug_name= Str::slug($request->title,'-');
-            //     $slug->author_id= Auth::user()->id;
-            //     $slug->post_id= $post->id;
-            //     $slug->save();
-            //     for($i=0;count($request->category);$i++){
-            //         $postHasCat=new PostHasCategory;
-            //         $postHasCat->post_id=$post->id;
-            //         $postHasCat->category_id=$request->category[$i];
-            //         $postHasCat->save();
-            //     }
-            //     $author=new PostHasAuthor;
-            //     $author->post_id= $post->id;
-            //     $author->author_id= Auth::user()->id;
-            //     $author->save();
+            
                 return response()->json(['status'=>true,'message'=>'Post Added Success']);
             }
             return response()->json(['error'=>$validator->getMessageBag()]);
@@ -175,39 +142,61 @@ class NewsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //  return $request->all();
+
         $validator=Validator::make($request->all(),[
             'feature_image'=>"required|mimes:jpg,jpeg,png,gif|max:2048",
-            'category'=>"required|max:20|min:1",
+            'category'=>"required|array",
+            'category.*'=>"required|regex:/^([0-9]+)$/",
             'title'=>"required|max:250|min:1",
-            'short_description'=>"required|max:250|min:1",
+            'meta_description'=>"required|max:250|min:1",
             'content'=>"required|max:5000|min:1",
-            'tags'=>"required|max:500|min:1",
-            'slug'=>"required|max:250|min:1|unique:ongsho_news.posts,slug,".$id,
+            'focus_keyword'=>"required|max:500|min:1",
+            'slug'=>"required|max:250|min:1|unique:ongsho_news.slugs,slug_name,".$id,
         ]);
         if($validator->passes()){
-                $post=Post::find($id);
-                $post->category_id=$request->category;
-                $post->title=$request->title;
-                $post->short_description=$request->short_description;
-                $post->content=$request->content;
-                $post->tags=$request->tags;
-                $post->date=strtotime(date('d-m-Y'));
-                $post->slug=Str::slug($request->slug,'-');
-                $post->author_id=Auth::user()->id;
-                $post->status=1;
+
+            DB::transaction(function() use($request){
+                $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
                 if($request->hasFile('feature_image')){
                     $img=$request->feature_image;
                     $ext= $img->getClientOriginalExtension();
                     $f_name=time().'_'.date('d_m_Y');
-                   Storage::putFileAs('public/post_images',$img,$f_name.'.'.$ext);
-                   $post->feature_image=$f_name.'.'.$ext;
                 }
-                $post->save();
-            if ($post) {
+                $post=Post::where('id',$id)->update([
+                    'title'=>$request->title,
+                    'meta_description'=>$request->meta_description,
+                    'content'=>$request->content,
+                    'focus_keyword'=>$request->focus_keyword,
+                    'slug'=>Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
+                    'date'=>strtotime(date('d-m-Y h:i:s')),
+                    'status'=>Constant::POST_STATUS['review'],
+                    'feature_image'=>$f_name.'.'.$ext,
+                    'post_type'=>$request->post_type
+                ]);
+                if($post){
+                    Storage::putFileAs('public/media/images/news/post_images',$img,$f_name.'.'.$ext);
+                }
+                Slug::create([
+                    'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
+                    'slug_type'=> 'post',
+                    'post_id'=> $post->id,
+                ]);
+                for($i=0;count($request->category)<$i;$i++){
+                    PostHasCategory::create([
+                        'post_id'=>$post->id,
+                        'category_id'=>$request->category[$i],
+                    ]);
+                }
+                PostHasAuthor::create([
+                    'post_id'=> $post->id,
+                    'author_id'=> Auth::user()->id,
+                ]);
+            });
+            
                 return response()->json(['status'=>true,'message'=>'Post Added Success']);
             }
-        }
-        return response()->json(['error'=>$validator->getMessageBag()]);
+            return response()->json(['error'=>$validator->getMessageBag()]);
     }
 
     /**

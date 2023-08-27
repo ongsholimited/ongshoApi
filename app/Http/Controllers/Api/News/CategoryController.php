@@ -14,7 +14,7 @@ class CategoryController extends Controller
     }
     public function getPostType()
     {
-        return response()->json(Constant::POST_STATUS);
+        return response()->json(['status'=>Constant::POST_STATUS,'post_type'=>Constant::POST_TYPE]);
     }
     public function getCategoryByMenu()
     {

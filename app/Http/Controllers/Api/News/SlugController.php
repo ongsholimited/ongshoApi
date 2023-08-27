@@ -15,8 +15,8 @@ class SlugController extends Controller
     {
         $existance=Slug::where('slug_name',$slug)->count();
         if($existance>0){
-            return response()->json(['status'=>true,'message'=>'the slug already exist']);
+            return response()->json(['status'=>true,'count'=>$existance,'message'=>'the slug already exist']);
         }
-        return response()->json(['status'=>false,'message'=>'the slug is not exist']);
+        return response()->json(['status'=>false,'count'=>$existance,'message'=>'the slug is not exist']);
     }
 }

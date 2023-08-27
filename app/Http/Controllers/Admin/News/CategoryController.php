@@ -69,23 +69,32 @@ class CategoryController extends Controller
             'name'=>"required|max:200|min:1",
         ]);
         if($validator->passes()){
-            if($request->parent_category=='null'){
-                $cat=new Category;
-                $cat->name=$request->name;
-                $cat->slug=Str::slug($request->name,'-');
-                $cat->author_id=auth()->user()->id;
-                $cat->status=1;
-                $cat->save();
-            }else{
-                $cat=new Category;
-                $cat->name=$request->name;
-                $cat->parent_id=$request->parent_category;
-                $cat->author_id=auth()->user()->id;
-                $cat->status=1;
-                $cat->save();
-            }
-            
-            if ($cat) {
+           $insert= DB::transaction(function() use($request){
+                if($request->parent_category=='null'){
+                    $category=Category::create([
+                        'name'=>$request->name,
+                        'slug'=>Str::slug($request->name,'-'),
+                        'author_id'=>auth()->user()->id,
+                        'status'=>1,
+                    ]);
+                }else{
+                    $category=Category::create([
+                        'name'=>$request->name,
+                        'slug'=>Str::slug($request->name,'-'),
+                        'parent_id'=>$request->parent_category,
+                        'author_id'=>auth()->user()->id,
+                        'status'=>1
+                    ]);
+                }
+                Slug::create([
+                    'slug_name'=>Str::slug($request->name,'-'),
+                    'slug_type'=>'category',
+                    'category_id'=>$category->id,
+                    'status'=>1,
+                ]);
+                
+            });
+            if ($insert) {
                 return response()->json(['message'=>'Course Category Added Success']);
             }
         }

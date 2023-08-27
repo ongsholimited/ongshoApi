@@ -9,7 +9,7 @@ class Category extends Model
 {
     use HasFactory;
     protected $connection='ongsho_news';
-    protected $fillable = ['name', 'parent_id','status'];
+    protected $fillable = ['name', 'slug','parent_id','author_id','status'];
 
     public function children()
     {

@@ -145,7 +145,7 @@ class NewsController extends Controller
         //  return $request->all();
 
         $validator=Validator::make($request->all(),[
-            'feature_image'=>"required|mimes:jpg,jpeg,png,gif|max:2048",
+            'feature_image'=>"nullable|mimes:jpg,jpeg,png,gif|max:2048",
             'category'=>"required|array",
             'category.*'=>"required|regex:/^([0-9]+)$/",
             'title'=>"required|max:250|min:1",
@@ -175,6 +175,7 @@ class NewsController extends Controller
                     'post_type'=>$request->post_type
                 ]);
                 if($post){
+                    
                     Storage::putFileAs('public/media/images/news/post_images',$img,$f_name.'.'.$ext);
                 }
                 Slug::create([
@@ -267,9 +268,9 @@ class NewsController extends Controller
                     return $query->where('slug',$get_slug->slug_name);
                 })->take(20)->get();
                 $data= ['status'=>true,'data'=>$post];
-                    break;
+            break;
             default:
-                # code...
+                $data= ['status'=>false,'message'=>'data not found'];
                 break;
         }
         return response()->json($data);

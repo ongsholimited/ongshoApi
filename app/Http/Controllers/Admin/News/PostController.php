@@ -21,21 +21,28 @@ class PostController extends Controller
     public function postList()
     {
       if(request()->ajax()){
-        $get=Post::with('category','author')->get();
+        $get=Post::with('categories','author.details')->get();
         return DataTables::of($get)
           ->addIndexColumn()
           ->addColumn('action',function($get){
-          $button  ='<div class="d-flex justify-content-center">';
-          $button.='<a data-url="'.route('category.edit',$get->id).'"  href="javascript:void(0)" class="btn btn-primary shadow btn-xs sharp me-1 editRow"><i class="fas fa-pencil-alt"></i></a>
-          <a data-url="'.route('category.destroy',$get->id).'" href="javascript:void(0)" class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
-          $button.='</div>';
+          // $button  ='<div class="d-flex justify-content-center">';
+          // $button.='<a data-url="'.route('category.edit',$get->id).'"  href="javascript:void(0)" class="btn btn-primary shadow btn-xs sharp me-1 editRow"><i class="fas fa-pencil-alt"></i></a>
+          // <a data-url="'.route('category.destroy',$get->id).'" href="javascript:void(0)" class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
+          $button='<li class="nav-item dropdown"><a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true">
+              <i class="far fa-bell"></i>
+          </a>
+          <div class="dropdown-menu dropdown-menu dropdown-menu-right" style="left: inherit; right: 0px;">
+              <span class="dropdown-item dropdown-header">15 Notifications</span>
+              <div class="dropdown-divider"></div>
+             
+              <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+          </div>';
+          $button.='</li>';
+          
         return $button;
       })
-      ->addColumn('category',function($get){
-        return $get->category->name;
-      })
       ->addColumn('author',function($get){
-        return $get->author->name;
+       return  $get->author[0]->details->first_name.' '.$get->author[0]->details->last_name;
       })
         ->rawColumns(['action'])->make(true);
       }

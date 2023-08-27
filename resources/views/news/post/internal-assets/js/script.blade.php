@@ -20,8 +20,8 @@
             name:'title',
           },
           {
-            data:'short_description',
-            name:'short_description',
+            data:'meta_description',
+            name:'meta_description',
           },
           {
             data:'author',
@@ -31,6 +31,9 @@
             data:'action',
             name:'action',
           }
+        ],
+        "columnDefs": [
+            { className: "text-left", "targets": [ 1,2,3 ] }
         ]
     });
   })

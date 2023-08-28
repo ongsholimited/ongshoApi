@@ -15,6 +15,7 @@ use App\Models\News\PostHasAuthor;
 use App\Models\News\Slug;
 use App\Helpers\Constant;
 use App\Models\News\HomeSection;
+use App\Rules\PostStatusRule;
 use DB;
 class NewsController extends Controller
 {
@@ -55,14 +56,17 @@ class NewsController extends Controller
         //  return $request->all();
 
          $validator=Validator::make($request->all(),[
-            'feature_image'=>"required|mimes:jpg,jpeg,png,gif|max:2048",
-            'category'=>"required|array",
-            'category.*'=>"required|regex:/^([0-9]+)$/",
+            'feature_image'=>"nullable|mimes:jpg,jpeg,png,gif|max:2048",
+            'category'=>"nullable|array",
+            'category.*'=>"nullable|regex:/^([0-9]+)$/",
             'title'=>"required|max:250|min:1",
-            'meta_description'=>"required|max:250|min:1",
-            'content'=>"required|max:5000|min:1",
-            'focus_keyword'=>"required|max:500|min:1",
+            'meta_description'=>"nullable|max:250|min:1",
+            'content'=>"nullable|max:5000|min:1",
+            'focus_keyword'=>"nullable|max:500|min:1",
             'slug'=>"required|max:250|min:1",
+            'status'=>['required','max:250','min:1',new PostStatusRule],
+            'post_type'=>"required|max:250|min:1",
+            'date'=>"nullable|date_format:d-m-Y H:i:s",
         ]);
         if($validator->passes()){
 
@@ -79,12 +83,12 @@ class NewsController extends Controller
                     'content'=>$request->content,
                     'focus_keyword'=>$request->focus_keyword,
                     'slug'=>Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
-                    'date'=>strtotime(date('d-m-Y h:i:s')),
-                    'status'=>Constant::POST_STATUS['review'],
-                    'feature_image'=>$f_name.'.'.$ext,
+                    'date'=>(isset($request->date) ? strtotime($request->date) : strtotime(date('d-m-Y h:i:s'))  ),
+                    'status'=>$request->status,
+                    'feature_image'=>$request->hasFile('feature_image') ? ($f_name.'.'.$ext) : 'no-image.jpg' ,
                     'post_type'=>$request->post_type
                 ]);
-                if($post){
+                if($post and $request->hasFile('feature_image')){
                     Storage::putFileAs('public/media/images/news/post_images',$img,$f_name.'.'.$ext);
                 }
                 Slug::create([
@@ -92,12 +96,14 @@ class NewsController extends Controller
                     'slug_type'=> 'post',
                     'post_id'=> $post->id,
                 ]);
-                for($i=0;count($request->category)<$i;$i++){
-                    PostHasCategory::create([
-                        'post_id'=>$post->id,
-                        'category_id'=>$request->category[$i],
-                    ]);
-                }
+                if(isset($request->category)){
+                    for($i=0;count($request->category)<$i;$i++){
+                        PostHasCategory::create([
+                            'post_id'=>$post->id,
+                            'category_id'=>$request->category[$i],
+                        ]);
+                    }
+                }   
                 PostHasAuthor::create([
                     'post_id'=> $post->id,
                     'author_id'=> Auth::user()->id,

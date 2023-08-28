@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('date',200);
             $table->string('feature_image',250)->nullable();
-            $table->text('title',1000)->nullabl;
+            $table->text('title',1000)->nullable();
             $table->text('meta_description',1000)->nullable();
-            $table->longText('content',1000);
+            $table->longText('content',1000)->nullable();
             $table->string('slug',250)->unique();
             $table->tinyInteger('post_type');
             $table->text('focus_keyword',1000)->nullable();

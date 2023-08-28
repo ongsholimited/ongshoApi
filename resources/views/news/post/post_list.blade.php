@@ -69,8 +69,6 @@
              </div>
          </li>
          {{-- endmodal --}}
-
-
      </section>
  @endsection
 

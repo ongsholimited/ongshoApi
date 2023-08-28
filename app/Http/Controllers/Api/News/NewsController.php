@@ -66,10 +66,9 @@ class NewsController extends Controller
             'slug'=>"required|max:250|min:1",
             'status'=>['required','max:250','min:1',new PostStatusRule],
             'post_type'=>"required|max:250|min:1",
-            'date'=>"nullable|date_format:d-m-Y H:i:s",
+            'date'=>"nullable|max:30",
         ]);
         if($validator->passes()){
-
             DB::transaction(function() use($request){
                 $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
                 if($request->hasFile('feature_image')){

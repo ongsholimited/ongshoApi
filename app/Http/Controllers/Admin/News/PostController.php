@@ -31,18 +31,23 @@ class PostController extends Controller
           $button='<span class="nav-item dropdown"><a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true">
                         <i class="fas fa-ellipsis-v"></i>
                     </a>
-                        <div class="dropdown-menu dropdown-menu dropdown-menu-right" style="left: inherit; right: 0px;">
-                            <span class="dropdown-item dropdown-header">Edit</span>
+                        <div class="dropdown-menu dropdown-menu p-0 dropdown-menu-right" style="left: inherit; right: 0px;">
+                            <span class="dropdown-item dropdown-header">Preview</span>
+                            <div class="dropdown-divider"></div>
                             <span class="dropdown-item dropdown-header">Edit</span>
                             <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a></div>';
+                            <span class="dropdown-item dropdown-header">Reject</span>
+                            <div class="dropdown-divider"></div>
+                            <span class="dropdown-item dropdown-header">Aprove</span>
+                            <div class="dropdown-divider"></div>
+                        </div>';
                         
          $button.='</span>';
           
         return $button;
       })
       ->addColumn('author',function($get){
-       return  $get->author[0]->details->first_name.' '.$get->author[0]->details->last_name;
+       return isset($get->author[0])?  $get->author[0]->details->first_name.' '.$get->author[0]->details->last_name : '';
       })
         ->rawColumns(['action'])->make(true);
       }

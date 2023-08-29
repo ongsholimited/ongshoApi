@@ -240,7 +240,7 @@ class NewsController extends Controller
             }
             $post=Post::with(['categories.category','author.details'=>function(){
                 
-            }])->where('category_id',$category->id)->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
+            }])->where('category_id',$category->id)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
             return response()->json($post);
         }
         return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
@@ -251,11 +251,10 @@ class NewsController extends Controller
             'limit'=>"required|numeric|min:1|max:50",
             'offset'=>"required|numeric|min:0|max:50",
         ]);
-        
         if($validator->passes()){
             $post=Post::with(['categories.category','author.details'=>function($query){
                 $query->with('badges');
-            }])->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
+            }])->skip($request->offset)->take($request->limit)->where('date','<',time())->where('status',Constant::POST_STATUS['public'])->orderBy('id','desc')->get();
             return response()->json($post);
         }
         return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
@@ -268,13 +267,13 @@ class NewsController extends Controller
               $data= ['status'=>false,'message'=>'data not found'];
                 break;
             case $get_slug->slug_type=='post':
-                $post=Post::with('author.details','categories.category')->where('slug',$get_slug->slug_name)->first();
+                $post=Post::with('author.details','categories.category')->where('slug',$get_slug->slug_name)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->first();
                 $data= ['status'=>true,'slug_type'=>$get_slug->slug_type,'data'=>$post];
                 break;
             case $get_slug->slug_type=='category':
                 $post=Post::with('author.details','categories.category')->where('categories',function($query) use ($get_slug){
                     return $query->where('slug',$get_slug->slug_name);
-                })->take(20)->get();
+                })->where('date','<',time())->where('status',Constant::POST_STATUS['public'])->take(20)->get();
                 $data= ['status'=>true,'slug_type'=>$get_slug->slug_type,'data'=>$post];
             break;
             default:
@@ -290,13 +289,13 @@ class NewsController extends Controller
         ]);
         if($validator->passes()){
             $post=HomeSection::with(['hasCategory'=>function($query) use ($request){
-                $query->with('post','post.author')->take($request->limit)->skip($request->offset)->orderBy('id','desc');
+                $query->with('post','post.author')->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->take($request->limit)->skip($request->offset)->orderBy('id','desc');
             }])->where('serial',$serial)->get();
             return response()->json($post);
         }
         return response()->json(['status'=>false,'error'=>'something went wrong']);
     }
-    public function getPinPost(Request $request,$serial){
+    public function getPinPost(Request $request){
         $validator=Validator::make($request->all(),[
             'limit'=>"required|numeric|min:1|max:50",
             'offset'=>"required|numeric|min:0|max:50",
@@ -304,7 +303,7 @@ class NewsController extends Controller
         if($validator->passes()){
             $post=Post::with(['categories.category','author.details'=>function($query){
                 $query->with('badges');
-            }])->where('post_type',Constant::POST_TYPE['pinned_post'])->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
+            }])->where('post_type',Constant::POST_TYPE['pinned_post'])->where('status',Constant::POST_STATUS['public'])->skip($request->offset)->take($request->limit)->where('date','<',time())->orderBy('id','desc')->get();
             return response()->json($post);
             
         }

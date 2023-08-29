@@ -57,6 +57,7 @@
               </p>
             </a>
           </li>
+         
           <li class="nav-item">
             <a href="{{ route('logout') }}"
             onclick="event.preventDefault();

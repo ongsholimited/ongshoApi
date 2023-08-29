@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Validator;
 use DataTables;
 use App\Models\News\Post;
+use App\Helpers\Constant;
 class PostController extends Controller
 {
     /**
@@ -49,7 +50,50 @@ class PostController extends Controller
       ->addColumn('author',function($get){
        return isset($get->author[0])?  $get->author[0]->details->first_name.' '.$get->author[0]->details->last_name : '';
       })
-        ->rawColumns(['action'])->make(true);
+      ->addColumn('status',function($get){
+        $arr=array_flip(Constant::POST_STATUS);
+        return '<b style="background-color:pink">'.str_replace('_',' ',ucfirst($arr[$get->status])).'</b>';
+       })
+        ->rawColumns(['action','status'])->make(true);
+      }
+      return view('news.post.post_list');
+    }
+    public function reviewList()
+    {
+      if(request()->ajax()){
+        $get=Post::with('categories','author.details')->get();
+        return DataTables::of($get)
+          ->addIndexColumn()
+          ->addColumn('action',function($get){
+          // $button  ='<div class="d-flex justify-content-center">';
+          // $button.='<a data-url="'.route('category.edit',$get->id).'"  href="javascript:void(0)" class="btn btn-primary shadow btn-xs sharp me-1 editRow"><i class="fas fa-pencil-alt"></i></a>
+          // <a data-url="'.route('category.destroy',$get->id).'" href="javascript:void(0)" class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
+          $button='<span class="nav-item dropdown"><a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                        <div class="dropdown-menu dropdown-menu p-0 dropdown-menu-right" style="left: inherit; right: 0px;">
+                            <span class="dropdown-item dropdown-header">Preview</span>
+                            <div class="dropdown-divider"></div>
+                            <span class="dropdown-item dropdown-header">Edit</span>
+                            <div class="dropdown-divider"></div>
+                            <span class="dropdown-item dropdown-header">Reject</span>
+                            <div class="dropdown-divider"></div>
+                            <span class="dropdown-item dropdown-header">Aprove</span>
+                            <div class="dropdown-divider"></div>
+                        </div>';
+                        
+         $button.='</span>';
+          
+        return $button;
+      })
+      ->addColumn('author',function($get){
+       return isset($get->author[0])?  $get->author[0]->details->first_name.' '.$get->author[0]->details->last_name : '';
+      })
+      ->addColumn('status',function($get){
+        $arr=array_flip(Constant::POST_STATUS);
+        return '<b style="background-color:pink">'.str_replace('_',' ',ucfirst($arr[$get->status])).'</b>';
+       })
+        ->rawColumns(['action','status'])->make(true);
       }
       return view('news.post.post_list');
     }

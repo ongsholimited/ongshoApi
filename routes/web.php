@@ -27,7 +27,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/login',[LoginController::class,'showLoginForm'])->name('login');
 Route::post('/login',[LoginController::class,'login'])->name('login');
-
+Route::post('/search-user',[App\Http\Controllers\Admin\UserController::class,'searchUser']);
 // institute
 
 Route::group([
@@ -60,6 +60,8 @@ Route::group([
 ],function () {
     Route::get('/dashboard','NewsDashboardController@homePage');
     Route::resource('/category','CategoryController');
+    
+    Route::resource('/badge','BadgeController');
     Route::post('/get-category','CategoryController@getCategory');
     Route::resource('/post','PostController');
     Route::get('/post-list','PostController@postList');

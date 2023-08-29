@@ -47,6 +47,7 @@
                                  <th>Title</th>
                                  <th>S. Description</th>
                                  <th>Author</th>
+                                 <th>Status</th>
                                  <th>Action</th>
                              </tr>
                          </thead>

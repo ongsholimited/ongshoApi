@@ -54,19 +54,22 @@ class NewsController extends Controller
     public function store(Request $request)
     {
         //  return $request->all();
-
+        if($request->status==Constant::POST_STATUS['public']){
+            $isRequired='required';
+        }
+            $isRequired='nullable';
          $validator=Validator::make($request->all(),[
-            'feature_image'=>"nullable|mimes:jpg,jpeg,png,gif|max:2048",
-            'category'=>"nullable|array",
-            'category.*'=>"nullable|regex:/^([0-9]+)$/",
+            'feature_image'=>$isRequired."|mimes:jpg,jpeg,png,gif|max:2048",
+            'category'=>$isRequired."|array",
+            'category.*'=>$isRequired."|regex:/^([0-9]+)$/",
             'title'=>"required|max:250|min:1",
-            'meta_description'=>"nullable|max:250|min:1",
-            'content'=>"nullable|max:5000|min:1",
+            'meta_description'=>$isRequired."|max:250|min:1",
+            'content'=>$isRequired."|max:5000|min:1",
             'focus_keyword'=>"nullable|max:500|min:1",
             'slug'=>"required|max:250|min:1",
             'status'=>['required','max:250','min:1',new PostStatusRule],
             'post_type'=>"required|max:250|min:1",
-            'date'=>"nullable|max:30",
+            'date'=>"required|max:30",
         ]);
         if($validator->passes()){
             DB::transaction(function() use($request){

@@ -57,6 +57,66 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-cog"></i>
+                <p>
+                    Post
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview ml-1">
+                <li class="nav-item">
+                    <a href="{{URL::to('/news/post-list')}}" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>
+                            Post List
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>
+                          Review List
+                      </p>
+                  </a>
+                </li>
+               
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>
+                          Published List
+                      </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>
+                          Rejected List
+                      </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>
+                          Deleted List
+                      </p>
+                  </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+          <a href="{{URL::to('/news/badge')}}" class="nav-link">
+            <i class="nav-icon fas fa-donate"></i>
+            <p>
+              Manage Badge
+            </p>
+          </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('logout') }}"
             onclick="event.preventDefault();
                           document.getElementById('logout-form').submit();" class="nav-link">
@@ -68,7 +128,8 @@
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
               @csrf
           </form>
-          </li>
+        </li>
+          
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

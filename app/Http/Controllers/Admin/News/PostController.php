@@ -33,7 +33,7 @@ class PostController extends Controller
                         <i class="fas fa-ellipsis-v"></i>
                     </a>
                         <div class="dropdown-menu dropdown-menu p-0 dropdown-menu-right" style="left: inherit; right: 0px;">
-                            <span class="dropdown-item dropdown-header">Preview</span>
+                            <span class="dropdown-item dropdown-header"><a href='.route('news.post.show',$get->id).'>Preview</a></span>
                             <div class="dropdown-divider"></div>
                             <span class="dropdown-item dropdown-header">Edit</span>
                             <div class="dropdown-divider"></div>
@@ -72,7 +72,7 @@ class PostController extends Controller
                         <i class="fas fa-ellipsis-v"></i>
                     </a>
                         <div class="dropdown-menu dropdown-menu p-0 dropdown-menu-right" style="left: inherit; right: 0px;">
-                            <span class="dropdown-item dropdown-header">Preview</span>
+                            <span class="dropdown-item dropdown-header"><a href='.route('news.post.show',$get->id).'>Preview</a></span>
                             <div class="dropdown-divider"></div>
                             <span class="dropdown-item dropdown-header">Edit</span>
                             <div class="dropdown-divider"></div>
@@ -154,7 +154,10 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
+        $post=$post=Post::with(['categories.category','author.details'=>function($query){
+            $query->with('badges');
+        }])->where('id',$id)->first();
+        return view('news.post_preview.post_preview',compact('post'));
     }
 
     /**

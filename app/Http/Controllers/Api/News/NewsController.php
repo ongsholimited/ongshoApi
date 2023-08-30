@@ -127,7 +127,7 @@ class NewsController extends Controller
      */
     public function show($id)
     {
-        //
+       
     }
 
     /**
@@ -308,5 +308,14 @@ class NewsController extends Controller
             
         }
         return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
+    }
+    public function getPostPreview($slug){
+        
+        $post=Post::with(['categories.category','author.details'=>function($query){
+                $query->with('badges');
+            }])->where('status','!=',Constant::POST_STATUS['deleted'])->where('slug',$slug)->first();
+        
+        return response()->json($post);
+        
     }
 }

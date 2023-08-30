@@ -22,7 +22,7 @@ Route::group([
     
     Route::get('get-post-types', 'CategoryController@getPostType');
     Route::get('/check-slug/{slug}', 'SlugController@checkSlug');
-    Route::get('post-preview/{slug}', 'NewsController@getPostPreview');
+    Route::get('post-preview/{slug}', 'NewsController@getPostPreview')->middleware('auth:api');
     Route::get('/{slug}', 'NewsController@getPostBySlug');
   
     

@@ -268,13 +268,13 @@ class NewsController extends Controller
                 break;
             case $get_slug->slug_type=='post':
                 $post=Post::with('author.details','categories.category')->where('slug',$get_slug->slug_name)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->first();
-                $data= ['status'=>($post->count()>0? true :false ),'slug_type'=>$get_slug->slug_type,'data'=>$post];
+                $data= ['status'=>($post!=null? true :false ),'slug_type'=>$get_slug->slug_type,'data'=>$post];
                 break;
             case $get_slug->slug_type=='category':
                 $post=Post::with('author.details','categories.category')->where('categories',function($query) use ($get_slug){
                     return $query->where('slug',$get_slug->slug_name);
                 })->where('date','<',time())->where('status',Constant::POST_STATUS['public'])->take(20)->get();
-                $data= ['status'=>($post->count()>0? true :false ),'slug_type'=>$get_slug->slug_type,'data'=>$post];
+                $data= ['status'=>($post!=null? true :false ),'slug_type'=>$get_slug->slug_type,'data'=>$post];
             break;
             default:
                 $data= ['status'=>false,'message'=>'data not found'];

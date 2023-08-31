@@ -291,7 +291,7 @@ class NewsController extends Controller
             $post=HomeSection::with(['hasCategory'=>function($query) use ($request){
                 $query->with(['post'=>function($query){
                     $query->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
-                },'post.author'])->take($request->limit)->skip($request->offset)->where('post','!=',null)->orderBy('id','desc');
+                },'post.author'])->take($request->limit)->skip($request->offset)->orderBy('id','desc');
             }])->where('serial',$serial)->get();
             return response()->json($post);
         }

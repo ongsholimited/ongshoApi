@@ -70,6 +70,7 @@ Route::group([
     Route::resource('/images','ImagesController');
     Route::get('/get-images/{folder}','ImagesController@getImages');
     Route::resource('/menu','MenuController');
+    Route::resource('/section','SectionController');
 
 });
 

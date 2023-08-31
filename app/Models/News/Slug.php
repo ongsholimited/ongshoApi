@@ -12,6 +12,7 @@ class Slug extends Model
     protected $fillable=[
                     'slug_name',
                     'slug_type',
-                    'post_id'
+                    'post_id',
+                    'category_id'
                 ];
 }

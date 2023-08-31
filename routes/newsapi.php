@@ -17,6 +17,7 @@ Route::group([
     Route::post('get-pin-posts', 'NewsController@getPinPost');
     Route::resource('post', 'NewsController');
     // Route::get('get-post/{limit}/{offset}', 'NewsController@getPost');
+    Route::get('get-section', 'SectionController@getSection');
     Route::post('get-posts/section/{serial}', 'NewsController@getSection');
     Route::post('get-posts/{category_slug}', 'NewsController@getPostByCat');
     

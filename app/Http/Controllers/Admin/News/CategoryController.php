@@ -70,7 +70,7 @@ class CategoryController extends Controller
             'name'=>"required|max:200|min:1",
         ]);
         if($validator->passes()){
-           $insert= DB::transaction(function() use($request){
+            DB::transaction(function() use($request){
                 if($request->parent_category=='null'){
                     $category=Category::create([
                         'name'=>$request->name,
@@ -93,11 +93,8 @@ class CategoryController extends Controller
                     'category_id'=>$category->id,
                     'status'=>1,
                 ]);
-                
-            });
-            if ($insert) {
                 return response()->json(['message'=>'Course Category Added Success']);
-            }
+            });
         }
         return response()->json(['error'=>$validator->getMessageBag()]);
     }

@@ -289,7 +289,9 @@ class NewsController extends Controller
         ]);
         if($validator->passes()){
             $post=HomeSection::with(['hasCategory'=>function($query) use ($request){
-                $query->with('post','post.author')->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->take($request->limit)->skip($request->offset)->orderBy('id','desc');
+                $query->with(['post'=>function($query){
+                    $query->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
+                },'post.author'])->take($request->limit)->skip($request->offset)->orderBy('id','desc');
             }])->where('serial',$serial)->get();
             return response()->json($post);
         }

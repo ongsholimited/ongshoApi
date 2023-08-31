@@ -266,13 +266,14 @@ class NewsController extends Controller
               $data= ['status'=>false,'message'=>'data not found'];
                 break;
             case $get_slug->slug_type=='post':
-                $post=Post::with('author.details.badge','categories.category')->where('slug',$get_slug->slug_name)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->first();
+                $post=Post::with('author.details.badges','categories.category')->where('slug',$get_slug->slug_name)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->first();
                 $data= ['status'=>($post!=null? true :false ),'slug_type'=>$get_slug->slug_type,'data'=>$post];
                 break;
             case $get_slug->slug_type=='category':
-                $post=Post::with('author.details.badge','categories.category')->where('categories',function($query) use ($get_slug){
-                    return $query->where('slug',$get_slug->slug_name);
-                })->where('date','<',time())->where('status',Constant::POST_STATUS['public'])->take(20)->get();
+                
+                $post=Category::with(['post'=>function($q){
+                    $q->where('date','<',time())->where('status',Constant::POST_STATUS['public'])->take(20);
+                }])->where('slug',$get_slug->slug_name)->get();
                 $data= ['status'=>($post!=null? true :false ),'slug_type'=>$get_slug->slug_type,'data'=>$post];
             break;
             default:

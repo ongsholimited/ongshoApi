@@ -240,7 +240,6 @@ class NewsController extends Controller
             }
             $post=Category::with(['post'=>function($q) use($request){
                 $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('date','desc');
-                
             }])->whereHas('post')->where('slug',$category_slug)->get();
             
             // where('category_id',$category->id)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
@@ -270,11 +269,11 @@ class NewsController extends Controller
               $data= ['status'=>false,'message'=>'data not found'];
                 break;
             case $get_slug->slug_type=='post':
-                $post=Post::with('author.details','categories.category')->where('slug',$get_slug->slug_name)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->first();
+                $post=Post::with('author.details.badge','categories.category')->where('slug',$get_slug->slug_name)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->first();
                 $data= ['status'=>($post!=null? true :false ),'slug_type'=>$get_slug->slug_type,'data'=>$post];
                 break;
             case $get_slug->slug_type=='category':
-                $post=Post::with('author.details','categories.category')->where('categories',function($query) use ($get_slug){
+                $post=Post::with('author.details.badge','categories.category')->where('categories',function($query) use ($get_slug){
                     return $query->where('slug',$get_slug->slug_name);
                 })->where('date','<',time())->where('status',Constant::POST_STATUS['public'])->take(20)->get();
                 $data= ['status'=>($post!=null? true :false ),'slug_type'=>$get_slug->slug_type,'data'=>$post];

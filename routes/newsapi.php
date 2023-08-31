@@ -15,14 +15,14 @@ Route::group([
     Route::post('get-images', 'ImageController@getImage')->middleware('auth:api');
     Route::get('get-image-by-folder/{folder_id}', 'ImageController@getImageByFolderId')->middleware('auth:api');
     Route::post('get-posts', 'NewsController@getPost');
-    Route::post('get-pin-posts', 'NewsController@getPinPost');
-    Route::resource('post', 'NewsController');
-    // Route::get('get-post/{limit}/{offset}', 'NewsController@getPost');
-    Route::get('get-section', 'SectionController@getSection');
+   
     Route::post('get-posts/section/{serial}', 'NewsController@getSection');
     Route::post('get-posts/{category_slug}', 'NewsController@getPostByCat');
-    
+    Route::post('get-pin-posts', 'NewsController@getPinPost');
+    Route::resource('post', 'NewsController');
     Route::get('get-post-types', 'CategoryController@getPostType');
+    // Route::get('get-post/{limit}/{offset}', 'NewsController@getPost');
+    Route::get('get-section', 'SectionController@getSection');
     Route::get('/check-slug/{slug}', 'SlugController@checkSlug');
     Route::get('post-preview/{slug}', 'NewsController@getPostPreview')->middleware('auth:api');
     Route::get('/{slug}', 'NewsController@getPostBySlug');

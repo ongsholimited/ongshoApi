@@ -112,7 +112,7 @@ class NewsController extends Controller
                 ]);
             });
             
-                return response()->json(['status'=>true,'message'=>'Post Added Success']);
+            return response()->json(['status'=>true,'message'=>'Post Added Success']);
             }
             return response()->json(['error'=>$validator->getMessageBag()]);
         }

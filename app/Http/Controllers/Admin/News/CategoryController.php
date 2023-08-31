@@ -93,8 +93,8 @@ class CategoryController extends Controller
                     'category_id'=>$category->id,
                     'status'=>1,
                 ]);
-                return response()->json(['message'=>'Course Category Added Success']);
             });
+            return response()->json(['message'=>'Course Category Added Success']);
         }
         return response()->json(['error'=>$validator->getMessageBag()]);
     }

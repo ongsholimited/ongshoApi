@@ -272,7 +272,7 @@ class NewsController extends Controller
             case $get_slug->slug_type=='category':
                 
                 $post=Category::with(['post'=>function($q){
-                    $q->where('date','<',time())->where('status',Constant::POST_STATUS['public'])->take(20);
+                    $q->with('author.details.badges')->where('date','<',time())->where('status',Constant::POST_STATUS['public'])->take(20);
                 }])->where('slug',$get_slug->slug_name)->get();
                 $data= ['status'=>($post!=null? true :false ),'slug_type'=>$get_slug->slug_type,'data'=>$post];
             break;

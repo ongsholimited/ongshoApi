@@ -21,5 +21,9 @@ class Category extends Model
         // return $this->belongsTo(Category::class, 'parent_id');
         return $this->belongsTo(Category::class, 'parent_id');
     }
+
+    public function post(){
+        return $this->hasManyThrough(Post::class,PostHasCategory::class,'category_id','id','id','post_id');
+    }
     
 }

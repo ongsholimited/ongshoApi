@@ -91,7 +91,7 @@ class NewsController extends Controller
                     'post_type'=>$request->post_type
                 ]);
                 if($post and $request->hasFile('feature_image')){
-                    Storage::putFileAs('public/media/images/news/post_images',$img,$f_name.'.'.$ext);
+                    Storage::putFileAs('public/media/images/news',$img,$f_name.'.'.$ext);
                 }
                 Slug::create([
                     'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
@@ -184,7 +184,7 @@ class NewsController extends Controller
                 ]);
                 if($post){
                     
-                    Storage::putFileAs('public/media/images/news/post_images',$img,$f_name.'.'.$ext);
+                    Storage::putFileAs('public/media/images/news',$img,$f_name.'.'.$ext);
                 }
                 Slug::create([
                     'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
@@ -238,9 +238,12 @@ class NewsController extends Controller
             if($category==null){
                 return response()->json(['status'=>false,'message'=>'data not found']);
             }
-            $post=Post::with(['categories.category','author.details'=>function(){
+            $post=Category::with(['post'=>function($q) use($request){
+                $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('date','desc');
                 
-            }])->where('category_id',$category->id)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
+            }])->whereHas('post')->where('slug',$category_slug)->get();
+            
+            // where('category_id',$category->id)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
             return response()->json($post);
         }
         return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
@@ -288,11 +291,10 @@ class NewsController extends Controller
             'offset'=>"required|numeric|min:0|max:50",
         ]);
         if($validator->passes()){
-            $post=HomeSection::with(['hasCategory'=>function($query) use ($request){
-                $query->with(['post'=>function($query){
-                    $query->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
-                },'post.author'])->take($request->limit)->skip($request->offset)->orderBy('id','desc');
-            }])->where('serial',$serial)->get();
+            // return 'xx';
+            $post=HomeSection::with(['post'=>function($query) use ($request){
+                    $query->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->take($request->limit)->skip($request->offset)->orderBy('date','desc');
+                },'post.author'])->whereHas('post')->where('serial',$serial)->get();
             return response()->json($post);
         }
         return response()->json(['status'=>false,'error'=>'something went wrong']);

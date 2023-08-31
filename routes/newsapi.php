@@ -1,4 +1,5 @@
 <?php
+    Route::get('test',[ App\Http\Controllers\Api\TestController::class,'test'])->middleware('api');
 
 Route::group([
     'middleware' => ['api','throttle:40'],

@@ -13,4 +13,9 @@ class HomeSection extends Model
     {
         return $this->hasMany(PostHasCategory::class,'category_id','category_id')->select('id','category_id','post_id');
     }
+    
+    public function post()
+    {
+        return $this->hasManyThrough(Post::class,PostHasCategory::class,'category_id','id','category_id','post_id');
+    }
 }

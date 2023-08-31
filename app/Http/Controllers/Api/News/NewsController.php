@@ -230,14 +230,11 @@ class NewsController extends Controller
     public function getPostByCat(Request $request,$category_slug){
         
         $validator=Validator::make($request->all(),[
-            'limit'=>"required|numeric|min:1|max:50",
+            'limit'=>"required|numeric|min:0|max:50",
             'offset'=>"required|numeric|min:0|max:50",
         ]);
         if($validator->passes()){
-            $category=Category::where('slug',$category_slug)->first();
-            if($category==null){
-                return response()->json(['status'=>false,'message'=>'data not found']);
-            }
+            // return 'xx';
             $post=Category::with(['post'=>function($q) use($request){
                 $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('date','desc');
             }])->whereHas('post')->where('slug',$category_slug)->get();

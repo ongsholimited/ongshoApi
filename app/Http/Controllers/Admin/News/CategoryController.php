@@ -67,7 +67,7 @@ class CategoryController extends Controller
     {
         $validator=Validator::make($request->all(),[
             'parent_category'=>"nullable|max:200|min:1",
-            'name'=>"required|max:200|min:1",
+            'name'=>"required|max:200|min:1|unique:ongsho_news.categories,name",
         ]);
         if($validator->passes()){
             DB::transaction(function() use($request){

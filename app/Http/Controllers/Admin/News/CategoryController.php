@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\News;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\News\Category;
+use App\Models\News\Slug;
 use DataTables;
 use DB;
 use Validator;

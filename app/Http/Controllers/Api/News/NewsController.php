@@ -58,7 +58,7 @@ class NewsController extends Controller
             $isRequired='required';
         }
             $isRequired='nullable';
-         $validator=Validator::make($request->all(),[
+            $validator=Validator::make($request->all(),[
             'feature_image'=>$isRequired."|mimes:jpg,jpeg,png,gif|max:2048",
             'category'=>$isRequired."|array",
             'category.*'=>$isRequired."|regex:/^([0-9]+)$/",

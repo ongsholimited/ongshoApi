@@ -330,4 +330,8 @@ $(document).ready(function() {
   function addImage(url){
     $('#content').summernote('insertImage', url);
   }
+  $(document).on('click','.removeAuthor',function(){
+      event.preventDefault();
+      console.log($(this).parent().remove());
+  })
 </script>

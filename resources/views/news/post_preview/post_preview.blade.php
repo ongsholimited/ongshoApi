@@ -130,20 +130,24 @@
                                      @endphp
                                  @endforeach
                              </div>
-                              <div class="form-group">
-                                  <label for="recipient-name" class="col-form-label">Add Author:</label>
+                             <div class="input-group">
+                                <select type="text" class="form-control" placeholder="User" id="user">
+                                
+                                </select>
+                                <div class="input-group-append">
+                                  <button class="btn btn-outline-secondary" id="add_author" type="button">Add</button>
+                                </div>
                                   
-                                  @foreach($post->author as $user)
-                                  <div id='users'>
-
+                             </div>
+                             @foreach($post->author as $user)
+                                <div class="d-block" id='users'>
                                     <div class='m-1'>
-                                      <input type="hidden" value='{{$user->details->id}}' name='author[]'>
-                                      <span class>{{$user->details->first_name.' '.$user->details->last_name}}</span>
-                                      <button class="btn btn-xs btn-danger ml-1 float-right removeAuthor">X</button>
+                                        <input type="hidden" value='{{$user->details->id}}' name='author[]'>
+                                        <span class>{{$user->details->first_name.' '.$user->details->last_name}}</span>
+                                        <button class="btn btn-xs btn-danger ml-1 float-right removeAuthor">X</button>
                                     </div>
-                                  </div>
-                                  @endforeach
-                              </div>
+                                </div>
+                             @endforeach
                          </div>
                          
                       </div>

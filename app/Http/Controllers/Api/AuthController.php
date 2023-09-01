@@ -43,6 +43,9 @@ class AuthController extends Controller
 
        if($validator->passes()){
            $user=new User;
+           if($requestData==null){
+             $requestData['username']='user_'.time().User::count();
+           }
            $user->username=$requestData['username'];
            $user->first_name=$requestData['first_name'];
            $user->last_name=$requestData['last_name'];

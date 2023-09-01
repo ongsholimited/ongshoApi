@@ -161,12 +161,12 @@ $(document).delegate(".deleteRow", "click", function(){
       }
     })
 });
-$('#category').select2({
+$('#user').select2({
     theme:'bootstrap4',
     placeholder:'select',
     allowClear:true,
     ajax:{
-      url:"{{URL::to('/news/get-category')}}",
+      url:"{{URL::to('/search-user')}}",
       type:'post',
       dataType:'json',
       delay:20,
@@ -333,5 +333,9 @@ $(document).ready(function() {
   $(document).on('click','.removeAuthor',function(){
       event.preventDefault();
       console.log($(this).parent().remove());
+  })
+  $(document).on('click','#add_author',function(){
+    user=$('user').val();
+     
   })
 </script>

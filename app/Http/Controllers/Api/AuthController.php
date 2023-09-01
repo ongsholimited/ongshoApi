@@ -43,7 +43,7 @@ class AuthController extends Controller
 
        if($validator->passes()){
            $user=new User;
-           if($requestData==null){
+           if($requestData['username']==null or $requestData['username']==''){
              $requestData['username']='user_'.time().User::count();
            }
            $user->username=$requestData['username'];

@@ -98,7 +98,7 @@ class NewsController extends Controller
                     'slug_type'=> 'post',
                     'post_id'=> $post->id,
                 ]);
-                if(isset($request->category)){
+                if(count($request->category)>0){
                     for($i=0;count($request->category)<$i;$i++){
                         PostHasCategory::create([
                             'post_id'=>$post->id,

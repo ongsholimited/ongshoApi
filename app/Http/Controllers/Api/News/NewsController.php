@@ -53,7 +53,7 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-         return $request->all();
+        //  return $request->all();
         if($request->status==Constant::POST_STATUS['public']){
             $isRequired='required';
         }

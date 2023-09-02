@@ -158,7 +158,7 @@ class NewsController extends Controller
             'category.*'=>"required|regex:/^([0-9]+)$/",
             'title'=>"required|max:250|min:1",
             'meta_description'=>"required|max:250|min:1",
-            'content'=>"required|max:5000|min:1",
+            'content'=>"required|max:60000|min:1",
             'focus_keyword'=>"required|max:500|min:1",
             'slug'=>"required|max:250|min:1|unique:ongsho_news.slugs,slug_name,".$id,
         ]);

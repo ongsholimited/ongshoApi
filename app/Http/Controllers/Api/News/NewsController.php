@@ -64,7 +64,7 @@ class NewsController extends Controller
             'category.*'=>$isRequired."|regex:/^([0-9]+)$/",
             'title'=>"required|max:250|min:1",
             'meta_description'=>$isRequired."|max:250|min:1",
-            'content'=>$isRequired."|max:5000|min:1",
+            'content'=>$isRequired."|max:60000|min:1",
             'focus_keyword'=>"nullable|max:500|min:1",
             'slug'=>"required|max:250|min:1",
             'status'=>['required','max:250','min:1',new PostStatusRule],

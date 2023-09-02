@@ -25,7 +25,7 @@ return new class extends Migration
             $table->text('focus_keyword',1000)->nullable();
             $table->decimal('views',20,2)->nullable();
             $table->tinyInteger('status')->default(0);
-            $table->tinyInteger('visibility')->default(0);
+            $table->tinyInteger('is_scheduled')->default(0);
             $table->timestamps();
         });
     }

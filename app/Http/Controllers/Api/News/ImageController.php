@@ -43,7 +43,7 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        return response()->json(['message'=>'Photo Uploaded Success']);
+        // return response()->json(['message'=>'Photo Uploaded Success']);
         // return $request->file('images')->getSize();
         $validator=Validator::make($request->all(),[
             "images"=>"required|max:2048|mimes:jpg,png,gif,jpeg",
@@ -52,9 +52,10 @@ class ImageController extends Controller
             "alt"=>"nullable|max:20",
         ]);
         if($validator->passes()){
+               $microtime=explode(' ',microtime(false));
                $img=$request->images;
                $ext= $img->getClientOriginalExtension();
-               $f_name=str_replace($ext,'',Str::slug($img->getClientOriginalName(),'-')).'_'.time().'_'.date('d_m_Y');
+               $f_name=str_replace($ext,'',Str::slug($img->getClientOriginalName(),'-')).'_'.$microtime[1]+str_replace('.','',$microtime[0]);
                $image=new Image;
                $image->name=$f_name.'.'.$ext;
                $image->size=$request->file('images')->getSize();
@@ -63,8 +64,8 @@ class ImageController extends Controller
                $image->author_id=auth()->user()->id;
                $image->save();
                if($image){
-                   Storage::putFileAs('public/media/images/news/gallery',$img,$f_name.'.'.$ext);
-                   return response()->json(['message'=>'Photo Uploaded Success']);
+                   Storage::putFileAs('public/media/images/news/',$img,$f_name.'.'.$ext);
+                   return response()->json(['message'=>'Photo Uploaded Success','image'=>$f_name.'.'.$ext]);
                 }
         }
         return response()->json(['error'=>$validator->getMessagebag()]);

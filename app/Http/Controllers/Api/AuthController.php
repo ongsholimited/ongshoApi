@@ -42,9 +42,10 @@ class AuthController extends Controller
        ]);
 
        if($validator->passes()){
+           $microtime=explode(' ',microtime(false));
            $user=new User;
            if($requestData['username']==null or $requestData['username']==''){
-             $requestData['username']='user_'.time().User::count();
+             $requestData['username']='user_'.$microtime[1]+str_replace('.','',$microtime[0]);
            }
            $user->username=$requestData['username'];
            $user->first_name=$requestData['first_name'];

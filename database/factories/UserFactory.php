@@ -20,6 +20,7 @@ class UserFactory extends Factory
         return [
             'first_name' => $this->faker->word(),
             'last_name' => $this->faker->word(),
+            'username' => $this->faker->unique()->word().'_'.$this->faker->randomNumber($nbDigits = NULL).'_'.str_replace('.','',explode(' ',microtime())[1]),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => Hash::make(12345678), // password

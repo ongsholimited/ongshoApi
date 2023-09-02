@@ -43,7 +43,7 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        // return response()->json(['message'=>'Photo Uploaded Success']);
+        return response()->json(['message'=>'Photo Uploaded Success']);
         // return $request->file('images')->getSize();
         $validator=Validator::make($request->all(),[
             "images"=>"required|max:2048|mimes:jpg,png,gif,jpeg",

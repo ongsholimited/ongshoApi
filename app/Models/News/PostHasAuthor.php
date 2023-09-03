@@ -16,5 +16,8 @@ class PostHasAuthor extends Model
     public function details(){
         return $this->setConnection('mysql')->belongsTo('App\Models\User','author_id','id');
     }
-    
+    public function post()
+    {
+        return $this->belongsTo(Post::class,'post_id','id');
+    }
 }

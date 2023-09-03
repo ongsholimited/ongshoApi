@@ -90,7 +90,7 @@ class UserController extends Controller
     {
         $customer= User::where('first_name','like','%'.$request->searchTerm.'%')->orWhere('last_name','like','%'.$request->searchTerm.'%')->orWhere('email','like','%'.$request->searchTerm.'%')->take(15)->get();
         foreach ($customer as $value){
-             $set_data[]=['id'=>$value->id,'text'=>$value->first_name.' '.$value->last_name.'('.$value->email.')'];
+             $set_data[]=['id'=>$value->id,'text'=>$value->username];
          }
          if(isset($set_data)){
             return response()->json($set_data);

@@ -321,7 +321,7 @@ $(document).ready(function() {
       html="";
       res.data.forEach(function(d){
         html+=`<div class="col-12 col-md-3">
-                <img style="max-height:150px;" onclick='addImage(this.src)' src="{{asset('storage/post_images')}}/`+d.name+`" alt="image" class='img-fluid'>
+                <img style="max-height:150px;" onclick='addImage(this.src)' src="{{asset('storage/media/images/news')}}/`+d.name+`" alt="image" class='img-fluid'>
                </div>`
       })
       $('.all-images').html(html);
@@ -335,7 +335,16 @@ $(document).ready(function() {
       console.log($(this).parent().remove());
   })
   $(document).on('click','#add_author',function(){
-    user=$('user').val();
-     
+    user=$('#user').val();
+     usertext=$('#user option:selected').text();
+     console.log(usertext)
+     html=`
+     <div class='m-1'>
+          <input type="hidden" value='`+user+`' name='author[]'>
+          <span class>`+usertext+`</span>
+          <button class="btn btn-xs btn-danger ml-1 float-right removeAuthor">X</button>
+      </div>
+     `
+     $('#all_users').append(html)
   })
 </script>

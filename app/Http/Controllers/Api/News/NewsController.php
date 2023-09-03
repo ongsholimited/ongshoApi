@@ -244,6 +244,20 @@ class NewsController extends Controller
         }
         return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
     }
+    public function getPostByUser(Request $request)
+    {
+        $validator=Validator::make($request->all(),[
+            'limit'=>"required|numeric|min:1|max:50",
+            'offset'=>"required|numeric|min:0|max:50",
+        ]);
+        if($validator->passes()){
+            $post=PostHasAuthor::with(['post'=>function($q)use($request){
+                $q->with('categories.category')->skip($request->offset)->take($request->limit)->where('date','<',time())->where('status',Constant::POST_STATUS['public'])->orderBy('id','desc');
+            },'details'])->where('author_id',Auth::user()->id)->get();
+            return response()->json($post);
+        }
+        return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
+    }
     public function getPost(Request $request)
     {
         $validator=Validator::make($request->all(),[

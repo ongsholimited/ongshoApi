@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Validator;
 use Storage;
 use App\Models\news\Image;
+use Str;
 class ImagesController extends Controller
 {
     /**
@@ -53,15 +54,16 @@ class ImagesController extends Controller
         ]);
         if($validator->passes()){
              foreach($request->images as $img){
+               $microtime=explode(' ',microtime(false));
                $ext= $img->getClientOriginalExtension();
-               $f_name=time().'_'.date('d_m_Y');
+               $f_name=str_replace($ext,'',Str::slug($img->getClientOriginalName(),'-')).'_'.$microtime[1]+str_replace('.','',$microtime[0]).'_'.date('d_m_Y');
                $image=new Image;
                $image->name=$f_name.'.'.$ext;
                $image->folder_id=$request->galary;
                $image->author_id=auth()->user()->id;
                $image->save();
                if($image){
-                   Storage::putFileAs('public/media/images/news/post_images',$img,$f_name.'.'.$ext);
+                   Storage::putFileAs('public/media/images/news/',$img,$f_name.'.'.$ext);
                }
                return response()->json(['message'=>'Photo Uploaded Success']);
              }

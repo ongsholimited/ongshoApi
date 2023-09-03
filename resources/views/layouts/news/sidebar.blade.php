@@ -57,6 +57,14 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="{{URL::to('/news/section')}}" class="nav-link">
+              <i class="nav-icon fas fa-donate"></i>
+              <p>
+                Manage Section
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-cog"></i>
                 <p>

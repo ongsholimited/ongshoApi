@@ -56,10 +56,11 @@ class NewsController extends Controller
         //  return $request->all();
         if($request->status==Constant::POST_STATUS['public']){
             $isRequired='required';
-        }
+        }else{
             $isRequired='nullable';
+        }
             $validator=Validator::make($request->all(),[
-            'feature_image'=>$isRequired."|mimes:jpg,jpeg,png,gif|max:2048",
+            'feature_image'=>$isRequired."|max:250|min:1",
             'category'=>$isRequired."|array",
             'category.*'=>$isRequired."|regex:/^([0-9]+)$/",
             'title'=>"required|max:250|min:1",
@@ -87,12 +88,10 @@ class NewsController extends Controller
                     'slug'=>Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
                     'date'=>(isset($request->date) ? strtotime($request->date) : strtotime(date('d-m-Y h:i:s'))  ),
                     'status'=>$request->status,
-                    'feature_image'=>$request->hasFile('feature_image') ? ($f_name.'.'.$ext) : 'no-image.jpg' ,
+                    'feature_image'=>isset($request->feature_image)  ? $request->feature_image : 'no-image.jpg' ,
                     'post_type'=>$request->post_type
                 ]);
-                if($post and $request->hasFile('feature_image')){
-                    Storage::putFileAs('public/media/images/news',$img,$f_name.'.'.$ext);
-                }
+                
                 Slug::create([
                     'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
                     'slug_type'=> 'post',
@@ -150,10 +149,10 @@ class NewsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //  return $request->all();
+         return $request->all();
 
         $validator=Validator::make($request->all(),[
-            'feature_image'=>"nullable|mimes:jpg,jpeg,png,gif|max:2048",
+            'feature_image'=>"nullable|max:250|min:1",
             'category'=>"required|array",
             'category.*'=>"required|regex:/^([0-9]+)$/",
             'title'=>"required|max:250|min:1",
@@ -182,10 +181,6 @@ class NewsController extends Controller
                     'feature_image'=>$f_name.'.'.$ext,
                     'post_type'=>$request->post_type
                 ]);
-                if($post){
-                    
-                    Storage::putFileAs('public/media/images/news',$img,$f_name.'.'.$ext);
-                }
                 Slug::create([
                     'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
                     'slug_type'=> 'post',
@@ -202,7 +197,6 @@ class NewsController extends Controller
                     'author_id'=> Auth::user()->id,
                 ]);
             });
-            
                 return response()->json(['status'=>true,'message'=>'Post Added Success']);
             }
             return response()->json(['error'=>$validator->getMessageBag()]);

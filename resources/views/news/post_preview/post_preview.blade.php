@@ -234,9 +234,8 @@
      <script src="{{ asset('vendor/ajax-file-uploader/dist/jquery.uploader.min.js') }}"></script>
      <script src="{{ asset('vendor/tagify/dist/tagify.js') }}"></script>
      <script src="{{ asset('storage/plugins/ckeditor/build/ckeditor.js') }}"></script>
-     @include('news.post_preview.internal-assets.js.script')
      <script>
-         let editorInstance;
+         var editorInstance;
          ClassicEditor
              .create(document.querySelector('#content'))
              .then(editor => {
@@ -254,4 +253,6 @@
                  console.error(error);
              });
      </script>
+     @include('news.post_preview.internal-assets.js.script')
+
  @endsection

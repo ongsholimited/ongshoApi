@@ -119,7 +119,6 @@ function submitPost(){
 $(document).delegate("#modalBtn", "click", function(event){
     clear();
     $('#exampleModalLabel').text('Add New Post');
-
 });
 $(document).delegate(".editRow", "click", function(){
     $('#exampleModalLabel').text('Update Post');
@@ -328,7 +327,8 @@ $(document).ready(function() {
     })
   }
   function addImage(url){
-    $('#content').summernote('insertImage', url);
+    console.log(url);
+    $('.ck-content').text(url);
   }
   $(document).on('click','.removeAuthor',function(){
       event.preventDefault();
@@ -346,5 +346,22 @@ $(document).ready(function() {
       </div>
      `
      $('#all_users').append(html)
+  })
+
+  $(document).on('focus','.ck-content',function(event){
+    if (editorInstance) {
+      const imageUrl = "https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png"; // Replace with the actual image URL
+      
+      editorInstance.model.change(writer => {
+        // Create a new image element and set its attributes
+        const imageElement = writer.createElement('image', {
+          src: imageUrl,
+          alt: 'Image description',
+        });
+        console.log(imageElement)
+        // Insert the image at the current cursor position
+        editorInstance.model.insertContent(imageElement, editorInstance.model.document.selection.getFirstPosition())
+      });
+    }
   })
 </script>

@@ -61,7 +61,7 @@ class SectionController extends Controller
     {
         $validator=Validator::make($request->all(),[
             'category'=>"required|max:20|min:1",
-            'name'=>"required|max:200|min:1|unique:ongsho_news.menus,name",
+            'name'=>"required|max:200|min:1|unique:ongsho_news.home_sections,name",
             'serial'=>"required|max:200|min:1",
         ]);
         if($validator->passes()){

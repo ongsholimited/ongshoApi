@@ -138,7 +138,7 @@ class ImageController extends Controller
             'offset'=>"required|numeric|min:0|max:50",
         ]);
         if($validator->passes()){
-            $image=Image::where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->get();
+            $image=Image::where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
             return response()->json($image);
         }
         return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);

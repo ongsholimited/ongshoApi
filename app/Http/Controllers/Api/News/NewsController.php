@@ -148,7 +148,11 @@ class NewsController extends Controller
     public function update(Request $request, $id)
     {
         //  return $request->all();
-
+        if($request->status==Constant::POST_STATUS['public']){
+            $isRequired='required';
+        }else{
+            $isRequired='nullable';
+        } 
         $validator=Validator::make($request->all(),[
             'feature_image'=>$isRequired."|max:250|min:1",
             'category'=>$isRequired."|array",

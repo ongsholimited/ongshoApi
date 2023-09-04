@@ -13,11 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('post_views', function (Blueprint $table) {
+        Schema::connection('ongsho_news')->create('post_views', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('post_id');
             $table->string('ip');
-            $table->string('user');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('post_views');
+        Schema::connection('ongsho_news')->dropIfExists('post_views');
     }
 };

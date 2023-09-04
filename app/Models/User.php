@@ -58,7 +58,7 @@ class User extends Authenticatable
         return $this->hasOne(InstUsers::class,'ongsho_id','id');
     }
     public function badges(){
-        return $this->belongsTo(UserHasBadge::class,'id','user_id');
+        return $this->belongsTo(UserHasBadge::class,'id','user_id')->where('badge_key','news_verified');
     }
     // public function news_verify(){
     //     return $this->belongsTo(UserHasBadge::class,'user_id','id');

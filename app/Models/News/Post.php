@@ -10,7 +10,7 @@ class Post extends Model
 {
     use HasFactory;
     protected $connection='ongsho_news';
-    protected $fillable=['title','slug','content','focus_keyword','date','meta_description','feature_image','post_type'];
+    protected $fillable=['title','slug','content','focus_keyword','date','meta_description','feature_image','post_type','status','is_scheduled'];
     
     public function categories(){
         return $this->hasMany(PostHasCategory::class,'post_id','id');

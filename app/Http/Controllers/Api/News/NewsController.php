@@ -218,7 +218,7 @@ class NewsController extends Controller
     public function destroy($id)
     {
         $post=PostHasAuthor::with(['post'=>function($q){
-            $q->update('status',Constant::POST_STATUS['deleted']);
+            $q->update(['status'=>Constant::POST_STATUS['deleted']]);
         }])->where('post_id',$id)->where('author_id',Auth::user()->id);
         if($post){
             return response()->json(['status'=>true,'message'=>'Post Deleted Success']);

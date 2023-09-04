@@ -135,7 +135,7 @@ class NewsController extends Controller
      */
     public function edit($id)
     {
-        //
+        return response()->json();
     }
 
     /**
@@ -161,7 +161,7 @@ class NewsController extends Controller
         ]);
         if($validator->passes()){
 
-            DB::transaction(function() use($request){
+            DB::transaction(function() use($request,$id){
                 $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
               
                 $post=Post::where('id',$id)->update([
@@ -183,6 +183,7 @@ class NewsController extends Controller
                     'post_id'=> $post->id,
                 ]);
                 if(isset($request->category)>0){
+                    PostHasCategory::where('post_id',$post->id)->delete();
                     for($i=0;$i<count($request->category);$i++){
                         PostHasCategory::create([
                             'post_id'=>$post->id,
@@ -190,7 +191,7 @@ class NewsController extends Controller
                         ]);
                     }
                 }   
-                PostHasAuthor::create([
+                PostHasAuthor::where('post_id',$post->id)->where('author_id',Auth::user()->id)->update([
                     'post_id'=> $post->id,
                     'author_id'=> Auth::user()->id,
                 ]);
@@ -297,7 +298,7 @@ class NewsController extends Controller
             // return 'xx';
             $post=HomeSection::with(['post'=>function($query) use ($request){
                     $query->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->take($request->limit)->skip($request->offset)->orderBy('date','desc');
-                },'post.author.details'])->whereHas('post')->where('serial',$serial)->first();
+                },'post.author.details.badges'])->whereHas('post')->where('serial',$serial)->first();
             return response()->json($post);
         }
         return response()->json(['status'=>false,'error'=>'something went wrong']);

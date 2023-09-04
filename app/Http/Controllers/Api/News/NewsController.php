@@ -147,17 +147,21 @@ class NewsController extends Controller
      */
     public function update(Request $request, $id)
     {
-         return $request->all();
+        //  return $request->all();
 
         $validator=Validator::make($request->all(),[
-            'feature_image'=>"nullable|max:250|min:1",
-            'category'=>"required|array",
-            'category.*'=>"required|regex:/^([0-9]+)$/",
+            'feature_image'=>$isRequired."|max:250|min:1",
+            'category'=>$isRequired."|array",
+            'category.*'=>$isRequired."|regex:/^([0-9]+)$/",
             'title'=>"required|max:250|min:1",
-            'meta_description'=>"required|max:250|min:1",
-            'content'=>"required|max:60000|min:1",
-            'focus_keyword'=>"required|max:500|min:1",
-            'slug'=>"required|max:250|min:1|unique:ongsho_news.slugs,slug_name,".$id,
+            'meta_description'=>$isRequired."|max:250|min:1",
+            'content'=>$isRequired."|max:60000|min:1",
+            'focus_keyword'=>"nullable|max:500|min:1",
+            'slug'=>"required|max:250|min:1",
+            'status'=>['required','max:250','min:1',new PostStatusRule],
+            'post_type'=>"required|max:250|min:1",
+            'date'=>"required|max:30",
+            'is_scheduled'=>"required|numeric|min:0|max:1",
         ]);
         if($validator->passes()){
 

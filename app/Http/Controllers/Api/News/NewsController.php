@@ -76,11 +76,7 @@ class NewsController extends Controller
         if($validator->passes()){
             DB::transaction(function() use($request){
                 $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
-                if($request->hasFile('feature_image')){
-                    $img=$request->feature_image;
-                    $ext= $img->getClientOriginalExtension();
-                    $f_name=time().'_'.date('d_m_Y');
-                }
+                
                 $post=Post::create([
                     'title'=>$request->title,
                     'meta_description'=>$request->meta_description,
@@ -167,33 +163,33 @@ class NewsController extends Controller
 
             DB::transaction(function() use($request){
                 $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
-                if($request->hasFile('feature_image')){
-                    $img=$request->feature_image;
-                    $ext= $img->getClientOriginalExtension();
-                    $f_name=time().'_'.date('d_m_Y');
-                }
+              
                 $post=Post::where('id',$id)->update([
                     'title'=>$request->title,
                     'meta_description'=>$request->meta_description,
                     'content'=>$request->content,
                     'focus_keyword'=>$request->focus_keyword,
                     'slug'=>Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
-                    'date'=>strtotime(date('d-m-Y h:i:s')),
-                    'status'=>Constant::POST_STATUS['review'],
-                    'feature_image'=>$f_name.'.'.$ext,
-                    'post_type'=>$request->post_type
+                    'date'=>(isset($request->date) ? strtotime($request->date) : strtotime(date('d-m-Y h:i:s'))  ),
+                    'status'=>$request->status,
+                    'feature_image'=>isset($request->feature_image)  ? $request->feature_image : 'no-image.jpg' ,
+                    'post_type'=>$request->post_type,
+                    'is_scheduled'=>$request->is_scheduled,
                 ]);
-                Slug::create([
+                
+                Slug::where('post_id',$id)->update([
                     'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
                     'slug_type'=> 'post',
                     'post_id'=> $post->id,
                 ]);
-                for($i=0;count($request->category)<$i;$i++){
-                    PostHasCategory::create([
-                        'post_id'=>$post->id,
-                        'category_id'=>$request->category[$i],
-                    ]);
-                }
+                if(isset($request->category)>0){
+                    for($i=0;$i<count($request->category);$i++){
+                        PostHasCategory::create([
+                            'post_id'=>$post->id,
+                            'category_id'=>$request->category[$i],
+                        ]);
+                    }
+                }   
                 PostHasAuthor::create([
                     'post_id'=> $post->id,
                     'author_id'=> Auth::user()->id,
@@ -301,7 +297,7 @@ class NewsController extends Controller
             // return 'xx';
             $post=HomeSection::with(['post'=>function($query) use ($request){
                     $query->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->take($request->limit)->skip($request->offset)->orderBy('date','desc');
-                },'post.author'])->whereHas('post')->where('serial',$serial)->first();
+                },'post.author.details'])->whereHas('post')->where('serial',$serial)->first();
             return response()->json($post);
         }
         return response()->json(['status'=>false,'error'=>'something went wrong']);

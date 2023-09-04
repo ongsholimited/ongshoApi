@@ -217,11 +217,12 @@ class NewsController extends Controller
      */
     public function destroy($id)
     {
-        $post=PostHasAuthor::with(['post'=>function($q){
-            $q->update(['status'=>Constant::POST_STATUS['deleted']]);
-        }])->where('post_id',$id)->where('author_id',Auth::user()->id);
-        if($post){
-            return response()->json(['status'=>true,'message'=>'Post Deleted Success']);
+        $post=PostHasAuthor::where('post_id',$id)->where('author_id',Auth::user()->id)->count();
+        if($post>0){
+            $del=Post::where('id',$id)->update(['status'=>Constant::POST_STATUS['deleted']]);
+            if($del){
+                return response()->json(['status'=>true,'message'=>'Post Deleted Success']);
+            }
         }
         return response()->json(['status'=>false,'error'=>'Something Went Wrong']);
 

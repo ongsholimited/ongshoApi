@@ -120,28 +120,66 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
+       return $request->all();
+       if($request->status==Constant::POST_STATUS['public']){
+        $isRequired='required';
+        }else{
+            $isRequired='nullable';
+        }
+        $data=$request->all();
+        $data['category']=explode(',',$request->category);
+        $data['author']=explode(',',$request->author);
         $validator=Validator::make($request->all(),[
-            'category'=>"required|max:20|min:1",
-            'title'=>"required|max:250|min:1",
-            'short_description'=>"required|max:250|min:1",
-            'content'=>"required|max:1000|min:1",
-            'tags'=>"required|max:250|min:1",
-        ]);
-        if($validator->passes()){
-                $post=new Post;
-                $post->category_id=$request->category;
-                $post->title=$request->title;
-                $post->short_description=$request->short_description;
-                $post->content=$request->content;
-                $post->tags=$request->tags;
-                $post->date=strtotime(date('d-m-Y'));
-                $post->author_id=auth()->user()->id;
-                $post->status=1;
-                $post->save();
-            if ($post) {
-                return response()->json(['message'=>'Post Added Success']);
-            }
+        'feature_image'=>$isRequired."|max:250|min:1",
+        'category'=>$isRequired."|array",
+        'category.*'=>$isRequired."|regex:/^([0-9]+)$/",
+        'title'=>"required|max:250|min:1",
+        'meta_description'=>$isRequired."|max:250|min:1",
+        'content'=>$isRequired."|max:60000|min:1",
+        'focus_keyword'=>"nullable|max:500|min:1",
+        'slug'=>"required|max:250|min:1",
+        'status'=>['required','max:250','min:1',new PostStatusRule],
+        'post_type'=>"required|max:250|min:1",
+        'date'=>"required|max:30",
+        'is_scheduled'=>"required|numeric|min:0|max:1",
+    ]);
+    if($validator->passes()){
+        DB::transaction(function() use($request){
+            $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
+            
+            $post=Post::create([
+                'title'=>$request->title,
+                'meta_description'=>$request->meta_description,
+                'content'=>$request->content,
+                'focus_keyword'=>$request->focus_keyword,
+                'slug'=>Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
+                'date'=>(isset($request->date) ? strtotime($request->date) : strtotime(date('d-m-Y h:i:s'))  ),
+                'status'=>$request->status,
+                'feature_image'=>isset($request->feature_image)  ? $request->feature_image : 'no-image.jpg' ,
+                'post_type'=>$request->post_type,
+                'is_scheduled'=>$request->is_scheduled,
+            ]);
+            
+            Slug::create([
+                'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
+                'slug_type'=> 'post',
+                'post_id'=> $post->id,
+            ]);
+            if(isset($request->category)>0){
+                for($i=0;$i<count($request->category);$i++){
+                    PostHasCategory::create([
+                        'post_id'=>$post->id,
+                        'category_id'=>$request->category[$i],
+                    ]);
+                }
+            }   
+            PostHasAuthor::create([
+                'post_id'=> $post->id,
+                'author_id'=> Auth::user()->id,
+            ]);
+        });
+        
+        return response()->json(['status'=>true,'message'=>'Post Added Success']);
         }
         return response()->json(['error'=>$validator->getMessageBag()]);
     }

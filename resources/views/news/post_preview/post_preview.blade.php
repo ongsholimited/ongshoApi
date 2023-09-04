@@ -100,6 +100,7 @@
                              </div>
                          </div>
                          <div class="col-12 col-md-3">
+                            
                              <div class="form-group overflow-auto" style="max-height:200px;">
                                  <label for="">Category</label>
                                  @php
@@ -120,7 +121,7 @@
                                      @endphp
                                      <div class="form-check">
                                          <input class="form-check-input" type="checkbox" name='category[]'
-                                             {{ $exist ? 'checked' : '' }}>
+                                             {{ $exist ? 'checked' : '' }} value="{{$cat->id}}">
                                          <label class="form-check-label" for="category">
                                              {{ $cat->name }}
                                          </label>
@@ -151,7 +152,7 @@
                              </div>
                              {{-- published Status --}}
                              <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">Focus Keyword:</label>
+                                <label for="recipient-name" class="col-form-label">Status:</label>
                                 <select class="form-control" name="status" id="status">
                                 <option value="">--select--</option>
                                 @php
@@ -166,6 +167,24 @@
                                 </div>
                             </div>
                              {{-- status end --}}
+                             {{-- post type --}}
+                             <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Post Type:</label>
+                                <select class="form-control" name="status" id="status">
+                                <option value="">--select--</option>
+                                @php
+                                    $post_type=App\Helpers\Constant::POST_TYPE;
+                                    $selected=App\Helpers\Constant::POST_TYPE['general'];
+                                @endphp
+                                @foreach($post_type as $stats_key=> $stats)
+                                
+                                <option {{$stats==$post->post_type ? "selected" : ''}} value="{{$stats}}">{{ucfirst(str_replace('_',' ',$stats_key))}}</option>
+                                @endforeach
+                                </select>
+                                <div class="invalid-feedback" id="focus_keyword_msg">
+                                </div>
+                            </div>
+                            {{-- post type end --}}
                              {{-- submit btn --}}
                              <div class="mt-5">
                                 {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Clear</button> --}}

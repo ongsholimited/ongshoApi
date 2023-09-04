@@ -75,29 +75,38 @@ window.formRequest= function(){
 
 function submitPost(){
     $('input,select').removeClass('is-invalid');
-    let category=$("#category").val();
     let title=$("#title").val();
-    let short_description=$("#short_description").val();
-    let content=$("#content").val();
-    let tag=$("#tags").val();
-    console.log(tags)
-    if(tag!=''){
-      tags=JSON.parse(tag);
-      tag="";
-      tags.forEach(function(d){
-        tag+=d.value+',';
-      })
-      console.log(tag);
-    }
+    let slug=$("#slug").val();
     
-
+    let short_description=$("#short_description").val();
+    let content=editorInstance.getData();
+    let focus_keyword=$("#focus_keyword").val();
+    let category=$("input[name='category[]']:checked").map(function(){
+        return $(this).val();
+    }).get();
+    let author=$("input[name='author[]']").map(function(){
+        return $(this).val();
+    }).get();
+    let status=$('#status').val();
+    let post_type=$('#post_type').val();
+    console.log(title,slug,short_description,content,focus_keyword,category,author,status,post_type)
+    tag='';
+    focus_keyword=JSON.parse(focus_keyword);
+    focus_keyword.map((item,index)=>{
+      tag+=item.value+(focus_keyword.length!==(index+1) ? ',': '');
+    })
+    console.log(tag)
     var formData= new FormData();
     
     formData.append('category',category);
     formData.append('title',title);
+    formData.append('slug',slug);
     formData.append('short_description',short_description);
     formData.append('content',content);
-    formData.append('tags',tag);
+    formData.append('focus_keyword',tag);
+    formData.append('author',author);
+    formData.append('status',status);
+    formData.append('post_type',post_type);
     $('#exampleModalLabel').text('Add New Post');
     
     //axios post request
@@ -203,14 +212,7 @@ function clear(){
 //       console.error(error);
 //     });
 $(document).ready(function() {
-  // $('#content').summernote({
-  //   height: 300, // set editor height
-  //   callbacks: {
-  //     onImageUpload: function(files) {
-  //       uploadImage(files[0]);
-  //     }
-  //   }
-  // })
+
   showFolder()
   showImage();
   var input = document.querySelector('#focus_keyword');

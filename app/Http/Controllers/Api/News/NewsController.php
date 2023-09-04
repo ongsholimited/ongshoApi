@@ -237,7 +237,7 @@ class NewsController extends Controller
             // return 'xx';
             $post=Category::with(['post'=>function($q) use($request){
                 $q->with('author.details.badges')->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('date','desc');
-            }])->whereHas('post')->where('slug',$category_slug)->get();
+            }])->whereHas('post')->where('slug',$category_slug)->first();
             
             // where('category_id',$category->id)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
             return response()->json($post);

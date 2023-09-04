@@ -54,7 +54,7 @@ class NewsController extends Controller
     public function store(Request $request)
     {
         //  return $request->all();
-            if($request->status==Constant::POST_STATUS['public']){
+            if($request->status==Constant::POST_STATUS['review']){
                 $isRequired='required';
             }else{
                 $isRequired='nullable';
@@ -148,7 +148,7 @@ class NewsController extends Controller
     public function update(Request $request, $id)
     {
         //  return $request->all();
-        if($request->status==Constant::POST_STATUS['public']){
+        if($request->status==Constant::POST_STATUS['review']){
             $isRequired='required';
         }else{
             $isRequired='nullable';
@@ -204,7 +204,7 @@ class NewsController extends Controller
                     'author_id'=> Auth::user()->id,
                 ]);
             });
-                return response()->json(['status'=>true,'message'=>'Post Added Success']);
+                return response()->json(['status'=>true,'message'=>'Post Updated Success']);
             }
             return response()->json(['error'=>$validator->getMessageBag()]);
     }

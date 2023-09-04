@@ -60,4 +60,7 @@ class User extends Authenticatable
     public function badges(){
         return $this->hasMany(UserHasBadge::class,'user_id','id');
     }
+    public function news_verify(){
+        return $this->belongsTo(UserHasBadge::class,'user_id','id');
+    }
 }

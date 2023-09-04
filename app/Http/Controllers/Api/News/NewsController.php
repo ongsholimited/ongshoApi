@@ -54,11 +54,11 @@ class NewsController extends Controller
     public function store(Request $request)
     {
         //  return $request->all();
-        if($request->status==Constant::POST_STATUS['public']){
-            $isRequired='required';
-        }else{
-            $isRequired='nullable';
-        }
+            if($request->status==Constant::POST_STATUS['public']){
+                $isRequired='required';
+            }else{
+                $isRequired='nullable';
+            }   
             $validator=Validator::make($request->all(),[
             'feature_image'=>$isRequired."|max:250|min:1",
             'category'=>$isRequired."|array",
@@ -71,6 +71,7 @@ class NewsController extends Controller
             'status'=>['required','max:250','min:1',new PostStatusRule],
             'post_type'=>"required|max:250|min:1",
             'date'=>"required|max:30",
+            'is_scheduled'=>"required|numeric|min:0|max:1",
         ]);
         if($validator->passes()){
             DB::transaction(function() use($request){
@@ -89,7 +90,8 @@ class NewsController extends Controller
                     'date'=>(isset($request->date) ? strtotime($request->date) : strtotime(date('d-m-Y h:i:s'))  ),
                     'status'=>$request->status,
                     'feature_image'=>isset($request->feature_image)  ? $request->feature_image : 'no-image.jpg' ,
-                    'post_type'=>$request->post_type
+                    'post_type'=>$request->post_type,
+                    'is_scheduled'=>$request->is_scheduled,
                 ]);
                 
                 Slug::create([

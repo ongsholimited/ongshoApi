@@ -217,11 +217,7 @@ class NewsController extends Controller
      */
     public function destroy($id)
     {
-        $post=Post::where('id',$id)->where('author_id',Auth::user()->id)->first();
-        if(isset($post->feature_image) and $post->feature_image!=null){
-            unlink(storage_path('app/public/post_images/'.$post->feature_image));
-        }
-        $post->delete();
+        $post=Post::where('id',$id)->update('status',Constant::POST_STATUS['deleted']);
         if($post){
             return response()->json(['status'=>true,'message'=>'Post Deleted Success']);
         }

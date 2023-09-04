@@ -199,8 +199,8 @@ class NewsController extends Controller
                         ]);
                     }
                 }   
-                PostHasAuthor::where('post_id',$post->id)->where('author_id',Auth::user()->id)->update([
-                    'post_id'=> $post->id,
+                PostHasAuthor::where('post_id',$id)->where('author_id',Auth::user()->id)->update([
+                    'post_id'=> $id,
                     'author_id'=> Auth::user()->id,
                 ]);
             });

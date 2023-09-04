@@ -188,13 +188,13 @@ class NewsController extends Controller
                 Slug::where('post_id',$id)->update([
                     'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
                     'slug_type'=> 'post',
-                    'post_id'=> $post->id,
+                    'post_id'=> $id,
                 ]);
                 if(isset($request->category)>0){
                     PostHasCategory::where('post_id',$post->id)->delete();
                     for($i=0;$i<count($request->category);$i++){
                         PostHasCategory::create([
-                            'post_id'=>$post->id,
+                            'post_id'=>$id,
                             'category_id'=>$request->category[$i],
                         ]);
                     }

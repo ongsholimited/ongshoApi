@@ -299,7 +299,7 @@ class NewsController extends Controller
             // return 'xx';
             $post=HomeSection::with(['post'=>function($query) use ($request){
                     $query->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->take($request->limit)->skip($request->offset)->orderBy('date','desc');
-                },'post.author'])->whereHas('post')->where('serial',$serial)->get();
+                },'post.author'])->whereHas('post')->where('serial',$serial)->first();
             return response()->json($post);
         }
         return response()->json(['status'=>false,'error'=>'something went wrong']);

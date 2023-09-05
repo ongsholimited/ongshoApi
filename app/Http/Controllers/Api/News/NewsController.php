@@ -252,8 +252,8 @@ class NewsController extends Controller
             'offset'=>"required|numeric|min:0|max:50",
         ]);
         if($validator->passes()){
-            $post=PostHasAuthor::with('post')->whereHas('post',function($q){
-                $q->with('categories.category')->where('status','!=',Constant::POST_STATUS['deleted'])->orderBy('id','desc');
+            $post=PostHasAuthor::with('post.categories.category','details')->whereHas('post',function($q){
+                $q->where('status','!=',Constant::POST_STATUS['deleted'])->orderBy('id','desc');
             })->where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->get();
             return response()->json($post);
         }

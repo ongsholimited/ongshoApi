@@ -324,11 +324,11 @@ class NewsController extends Controller
         }
         return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
     }
-    public function getPostPreview($slug){
+    public function getPostPreview($id){
         
         $post=Post::with(['categories.category','author.details'=>function($query){
                 $query->with('badges');
-            }])->where('status','!=',Constant::POST_STATUS['deleted'])->where('slug',$slug)->first();
+            }])->where('status','!=',Constant::POST_STATUS['deleted'])->where('id',$id)->first();
         
         return response()->json($post);
         

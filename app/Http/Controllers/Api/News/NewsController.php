@@ -110,7 +110,7 @@ class NewsController extends Controller
                 ]);
             });
             
-            return response()->json(['status'=>true,'message'=>'Post Added Success','post_id'=>$this->post->id,$this->post->slug]);
+            return response()->json(['status'=>true,'message'=>'Post Added Success','post_id'=>$this->post->id,'slug'=>$this->post->slug]);
             }
             return response()->json(['error'=>$validator->getMessageBag()]);
         }

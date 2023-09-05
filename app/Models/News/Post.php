@@ -25,7 +25,7 @@ class Post extends Model
         return $this->scheduled_at!==null? $this->scheduled_at : $this->date;
     }
 
-    public function getCategoryAttribute(){
+    public function getCategoriesAttribute(){
         $this->categories->pluck('category_id')->toArray();
     }
 }

@@ -254,7 +254,7 @@ class NewsController extends Controller
         if($validator->passes()){
             $post=PostHasAuthor::with('details')->has('post',function($q)use($request){
                 $q->with('categories.category')->where('status','!=',Constant::POST_STATUS['deleted'])->orderBy('id','desc');
-            })->whereHas('post')->where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->get();
+            })->where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->get();
             return response()->json($post);
         }
         return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);

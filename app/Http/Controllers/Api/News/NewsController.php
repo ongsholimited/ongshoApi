@@ -326,7 +326,7 @@ class NewsController extends Controller
     }
     public function getPostPreview($id){
         
-        $post=Post::with(['categories.category','author.details'=>function($query){
+        $post=Post::with(['categories.category','xyz','author.details'=>function($query){
                 $query->with('badges');
             }])->where('status','!=',Constant::POST_STATUS['deleted'])->where('id',$id)->first();
         

@@ -24,8 +24,10 @@ class Post extends Model
     public function getCreatedAtAttribute(){
         return $this->scheduled_at!==null? $this->scheduled_at : $this->date;
     }
-
-    public function getCategoriesAttribute(){
+    public function xyz(){
+        return $this->xyz_ids;
+    }
+    public function getXyzIdsAttribute(){
         $this->categories->pluck('category_id')->toArray();
     }
 }

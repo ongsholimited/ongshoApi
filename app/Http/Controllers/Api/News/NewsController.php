@@ -24,6 +24,7 @@ class NewsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    private $post;
     public function __construct() {
         $this->middleware('auth:api')->only(['store','destroy','update']);
     }
@@ -89,7 +90,7 @@ class NewsController extends Controller
                     'post_type'=>$request->post_type,
                     'is_scheduled'=>$request->is_scheduled,
                 ]);
-                
+                $this->post=$post;
                 Slug::create([
                     'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
                     'slug_type'=> 'post',
@@ -109,7 +110,7 @@ class NewsController extends Controller
                 ]);
             });
             
-            return response()->json(['status'=>true,'message'=>'Post Added Success']);
+            return response()->json(['status'=>true,'message'=>'Post Added Success','post_id'=>$this->post->id,$this->post->slug]);
             }
             return response()->json(['error'=>$validator->getMessageBag()]);
         }

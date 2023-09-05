@@ -18,6 +18,6 @@ class PostHasAuthor extends Model
     }
     public function post()
     {
-        return $this->hasOne(Post::class,'id','post_id');
+        return $this->belongsTo(Post::class,'post_id','id');
     }
 }

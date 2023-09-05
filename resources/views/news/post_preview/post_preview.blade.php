@@ -7,6 +7,9 @@
      <link rel="stylesheet" href="{{ asset('vendor/ajax-file-uploader/css/jquery.uploader.css') }}">
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css">
      <link rel="stylesheet" href="{{ asset('vendor/tagify/dist/tagify.css') }}">
+     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
  @endsection
  @section('content')
      <!-- Content Header (Page header) -->
@@ -100,7 +103,10 @@
                              </div>
                          </div>
                          <div class="col-12 col-md-3">
-                            
+                            <div class="form-group">
+                                <input type="hidden" id="feature_image" value="{{$post->feature_image}}">
+                                <img class="img-fluid rounded" src="{{asset('storage/media/images/news/'.$post->feature_image)}}" alt="" style="height:150px;width:250px;">
+                            </div>
                              <div class="form-group overflow-auto" style="max-height:200px;">
                                  <label for="">Category</label>
                                  @php
@@ -185,6 +191,18 @@
                                 </div>
                             </div>
                             {{-- post type end --}}
+                            {{-- is schedule --}}
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="is_scheduled"
+                                        {{ $post->is_scheduled ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="category">
+                                        Schedule
+                                    </label>
+                                </div>
+                                <input class="form-control form-control-sm" id='date' type="text">
+                            </div>
+                            {{-- end schedule --}}
                              {{-- submit btn --}}
                              <div class="mt-5">
                                 {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Clear</button> --}}

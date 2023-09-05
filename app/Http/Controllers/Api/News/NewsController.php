@@ -252,9 +252,9 @@ class NewsController extends Controller
             'offset'=>"required|numeric|min:0|max:50",
         ]);
         if($validator->passes()){
-            $post=PostHasAuthor::with('post')->has('post','!=',null,'and',function($q)use($request){
+            $post=PostHasAuthor::with(['post'=>function($q){
                 $q->with('categories.category')->where('status','!=',Constant::POST_STATUS['deleted'])->orderBy('id','desc');
-            })->where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->get();
+            }])->has('post','!=',null)->where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->get();
             return response()->json($post);
         }
         return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);

@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Route;
 //     Route::get('test', 'TestController@test');
 // });
 Route::group([
-    'middleware' => 'api',
+    'middleware' => ['api'],
     'namespace' => 'App\Http\Controllers\Api'
 ], function ($router) {
     Route::get('check-username/{username}', 'AuthController@checkUsername');

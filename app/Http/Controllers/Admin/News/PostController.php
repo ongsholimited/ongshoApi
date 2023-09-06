@@ -14,6 +14,7 @@ use App\Models\News\PostHasCategory;
 use App\Models\News\Slug;
 use DB;
 use Str;
+use Auth;
 class PostController extends Controller
 {
     /**
@@ -144,7 +145,7 @@ class PostController extends Controller
         'content'=>$isRequired."|max:60000|min:1",
         'focus_keyword'=>"nullable|max:500|min:1",
         'slug'=>"required|max:250|min:1",
-        'status'=>['required','numeric','max:7','min:1'],
+        'status'=>['required','numeric','max:7','min:0'],
         'post_type'=>"required|max:250|min:1",
         'date'=>"required|max:30",
         'is_scheduled'=>"required|numeric|min:0|max:1",
@@ -177,12 +178,12 @@ class PostController extends Controller
                 for($i=0;$i<count($data['category']);$i++){
                     PostHasCategory::create([
                         'post_id'=>$post->id,
-                        'category_id'=>$request->category[$i],
+                        'category_id'=>$data['category'][$i],
                     ]);
                 }
             }
         if(isset($data['author'])>0){
-                for($i=0;$i<count($request->category);$i++){
+                for($i=0;$i<count($data['author']);$i++){
                     PostHasAuthor::create([
                         'post_id'=> $post->id,
                         'author_id'=> Auth::user()->id,
@@ -190,7 +191,6 @@ class PostController extends Controller
                 }
             }
         });
-        
         return response()->json(['status'=>true,'message'=>'Post Added Success']);
         }
         return response()->json(['error'=>$validator->getMessageBag()]);
@@ -230,7 +230,73 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //    return $request->all();
+       if($request->status==Constant::POST_STATUS['public']){
+        $isRequired='required';
+        }else{
+            $isRequired='nullable';
+        }
+        $data=$request->all();
+        $data['category']=explode(',',$request->category);
+        $data['author']=explode(',',$request->author);
+        $validator=Validator::make($data,[
+        'feature_image'=>$isRequired."|max:250|min:1",
+        'category'=>$isRequired."|array",
+        'category.*'=>$isRequired."|regex:/^([0-9]+)$/",
+        'title'=>"required|max:250|min:1",
+        'meta_description'=>$isRequired."|max:250|min:1",
+        'content'=>$isRequired."|max:60000|min:1",
+        'focus_keyword'=>"nullable|max:500|min:1",
+        'slug'=>"required|max:250|min:1",
+        'status'=>['required','numeric','max:7','min:0'],
+        'post_type'=>"required|max:250|min:1",
+        'date'=>"required|max:30",
+        'is_scheduled'=>"required|numeric|min:0|max:1",
+    ]);
+
+    // return $data;
+    if($validator->passes()){
+        DB::transaction(function() use($request,$data,$id){
+            $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
+            
+            $post=Post::where('id',$id)->create([
+                'title'=>$request->title,
+                'meta_description'=>$request->meta_description,
+                'content'=>$request->content,
+                'focus_keyword'=>$request->focus_keyword,
+                'slug'=>Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
+                'date'=>(isset($request->date) ? strtotime($request->date) : strtotime(date('d-m-Y h:i:s'))  ),
+                'status'=>$request->status,
+                'feature_image'=>isset($request->feature_image)  ? $request->feature_image : 'no-image.jpg' ,
+                'post_type'=>$request->post_type,
+                'is_scheduled'=>$request->is_scheduled,
+            ]);
+            
+            Slug::where('post_id',$id)->update([
+                'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
+                'slug_type'=> 'post',
+                'post_id'=> $post->id,
+            ]);
+            if(isset($data['category'])>0){
+                for($i=0;$i<count($data['category']);$i++){
+                    PostHasCategory::create([
+                        'post_id'=>$post->id,
+                        'category_id'=>$data['category'][$i],
+                    ]);
+                }
+            }
+        if(isset($data['author'])>0){
+                for($i=0;$i<count($data['author']);$i++){
+                    PostHasAuthor::create([
+                        'post_id'=> $post->id,
+                        'author_id'=> Auth::user()->id,
+                    ]);
+                }
+            }
+        });
+        return response()->json(['status'=>true,'message'=>'Post Added Success']);
+        }
+        return response()->json(['error'=>$validator->getMessageBag()]);
     }
 
     /**

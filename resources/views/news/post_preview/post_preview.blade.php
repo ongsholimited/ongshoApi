@@ -63,7 +63,7 @@
                                  <div class="col-md-10 mr-auto ml-auto">
                                      <div class="form-group">
                                          <label for="recipient-name" class="col-form-label">Link:</label>
-                                         {{ URL::to('/') }}/<input type="text" class="form-control-sm" id="slug"
+                                         {{ URL::to('/api/news') }}/<input type="text" class="form-control-sm" id="slug"
                                              placeholder="Write Slug" value="{{ $post->slug }}">
                                          <div class="invalid-feedback" id="slug_msg">
                                          </div>
@@ -166,7 +166,7 @@
                                 @endphp
                                 @foreach($status_arr as $stats_key=> $stats)
                                 
-                                <option value="{{$stats}}">{{ucfirst(str_replace('_',' ',$stats_key))}}</option>
+                                <option {{$stats==$post->status ? 'selected' : ''}} value="{{$stats}}">{{ucfirst(str_replace('_',' ',$stats_key))}}</option>
                                 @endforeach
                                 </select>
                                 <div class="invalid-feedback" id="focus_keyword_msg">
@@ -176,7 +176,7 @@
                              {{-- post type --}}
                              <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">Post Type:</label>
-                                <select class="form-control" name="status" id="status">
+                                <select class="form-control" name="post_type" id="post_type">
                                 <option value="">--select--</option>
                                 @php
                                     $post_type=App\Helpers\Constant::POST_TYPE;

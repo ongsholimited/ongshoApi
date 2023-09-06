@@ -98,6 +98,11 @@ class AuthController extends Controller
         $revoke = Auth::user()->token()->revoke();
         return response()->json(['status'=>true,'message'=>'logout successfully done'],200);
     }
-
+    public function authCheck(){
+        if(Auth::check()){
+            return ['status'=>true,'message'=>'User Authenticated'];
+        }
+        return ['status'=>false,'message'=>'User Unauthorized'];
+    }
     
 }

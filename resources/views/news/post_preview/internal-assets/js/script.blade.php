@@ -40,6 +40,9 @@
                 "targets": [1, 2, 3]
             }]
         });
+       post_date= unixTimestampToFormattedDate(parseInt("{{$post->date}}"));
+       $('#date').val(post_date)
+
     })
 
     // $('#content').trumbowyg();
@@ -114,6 +117,7 @@
         formData.append('date', date);
         formData.append('feature_image', feature_image);
         formData.append('is_scheduled', is_scheduled);
+        
         $('#exampleModalLabel').text('Add New Post');
 
         //axios post request
@@ -388,17 +392,17 @@
     $("#date").daterangepicker({
         singleDatePicker: true,
         timePicker: true,
-        timePicker12Hour: true,
-        timePickerIncrement: 30,
+        // timePicker12Hour: true,
+        // timePickerIncrement: 30,
         locale: {
-            format: 'MM-DD-YYYY h:mm A'
+            format: 'DD-MM-YYYY h:mm A'
         }
     });
 
     function convertToUtc(dateString) {
         // Your date string
         // var dateString = "04-09-2023 12:34:56"; // Replace this with your date string
-        var inputDate = "04-09-2023 12:34:56 AM";
+        var inputDate =dateString //"04-09-2023 12:34:56 AM";
         // Convert it to a JavaScript Date object
         var dateObj = new Date(inputDate);
         // Get the Unix timestamp (milliseconds since January 1, 1970)
@@ -422,5 +426,16 @@
         const utcTimeString = `${dd}-${mm}-${yyyy} ${h}:${i}:${s}`;
         console.log(utcTimeString)
         return utcTimeString;
+    }
+    function unixTimestampToFormattedDate(unixTimestamp) {
+        const date = new Date(unixTimestamp * 1000); // Convert to milliseconds
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const amOrPm = hours < 12 ? 'AM' : 'PM';
+        const formattedDate = `${day}-${month}-${year} ${hours}:${minutes} ${amOrPm}`;
+        return formattedDate;
     }
 </script>

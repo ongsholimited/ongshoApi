@@ -194,16 +194,20 @@ class NewsController extends Controller
                 if(isset($request->category)>0){
                     PostHasCategory::where('post_id',$post->id)->delete();
                     for($i=0;$i<count($request->category);$i++){
+                        $post_has_cat=
                         PostHasCategory::create([
                             'post_id'=>$id,
                             'category_id'=>$request->category[$i],
                         ]);
                     }
-                }   
-                PostHasAuthor::where('post_id',$id)->where('author_id',Auth::user()->id)->update([
-                    'post_id'=> $id,
-                    'author_id'=> Auth::user()->id,
-                ]);
+                }
+                if(isset($request->category)>0){
+                    PostHasAuthor::where('post_id',$post->id)->delete();
+                    PostHasAuthor::create([
+                        'post_id'=> $id,
+                        'author_id'=> Auth::user()->id,
+                    ]);
+                }
             });
                 return response()->json(['status'=>true,'message'=>'Post Updated Success']);
             }

@@ -88,7 +88,7 @@ class UserController extends Controller
     }
     public function searchUser(Request $request)
     {
-        $customer= User::where('first_name','like','%'.$request->searchTerm.'%')->orWhere('last_name','like','%'.$request->searchTerm.'%')->orWhere('email','like','%'.$request->searchTerm.'%')->take(15)->get();
+        $customer= User::where('first_name','like','%'.$request->searchTerm.'%')->orWhere('last_name','like','%'.$request->searchTerm.'%')->orWhere('email','like','%'.$request->searchTerm.'%')->orWhere('username','like','%'.$request->searchTerm.'%')->take(15)->get();
         foreach ($customer as $value){
              $set_data[]=['id'=>$value->id,'text'=>$value->username];
          }

@@ -22,6 +22,7 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    private $post;
     public function __construct()
     {
         $this->middleware('auth:admin');
@@ -237,8 +238,12 @@ class PostController extends Controller
             $isRequired='nullable';
         }
         $data=$request->all();
-        $data['category']=explode(',',$request->category);
-        $data['author']=explode(',',$request->author);
+        $data['category']=array_filter(explode(',',$request->category));
+        $data['category_delete']=array_filter(explode(',',$request->category_delete));
+        $data['author']=array_filter(explode(',',$request->author));
+        $data['author_delete']=array_filter(explode(',',$request->author_delete));
+        
+        // return $data;
         $validator=Validator::make($data,[
         'feature_image'=>$isRequired."|max:250|min:1",
         'category'=>$isRequired."|array",
@@ -259,7 +264,7 @@ class PostController extends Controller
         DB::transaction(function() use($request,$data,$id){
             $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
             
-            $post=Post::where('id',$id)->create([
+            $post=Post::where('id',$id)->update([
                 'title'=>$request->title,
                 'meta_description'=>$request->meta_description,
                 'content'=>$request->content,
@@ -271,30 +276,61 @@ class PostController extends Controller
                 'post_type'=>$request->post_type,
                 'is_scheduled'=>$request->is_scheduled,
             ]);
-            
+            // $this->post=$post;
             Slug::where('post_id',$id)->update([
                 'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
                 'slug_type'=> 'post',
-                'post_id'=> $post->id,
+                'post_id'=> $id,
             ]);
+            if(isset($data['category_delete'])>0){
+                for($i=0;$i<count($data['category_delete']);$i++){
+                    $cat_exist= PostHasCategory::where('post_id',$id)->where('category_id',$data['category_delete'][$i])->count();
+                     if($cat_exist<1){
+                         PostHasCategory::where([
+                             'post_id'=>$post->id,
+                             'category_id'=>$data['category_delete'][$i],
+                         ])->delete();
+                     }
+                 }
+            }
             if(isset($data['category'])>0){
                 for($i=0;$i<count($data['category']);$i++){
-                    PostHasCategory::create([
-                        'post_id'=>$post->id,
-                        'category_id'=>$data['category'][$i],
-                    ]);
+                   $cat_exist= PostHasCategory::where('post_id',$id)->where('category_id',$data['category'][$i])->count();
+                   if($cat_exist<1){
+                   info('cat_id:'.$data['category'][$i].' exist'.$cat_exist);
+                    
+                        PostHasCategory::create([
+                            'post_id'=>$id,
+                            'category_id'=>$data['category'][$i],
+                        ]);
+                    }
                 }
             }
-        if(isset($data['author'])>0){
+            if(isset($data['author_delete'])>0){
+                for($i=0;$i<count($data['author_delete']);$i++){
+                    $auth_exist= PostHasAuthor::where('post_id',$id)->where('author_id',$data['author_delete'][$i])->count();
+                        if($auth_exist<1){
+                            PostHasAuthor::where([
+                                'post_id'=> $id,
+                                'author_id'=> $data['author'][$i],
+                            ])->delete();
+                        }
+                }
+            }
+            if(isset($data['author'])>0){
                 for($i=0;$i<count($data['author']);$i++){
-                    PostHasAuthor::create([
-                        'post_id'=> $post->id,
-                        'author_id'=> Auth::user()->id,
-                    ]);
+                    $auth_exist= PostHasAuthor::where('post_id',$id)->where('author_id',$data['author'][$i])->count();
+                        if($auth_exist<1){
+                            PostHasAuthor::create([
+                            'post_id'=> $id,
+                            'author_id'=> $data['author'][$i],
+                        ]);
+                    }
                 }
             }
         });
-        return response()->json(['status'=>true,'message'=>'Post Added Success']);
+        
+        return response()->json(['status'=>true,'message'=>'Post Added Success','post'=>$this->post]);
         }
         return response()->json(['error'=>$validator->getMessageBag()]);
     }

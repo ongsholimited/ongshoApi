@@ -1,6 +1,8 @@
 <script>
     var datatable;
     var gallery_selector;
+    var cat_del=[];
+    var author_del=[];
     $(document).ready(function() {
         datatable = $('#datatable').DataTable({
             processing: true,
@@ -107,22 +109,25 @@
         var formData = new FormData();
 
         formData.append('category', category);
+        formData.append('category_delete', cat_del);
         formData.append('title', title);
         formData.append('slug', slug);
         formData.append('meta_description', short_description);
         formData.append('content', content);
         formData.append('focus_keyword', tag);
         formData.append('author', author);
+        formData.append('author_delete', author_del);
         formData.append('status', status);
         formData.append('post_type', post_type);
         formData.append('date', date);
         formData.append('feature_image', feature_image);
         formData.append('is_scheduled', is_scheduled);
+        formData.append('_method', 'PUT');
         
         $('#exampleModalLabel').text('Add New Post');
 
         //axios post request
-        axios.post("{{ route('news.post.store') }}", formData)
+        axios.post("{{ route('news.post.update',$post->id) }}", formData)
             .then(function(response) {
                 if (response.data.message) {
                     toastr.success(response.data.message)
@@ -355,20 +360,44 @@
     }
     $(document).on('click', '.removeAuthor', function() {
         event.preventDefault();
-        console.log($(this).parent().remove());
+        let author=$(this).prev().prev("input[name='author[]']").val();
+        console.log(author);
+        author_del.push(author)
+        $(this).parent().remove();
     })
+    $("input[name='category[]']").change(function() {
+        var ischecked= $(this).is(':checked');
+        if(ischecked){
+            const index = cat_del.indexOf($(this).val());
+            if (index > -1) { // only splice array when item is found
+                cat_del.splice(index, 1); // 2nd parameter means remove one item only
+            }
+        }else{
+            cat_del.push($(this).val())
+        }
+        console.log($(this).val())
+    });
     $(document).on('click', '#add_author', function() {
+        let author = $("input[name='author[]']").map(function() {
+            return $(this).val();
+        }).get();
         user = $('#user').val();
-        usertext = $('#user option:selected').text();
-        console.log(usertext)
-        html = `
-     <div class='m-1'>
-          <input type="hidden" value='` + user + `' name='author[]'>
-          <span class>` + usertext + `</span>
-          <button class="btn btn-xs btn-danger ml-1 float-right removeAuthor">X</button>
-      </div>
-     `
-        $('#all_users').append(html)
+        if(!author.includes(user)){
+            usertext = $('#user option:selected').text();
+            console.log(usertext)
+            html = `<div class='m-1'>
+                        <input type="hidden" value='` + user + `' name='author[]'>
+                        <span class>` + usertext + `</span>
+                        <button class="btn btn-xs btn-danger ml-1 float-right removeAuthor">X</button>
+                    </div>
+                    `
+            $('#all_users').append(html)
+            const index = author_del.indexOf(user);
+            if (index > -1) { // only splice array when item is found
+                author_del.splice(index, 1); // 2nd parameter means remove one item only
+            }
+        }
+        
     })
 
     $(document).on('focus', '.ck-content', function(event) {
@@ -393,7 +422,7 @@
     $("#date").daterangepicker({
         singleDatePicker: true,
         timePicker: true,
-        // timePicker12Hour: true,
+        timePicker12Hour: true,
         // timePickerIncrement: 30,
         locale: {
             format: 'DD-MM-YYYY h:mm A'
@@ -401,13 +430,19 @@
     });
 
     function convertToUtc(dateString) {
-        // Your date string
-        // var dateString = "04-09-2023 12:34:56"; // Replace this with your date string
-        var inputDate =dateString //"04-09-2023 12:34:56 AM";
-        // Convert it to a JavaScript Date object
-        var dateObj = new Date(inputDate);
-        // Get the Unix timestamp (milliseconds since January 1, 1970)
-        var unixTimestamp = dateObj.getTime() / 1000; // Divide by 1000 to convert to seconds
+        var inputDateString = dateString;
+        // Split the input string into components
+        var components = inputDateString.split(/[- :]/);
+        // Extract the date and time components
+        var day = parseInt(components[0], 10);
+        var month = parseInt(components[1], 10) - 1; // Months are 0-based
+        var year = parseInt(components[2], 10);
+        var hour = parseInt(components[3], 10);
+        var minute = parseInt(components[4], 10);
+        // Create a new Date object
+        var inputDate = new Date(year, month, day, hour, minute);
+        // Convert the Date object to a Unix timestamp (in seconds)
+        var unixTimestamp = inputDate.getTime() / 1000;
         console.log(unixTimestamp);
         return formatUnixToUtc(unixTimestamp);
     }

@@ -109,7 +109,7 @@
                             </div>
                              <div class="form-group overflow-auto" style="max-height:200px;">
                                  <label for="">Category</label>
-                                 {{dd($post->categories)}}
+                                 {{-- {{dd($post->categories)}} --}}
                                  @php
                                      //  dd($post);
                                      $category = App\Models\News\Category::all();
@@ -118,7 +118,7 @@
                                  @foreach ($category as $cat)
                                      @php
                                          foreach ($post->categories as $pcat) {
-                                             if ($cat->id == $pcat->id) {
+                                             if ($cat->id == $pcat->category_id) {
                                                  $exist = true;
                                                  break;
                                              } else {

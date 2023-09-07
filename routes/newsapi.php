@@ -26,6 +26,7 @@ Route::group([
     Route::get('get-section', 'SectionController@getSection');
     Route::get('/check-slug/{slug}', 'SlugController@checkSlug');
     Route::get('post-preview/{post_slug}', 'NewsController@getPostPreview')->middleware('auth:api');
+    Route::get('post-preview-edit/{id}', 'NewsController@getPostPreviewEdit')->middleware('auth:api');
     Route::get('/{slug}', 'NewsController@getPostBySlug');
   
     

@@ -294,7 +294,7 @@
              });
 
              function wrapWithBackticks(string) {
-                return ${string};
+                return `${string}`;
              }
      </script>
      @include('news.post_preview.internal-assets.js.script')

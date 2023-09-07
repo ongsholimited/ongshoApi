@@ -1,5 +1,6 @@
 <script>
     var datatable;
+    var gallery_selector;
     $(document).ready(function() {
         datatable = $('#datatable').DataTable({
             processing: true,

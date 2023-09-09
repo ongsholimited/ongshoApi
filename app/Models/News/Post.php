@@ -29,6 +29,6 @@ class Post extends Model
         $this->attributes['cat']=$this->categories->pluck('category_id')->toArray();
     }
     public function getCategoryIdsAttribute(){
-        $this->categories->pluck('id');
+        return $this->categories->pluck('category_id');
     }
 }

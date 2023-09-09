@@ -162,7 +162,7 @@ class NewsController extends Controller
             'meta_description'=>$isRequired."|max:250|min:1",
             'content'=>$isRequired."|max:60000|min:1",
             'focus_keyword'=>"nullable|max:500|min:1",
-            'slug'=>"required|max:250|min:1|unique:ongsho_news.slugs,slug_name,".$id,
+            'slug'=>"required|max:250|min:1|unique:ongsho_news.slugs,slug_name,post_id,".$id,
             'status'=>['required','max:250','min:1',new PostStatusRule],
             'post_type'=>"required|max:250|min:1",
             'date'=>"required|max:30",

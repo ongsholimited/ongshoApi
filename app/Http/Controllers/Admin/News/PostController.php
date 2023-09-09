@@ -282,41 +282,20 @@ class PostController extends Controller
                 'slug_type'=> 'post',
                 'post_id'=> $id,
             ]);
-            if(isset($data['category_delete'])>0){
-                for($i=0;$i<count($data['category_delete']);$i++){
-                    $cat_exist= PostHasCategory::where('post_id',$id)->where('category_id',$data['category_delete'][$i])->count();
-                     if($cat_exist<1){
-                         PostHasCategory::where([
-                             'post_id'=>$post->id,
-                             'category_id'=>$data['category_delete'][$i],
-                         ])->delete();
-                     }
-                 }
-            }
+            
             if(isset($data['category'])>0){
                 for($i=0;$i<count($data['category']);$i++){
                    $cat_exist= PostHasCategory::where('post_id',$id)->where('category_id',$data['category'][$i])->count();
                    if($cat_exist<1){
-                   info('cat_id:'.$data['category'][$i].' exist'.$cat_exist);
-                    
                         PostHasCategory::create([
                             'post_id'=>$id,
                             'category_id'=>$data['category'][$i],
                         ]);
                     }
                 }
+                PostHasCategory::where('post_id',$id)->whereNotIn('category_id',$data['category'])->delete();
             }
-            if(isset($data['author_delete'])>0){
-                for($i=0;$i<count($data['author_delete']);$i++){
-                    $auth_exist= PostHasAuthor::where('post_id',$id)->where('author_id',$data['author_delete'][$i])->count();
-                        if($auth_exist<1){
-                            PostHasAuthor::where([
-                                'post_id'=> $id,
-                                'author_id'=> $data['author'][$i],
-                            ])->delete();
-                        }
-                }
-            }
+            
             if(isset($data['author'])>0){
                 for($i=0;$i<count($data['author']);$i++){
                     $auth_exist= PostHasAuthor::where('post_id',$id)->where('author_id',$data['author'][$i])->count();
@@ -327,6 +306,7 @@ class PostController extends Controller
                         ]);
                     }
                 }
+                PostHasAuthor::where('post_id',$id)->whereNotIn('author_id',$data['author'])->delete();
             }
         });
         

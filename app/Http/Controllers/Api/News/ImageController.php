@@ -49,7 +49,9 @@ class ImageController extends Controller
             "images"=>"required|max:2048|mimes:jpg,png,gif,jpeg",
             "folder"=>"nullable|max:20",
             // "size"=>"required|max:20",
-            "alt"=>"nullable|max:20",
+            "alt"=>"nullable|max:250",
+            "title"=>"nullable|max:250",
+            "caption"=>"nullable|max:250",
         ]);
         if($validator->passes()){
                $microtime=explode(' ',microtime(false));
@@ -60,6 +62,8 @@ class ImageController extends Controller
                $image->name=$f_name.'.'.$ext;
                $image->size=$request->file('images')->getSize();
                $image->alt=$request->alt;
+               $image->title=$request->tittle;
+               $image->caption=$request->caption;
                $image->folder_id=$request->folder;
                $image->author_id=auth()->user()->id;
                $image->save();

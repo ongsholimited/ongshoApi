@@ -68,7 +68,7 @@ class NewsController extends Controller
             'meta_description'=>$isRequired."|max:250|min:1",
             'content'=>$isRequired."|max:60000|min:1",
             'focus_keyword'=>"nullable|max:500|min:1",
-            'slug'=>"required|max:250|min:1",
+            'slug'=>"required|max:250|min:1|unique:ongsho_news.slugs,slug_name",
             'status'=>['required','max:250','min:1',new PostStatusRule],
             'post_type'=>"required|max:250|min:1",
             'date'=>"required|max:30",
@@ -162,7 +162,7 @@ class NewsController extends Controller
             'meta_description'=>$isRequired."|max:250|min:1",
             'content'=>$isRequired."|max:60000|min:1",
             'focus_keyword'=>"nullable|max:500|min:1",
-            'slug'=>"required|max:250|min:1",
+            'slug'=>"required|max:250|min:1|unique:ongsho_news.slugs,slug_name,".$id,
             'status'=>['required','max:250','min:1',new PostStatusRule],
             'post_type'=>"required|max:250|min:1",
             'date'=>"required|max:30",
@@ -172,7 +172,6 @@ class NewsController extends Controller
 
             DB::transaction(function() use($request,$id){
                 $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
-              
                 $post=Post::where('id',$id)->update([
                     'title'=>$request->title,
                     'meta_description'=>$request->meta_description,
@@ -185,29 +184,31 @@ class NewsController extends Controller
                     'post_type'=>$request->post_type,
                     'is_scheduled'=>$request->is_scheduled,
                 ]);
-                
                 Slug::where('post_id',$id)->update([
                     'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
                     'slug_type'=> 'post',
                     'post_id'=> $id,
                 ]);
                 if(isset($request->category)>0){
-                    PostHasCategory::where('post_id',$post->id)->delete();
                     for($i=0;$i<count($request->category);$i++){
-                        $post_has_cat=
-                        PostHasCategory::create([
-                            'post_id'=>$id,
-                            'category_id'=>$request->category[$i],
-                        ]);
+                       $cat_exist= PostHasCategory::where('post_id',$id)->where('category_id',$request->category[$i])->count();
+                       if($cat_exist<1){
+                            PostHasCategory::create([
+                                'post_id'=>$id,
+                                'category_id'=>$request->category[$i],
+                            ]);
+                        }
                     }
+                    PostHasCategory::where('post_id',$id)->whereNotIn('category_id',$request->category)->delete();
                 }
-                if(isset($request->category)>0){
-                    PostHasAuthor::where('post_id',$post->id)->delete();
+                $auth_exist= PostHasAuthor::where('post_id',$id)->where('author_id',Auth::user()->id)->count();
+                if($auth_exist<1){
                     PostHasAuthor::create([
                         'post_id'=> $id,
                         'author_id'=> Auth::user()->id,
                     ]);
                 }
+                    
             });
                 return response()->json(['status'=>true,'message'=>'Post Updated Success']);
             }

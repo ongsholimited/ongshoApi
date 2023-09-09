@@ -24,7 +24,7 @@ Route::group([
     Route::get('get-post-types', 'CategoryController@getPostType');
     // Route::get('get-post/{limit}/{offset}', 'NewsController@getPost');
     Route::get('get-section', 'SectionController@getSection');
-    Route::get('/check-slug/{slug}', 'SlugController@checkSlug');
+    Route::get('/check-slug/{slug}/{post_id?}', 'SlugController@checkSlug');
     Route::get('post-preview/{post_slug}', 'NewsController@getPostPreview')->middleware('auth:api');
     Route::get('post-preview-edit/{id}', 'NewsController@getPostPreviewEdit')->middleware('auth:api');
     Route::get('/{slug}', 'NewsController@getPostBySlug');

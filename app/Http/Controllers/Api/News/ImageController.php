@@ -108,6 +108,9 @@ class ImageController extends Controller
     {
         $validator=Validator::make($request->all(),[
             "alt"=>"nullable|max:20",
+            "alt"=>"nullable|max:250",
+            "title"=>"nullable|max:250",
+            "caption"=>"nullable|max:250",
         ]);
         if($validator->passes()){
                $image=Image::find($id);

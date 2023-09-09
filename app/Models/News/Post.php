@@ -11,7 +11,7 @@ class Post extends Model
     use HasFactory;
     protected $connection='ongsho_news';
     protected $fillable=['title','slug','content','focus_keyword','date','meta_description','feature_image','post_type','status','is_scheduled'];
-    
+    protected $appends=['category_ids'];
     public function categories(){
         return $this->hasMany(PostHasCategory::class,'post_id','id');
     }
@@ -27,5 +27,8 @@ class Post extends Model
    
     public function setCatAttribute(){
         $this->attributes['cat']=$this->categories->pluck('category_id')->toArray();
+    }
+    public function getCategoryIdsAttribute(){
+        $this->categories->pluck('id');
     }
 }

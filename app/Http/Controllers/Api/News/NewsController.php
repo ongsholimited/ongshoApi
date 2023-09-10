@@ -172,7 +172,7 @@ class NewsController extends Controller
         if($validator->passes()){
 
             DB::transaction(function() use($request,$id){
-                $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
+                $existed_slug=Post::where('slug','like',$request->slug.'%')->whereNotIn('post_id',[$id])->count();
                 $post=Post::where('id',$id)->update([
                     'title'=>$request->title,
                     'meta_description'=>$request->meta_description,

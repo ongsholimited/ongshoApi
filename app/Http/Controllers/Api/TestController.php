@@ -11,6 +11,7 @@ class TestController extends Controller
     {
       
         $clientIp = $request->getClientIp();
+       return  $_SERVER['REMOTE_ADDR'];
         return dd($request->headers->all());
         return "Client's IP address: " . $clientIp;
         

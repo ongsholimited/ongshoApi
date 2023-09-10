@@ -289,10 +289,10 @@ class NewsController extends Controller
                 break;
             case $get_slug->slug_type=='post':
                 $post=Post::with('author.details.badges','categories.category')->where('slug',$get_slug->slug_name)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->first();
-                PostView::create([
-                    'post_id'=>$post->id,
-                    'ip'=>Request::getClientIp(true),
-                ]);
+                // PostView::create([
+                //     'post_id'=>$post->id,
+                //     'ip'=>Request::getClientIp(true),
+                // ]);
                 $data= ['status'=>($post!=null? true :false ),'slug_type'=>$get_slug->slug_type,'data'=>$post];
                 break;
             case $get_slug->slug_type=='category':

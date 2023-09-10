@@ -341,7 +341,7 @@ class NewsController extends Controller
                 $query->with('badges');
             }])->where('status','!=',Constant::POST_STATUS['deleted'])->where('slug',$post_slug)->first();
         
-        return response()->json($post);
+        return response()->json(['status'=>true,'data'=>$post]);
     }
     public function getPostPreviewEdit($id){
         $post=Post::with(['author.details'=>function($query){

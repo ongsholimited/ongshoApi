@@ -12,7 +12,7 @@ class TrustProxies extends Middleware
      *
      * @var array<int, string>|string|null
      */
-        protected $proxies=['X-Forwarded-For'];
+        protected $proxies=['192.168.0.1','X-Forwarded-For'];
 
     /**
      * The headers that should be used to detect proxies.

@@ -14,7 +14,7 @@ return [
     | any other location as required by the application or its packages.
     |
     */
-
+    'proxies' => '*',
     'name' => env('APP_NAME', 'Laravel'),
 
     /*
@@ -96,7 +96,7 @@ return [
     */
 
     'fallback_locale' => 'en',
-
+    
     /*
     |--------------------------------------------------------------------------
     | Faker Locale

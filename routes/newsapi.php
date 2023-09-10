@@ -27,8 +27,9 @@ Route::group([
     Route::get('/check-slug/{slug}/{post_id?}', 'SlugController@checkSlug');
     Route::get('post-preview/{post_slug}', 'NewsController@getPostPreview')->middleware('auth:api');
     Route::get('post-preview-edit/{id}', 'NewsController@getPostPreviewEdit')->middleware('auth:api');
+    Route::get('/view-count/{post_id}', 'ViewPostController@viewCount');
     Route::get('/{slug}', 'NewsController@getPostBySlug');
-  
+    
     
 });
 

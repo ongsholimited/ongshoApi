@@ -15,6 +15,7 @@ use App\Models\News\PostHasAuthor;
 use App\Models\News\Slug;
 use App\Helpers\Constant;
 use App\Models\News\HomeSection;
+use App\Models\News\PostView;
 use App\Rules\PostStatusRule;
 use DB;
 class NewsController extends Controller
@@ -280,6 +281,7 @@ class NewsController extends Controller
     }
     public function getPostBySlug($slug=null)
     {
+        
         $get_slug=Slug::where('slug_name',$slug)->first();
         switch ($get_slug) {
             case null:
@@ -287,6 +289,10 @@ class NewsController extends Controller
                 break;
             case $get_slug->slug_type=='post':
                 $post=Post::with('author.details.badges','categories.category')->where('slug',$get_slug->slug_name)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->first();
+                PostView::create([
+                    'post_id'=>$post->id,
+                    'ip'=>request()->ip(),
+                ]);
                 $data= ['status'=>($post!=null? true :false ),'slug_type'=>$get_slug->slug_type,'data'=>$post];
                 break;
             case $get_slug->slug_type=='category':

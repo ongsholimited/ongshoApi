@@ -11,7 +11,7 @@ class TestController extends Controller
     {
       
         $clientIp = $request->getClientIp();
-
+        return dd($request->headers->all());
         return "Client's IP address: " . $clientIp;
         
         return "Client's Public IP Address: " . $ip;

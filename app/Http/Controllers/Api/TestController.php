@@ -12,10 +12,9 @@ class TestController extends Controller
       
         $clientIp = $request->getClientIp();
     //    return  $_SERVER['REMOTE_ADDR'];
-        return dd($request->headers->all());
+        // return dd($request->headers->all());
         return "Client's IP address: " . $clientIp;
         
-        return "Client's Public IP Address: " . $ip;
         $public_ip = file_get_contents('https://ipinfo.io/ip');
         return  "Your public IP address is: $public_ip";
   

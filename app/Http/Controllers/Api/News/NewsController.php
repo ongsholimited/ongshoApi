@@ -344,8 +344,8 @@ class NewsController extends Controller
         return response()->json(['status'=>true,'data'=>$post]);
     }
     public function getPostPreviewEdit($id){
-        $post=Post::whereHas(['author.details'=>function($query){
-                $query->with('badges')->where('id',Auth::user()->id);
+        $post=Post::with(['author.details'=>function($query){
+                $query->with('badges');
             }])->where('status','!=',Constant::POST_STATUS['deleted'])->where('id',$id)->first();
         
         return response()->json($post);

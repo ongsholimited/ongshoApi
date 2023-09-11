@@ -11,12 +11,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Category</h1>
+            <h1 class="m-0">{{$data['form']['name']}}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Category</li>
+              <li class="breadcrumb-item active">{{$data['form']['name']}}</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -31,7 +31,7 @@
             <div class="card-header bg-dark">
               <div class="row">
                 <div class="col-6">
-                  <div class="card-title">Category </div>
+                  <div class="card-title">{{$data['form']['name']}} </div>
                 </div>
                 <div class="col-6">
                   <button class="btn btn-primary float-right" data-toggle="modal" data-target="#modal" data-whatever="@mdo">Add New</button>
@@ -43,7 +43,9 @@
                 <thead>
                   <tr>
                     <th>SL</th>
-                    <th>Category</th>
+                    @foreach ($data['fields'] as $field)
+                    <th>{{$field['name']}}</th>
+                    @endforeach
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -67,22 +69,11 @@
               <form>
                 <input type="hidden" id="id">
                 <div class="row">
+                  @foreach($data['fields'] as $field)
                   <div class="col-md-8 mr-auto ml-auto">
-                    <div class="form-group">
-                      <label for="recipient-name" class="col-form-label">Parent Category:</label>
-                      <select name="" id="parent_category" class="form-control"></select>
-                      <div class="invalid-feedback" id="parent_category_msg">
-                      </div>
-                    </div>
+                    {!! App\Helpers\FormMaker::FormMaker($field) !!}
                   </div>
-                  <div class="col-md-8 mr-auto ml-auto">
-                    <div class="form-group">
-                      <label for="recipient-name" class="col-form-label">Name:</label>
-                      <input type="text" class="form-control" id="name" placeholder="নাম লিখুন">
-                      <div class="invalid-feedback" id="name_msg">
-                      </div>
-                    </div>
-                  </div>
+                  @endforeach
                 </div>
               </form>
             </div>

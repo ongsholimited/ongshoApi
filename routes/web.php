@@ -71,6 +71,7 @@ Route::group([
     Route::get('/get-images/{folder}','ImagesController@getImages');
     Route::resource('/menu','MenuController');
     Route::resource('/section','SectionController');
+    Route::get('/meta_keyword','MetaKeywordController@index');
 
 });
 

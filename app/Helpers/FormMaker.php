@@ -5,7 +5,7 @@ namespace App\Helpers;
 
 class FormMaker{
 
-    public function formMaker(array $array=[
+    public static function formMaker(array $array=[
         'name'=>'',
         'label'=>'',
         'styles'=>'',
@@ -87,6 +87,4 @@ class FormMaker{
           }
         return $html;
     }
-
-    
 }

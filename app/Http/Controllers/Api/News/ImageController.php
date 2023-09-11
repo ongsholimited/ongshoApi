@@ -62,7 +62,7 @@ class ImageController extends Controller
                $image->name=$f_name.'.'.$ext;
                $image->size=$request->file('images')->getSize();
                $image->alt=$request->alt;
-               $image->title=$request->tittle;
+               $image->title=$request->title;
                $image->caption=$request->caption;
                $image->folder_id=$request->folder;
                $image->author_id=auth()->user()->id;

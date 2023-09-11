@@ -10,7 +10,8 @@ class TestController extends Controller
     public function test(Request $request)
     {
 
-        
+        $x='App\Models\User'::find(1);
+        return $x;
     //   XXXX
         $clientIp = $request->ips();
     //    return  $_SERVER['REMOTE_ADDR'];

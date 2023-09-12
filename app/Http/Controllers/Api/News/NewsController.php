@@ -334,8 +334,8 @@ class NewsController extends Controller
         if($validator->passes()){
             // return 'xx';
             $post=HomeSection::with(['post'=>function($query) use ($request){
-                    $query->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->take($request->limit)->skip($request->offset)->orderBy('date','desc');
-                },'post.author.details.badges'])->whereHas('post',function($q)use ($request){
+                    $query->take($request->limit)->skip($request->offset)->orderBy('date','desc');
+                },'post.author.details.badges'])->whereHas('post',function($q){
                    $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
                 })->orderBy('serial','asc')->get();
             if($post->count()>0){

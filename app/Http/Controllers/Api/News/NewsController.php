@@ -333,7 +333,7 @@ class NewsController extends Controller
             $post=HomeSection::with(['post'=>function($query) use ($request){
                     $query->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->take($request->limit)->skip($request->offset)->orderBy('date','desc');
                 },'post.author.details.badges'])->whereHas('post')->where('serial',$serial)->first();
-            if($post!=null){
+            if(isset($post->post) and $post->post->count()>0){
                 return SendDataApi::bind($post);
             }
             return SendDataApi::bind('data not found',404);

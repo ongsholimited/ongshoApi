@@ -13,7 +13,7 @@ class MetaKeywordController extends Controller
         if($meta!=null){
             return response()->json(['status'=>true,'data'=>$meta]);
         }
-        return response()->json(['status'=>true,'data'=>'Something went wrong.']);
+        return response()->json(['status'=>false,'data'=>'Data not found.'],404);
 
     }
 }

@@ -17,6 +17,7 @@ use App\Helpers\Constant;
 use App\Models\News\HomeSection;
 use App\Models\News\PostView;
 use App\Rules\PostStatusRule;
+use App\Http\Traits\SendDataApi;
 use DB;
 class NewsController extends Controller
 {
@@ -267,6 +268,7 @@ class NewsController extends Controller
     }
     public function getPost(Request $request)
     {
+        
         $validator=Validator::make($request->all(),[
             'limit'=>"required|numeric|min:1|max:50",
             'offset'=>"required|numeric|min:0|max:50",
@@ -275,13 +277,16 @@ class NewsController extends Controller
             $post=Post::with(['categories.category','author.details'=>function($query){
                 $query->with('badges');
             }])->skip($request->offset)->take($request->limit)->where('date','<',time())->where('status',Constant::POST_STATUS['public'])->orderBy('id','desc')->get();
-            return response()->json($post);
+            if($post->count()>0){
+                return SendDataApi::bind($post,200);
+            }
+            return SendDataApi::bind('data not found',200);
         }
-        return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
+        return SendDataApi::bind($validator->getMessageBag(),403);
     }
     public function getPostBySlug($slug=null)
     {
-        
+        // return 'xx';
         $get_slug=Slug::where('slug_name',$slug)->first();
         switch ($get_slug) {
             case null:

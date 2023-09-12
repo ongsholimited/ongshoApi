@@ -9,6 +9,7 @@ use App\Models\News\Image;
 use Storage;
 use Str;
 use Auth;
+use App\Http\Traits\SendDataApi;
 class ImageController extends Controller
 {
     /**
@@ -146,8 +147,11 @@ class ImageController extends Controller
         ]);
         if($validator->passes()){
             $image=Image::where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
-            return response()->json($image);
+            if($image->count()>0){
+                return SendDataApi::bind($image,200);
+            }
+            return SendDataApi::bind('data not found',404);
         }
-        return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
+        return SendDataApi::bind($validator->getMessageBag(),403);
     }
 }

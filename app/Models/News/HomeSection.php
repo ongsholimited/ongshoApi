@@ -17,7 +17,7 @@ class HomeSection extends Model
     
     public function post()
     {
-        return $this->hasManyThrough(Post::class,PostHasCategory::class,'post_id','id','category_id','category_id');
+        return $this->hasManyThrough(Post::class,PostHasCategory::class,'category_id','id','category_id','category_id');
     }
     public function category(){
         return $this->belongsTo(Category::class,'category_id','id');

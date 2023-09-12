@@ -295,6 +295,7 @@ class NewsController extends Controller
         switch ($get_slug) {
             case null:
               $data= SendDataApi::bind('data not found',404);
+
                 break;
             case $get_slug->slug_type=='post':
                 $post=Post::with('author.details.badges','categories.category')->where('slug',$get_slug->slug_name)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->first();
@@ -304,8 +305,9 @@ class NewsController extends Controller
                 // ]);
                 if($post!=null){
                     $data=SendDataApi::bind(['slug_type'=>$get_slug->slug_type,'data'=>$post]);
+                }else{
+                    $data= SendDataApi::bind('data not found',404);
                 }
-                $data= SendDataApi::bind('data not found',404);
                 break;
             case $get_slug->slug_type=='category':
                 
@@ -314,8 +316,9 @@ class NewsController extends Controller
                 }])->where('slug',$get_slug->slug_name)->first();
                 if($post!=null){
                     $data= SendDataApi::bind(['slug_type'=>$get_slug->slug_type,'data'=>$post]);
+                }else{
+                    $data=SendDataApi::bind('data not found',404) ;
                 }
-                $data=SendDataApi::bind('data not found',404) ;
             break;
             default:
                 $data= SendDataApi::bind('data not found',404);
@@ -323,7 +326,7 @@ class NewsController extends Controller
         }
         return $data;
     }
-    public function getSection(Request $request,$serial){
+    public function getSection(Request $request){
         $validator=Validator::make($request->all(),[
             'limit'=>"required|numeric|min:1|max:50",
             'offset'=>"required|numeric|min:0|max:50",
@@ -332,7 +335,9 @@ class NewsController extends Controller
             // return 'xx';
             $post=HomeSection::with(['post'=>function($query) use ($request){
                     $query->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->take($request->limit)->skip($request->offset)->orderBy('date','desc');
-                },'post.author.details.badges'])->whereHas('post')->where('serial',$serial)->first();
+                },'post.author.details.badges'])->whereHas('post',function($q)use ($request){
+                   $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->take($request->limit)->skip($request->offset);
+                })->orderBy('serial','asc')->get();
             if(isset($post->post) and $post->post->count()>0){
                 return SendDataApi::bind($post);
             }

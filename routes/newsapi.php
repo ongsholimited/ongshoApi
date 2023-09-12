@@ -2,7 +2,7 @@
     Route::get('test',[ App\Http\Controllers\Api\TestController::class,'test'])->middleware('api');
 
 Route::group([
-    'middleware' => ['api','throttle:1000'],
+    'middleware' => ['api'],
     'namespace' => 'App\Http\Controllers\Api\News',
     'prefix' => 'news'
     

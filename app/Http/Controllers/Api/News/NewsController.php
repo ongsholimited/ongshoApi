@@ -339,7 +339,7 @@ class NewsController extends Controller
                    $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
                 })->orderBy('serial','asc')->get();
             return $post;
-            if(isset($post->post) and $post->post->count()>0){
+            if($post->count()>0){
                 return SendDataApi::bind($post);
             }
             return SendDataApi::bind('data not found',404);

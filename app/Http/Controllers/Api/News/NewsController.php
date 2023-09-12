@@ -333,8 +333,10 @@ class NewsController extends Controller
         ]);
         if($validator->passes()){
             // return 'xx';
-            $post=HomeSection::with(['post','post.author.details.badges'])->whereHas('post',function($q)use($request){
-                   $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->take($request->limit)->skip($request->offset)->orderBy('date','desc');;
+            $post=HomeSection::with(['post'=>function($q)use($request){
+                $q->take($request->limit)->skip($request->offset)->orderBy('date','desc');
+            },'post.author.details.badges'])->whereHas('post',function($q){
+                   $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
                 })->orderBy('serial','asc')->get();
             if($post->count()>0){
                 return SendDataApi::bind($post);

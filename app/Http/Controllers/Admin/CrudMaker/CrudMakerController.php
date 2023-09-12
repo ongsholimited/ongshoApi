@@ -8,11 +8,12 @@ use App\Helpers\Crud;
 class CrudMakerController extends Controller
 {
     public function __construct($middleware=[]){
-        $this->middleware($middleware);
+        $this->middleware('auth:admin');
     }
     public function call(Request $request,$type)
     {
+        // return $request->all();
         $store=new Crud;
-        $store->$type ($request());
+        return $store->$type ($request->all());
     }
 }

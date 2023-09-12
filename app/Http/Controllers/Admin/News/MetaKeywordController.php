@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin\News;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Models\News\MetaKeyword;
+use DataTables;
 class MetaKeywordController extends Controller
 {
     public function __construct()
@@ -13,30 +14,7 @@ class MetaKeywordController extends Controller
     }
     public function index()
     {
-        
-        // return $get=Category::with('parent')->get();
-        if(request()->ajax()){
-            $get=Category::with('children')->get();
-            return DataTables::of($get)
-            ->addIndexColumn()
-            ->addColumn('action',function($get){
-            $button  ='<div class="d-flex justify-content-center">';
-                $button.='<a data-url="'.route('news.category.edit',$get->id).'"  href="javascript:void(0)" class="btn btn-primary shadow btn-xs sharp me-1 editRow"><i class="fas fa-pencil-alt"></i></a>
-            <a data-url="'.route('news.category.destroy',$get->id).'" href="javascript:void(0)" class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
-            $button.='</div>';
-            return $button;
-        })
-        ->addColumn('name',function($get){
-            if($get->parent!=null){
-                return $get->parent->name.'-'.$get->name;
-            }else{
-                return $get->name;
-            }
-        })
-        ->rawColumns(['action'])->make(true);
-        }
-
-        //$fields= [
+         //$fields= [
         //     'name'=>'',
         //     'label'=>'',
         //     'styles'=>'',
@@ -46,18 +24,27 @@ class MetaKeywordController extends Controller
         //     'attribute'=>'',
         //     'options'=>[]
         // ]
+        
         $data=
         [
            'form'=>[
-            'name'=>'Category',
+            'name'=>'Meta_Keyword',
            ],
+           'datatable'=>[
+            'title',
+            'description',
+            'keyword',
+            'robots',
+            'action',
+           ],
+           'route'=>route('news.meta_keyword'),
            'fields'=> [
                 [
                     'name'=>'title',
                     'label'=>'Title',
                     'placeholder'=>'Enter Title',
                     'type'=>'text',
-                    'classes'=>'form-control',
+                    'classes'=>'form-control text-danger',
 
                 ],
                 [
@@ -78,7 +65,7 @@ class MetaKeywordController extends Controller
                 [
                     'name'=>'keyword',
                     'label'=>'keyword',
-                    'placeholder'=>'Enter Description',
+                    'placeholder'=>'Enter keyword',
                     'type'=>'text',
                     'classes'=>'form-control',
 
@@ -86,14 +73,35 @@ class MetaKeywordController extends Controller
                 [
                     'name'=>'robots',
                     'label'=>'Robots',
-                    'placeholder'=>'Enter Description',
+                    'placeholder'=>'Enter Robots',
                     'type'=>'text',
                     'classes'=>'form-control',
 
                 ],
             ]
         ];
-        return view('crud_maker.crud_maker',compact('data'));
+        // return $get=Category::with('parent')->get();
+        if(request()->ajax()){
+            $get=MetaKeyword::all();
+            return DataTables::of($get)
+            ->addIndexColumn()
+            ->addColumn('action',function($get)use($data){
+            $button  ='<div class="d-flex justify-content-center">';
+            $button.='<a data-url="'.url('crud_maker/edit').'" data-id="'.$get->id.'" data-form="'.$data['form']['name'].'"  href="javascript:void(0)" class="btn btn-primary shadow btn-xs sharp me-1 editRow"><i class="fas fa-pencil-alt"></i></a>
+            <a data-url="'.url('crud_maker/destroy').'" data-id="'.$get->id.'" data-form="'.$data['form']['name'].'" href="javascript:void(0)" class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
+            $button.='</div>';
+            return $button;
+        })
+        ->addColumn('name',function($get){
+            if($get->parent!=null){
+                return $get->parent->name.'-'.$get->name;
+            }else{
+                return $get->name;
+            }
+        })
+        ->rawColumns(['action'])->make(true);
+        }
         
+        return view('crud_maker.crud_maker',compact('data')); 
     }
 }

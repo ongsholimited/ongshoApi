@@ -1,48 +1,48 @@
 <script>
     var datatable;
+    var column=[{
+            data:'DT_RowIndex',
+            name:'DT_RowIndex',
+            orderable:false,
+            searchable:false
+          }]
+    var col=(`<?php echo json_encode($data['datatable']) ?>`);
+    var col=JSON.parse(col);
+    col.forEach(item=>{
+      column.push({data:item,name:item});
+    })
+    console.log(column)
     $(document).ready(function(){
         datatable= $('#datatable').DataTable({
         processing:true,
         serverSide:true,
         responsive:true,
         ajax:{
-          url:"{{route('news.category.index')}}"
+          url:"{{$data['route']}}"
         },
-        columns:[
-          {
-            data:'DT_RowIndex',
-            name:'DT_RowIndex',
-            orderable:false,
-            searchable:false
-          },
-          {
-            data:'name',
-            name:'name',
-          },
-          {
-            data:'action',
-            name:'action',
-          }
-        ]
+        columns:column
     });
   })
     
 
 window.formRequest= function(){
     $('input,select').removeClass('is-invalid');
-    let parent_category=$('#parent_category').val();
-    let name=$('#name').val();
     let id=$('#id').val();
     let formData= new FormData();
-    formData.append('parent_category',parent_category);
-    formData.append('name',name);
-    $('#exampleModalLabel').text('Add New Category');
+    @foreach($data['fields'] as $f)
+      let {{$f['name']}} =$("#{{$f['name']}}").val();
+      formData.append('{{$f['name']}}',{{$f['name']}});
+    @endforeach
+    formData.append('_name',"{{$data['form']['name']}}");
+
+    $('#exampleModalLabel').text("Add New {{$form_name}}");
     if(id!=''){
-      formData.append('_method','PUT');
+      // formData.append('_method','PUT');
+      formData.append('form_data_id',id);
     }
     //axios post request
     if (id==''){
-         axios.post("{{route('news.category.store')}}",formData)
+         axios.post("{{URL::to('/crud_maker/store')}}",formData)
         .then(function (response){
             if(response.data.message){
                 toastr.success(response.data.message)
@@ -58,7 +58,7 @@ window.formRequest= function(){
             }
         })
     }else{
-      axios.post("{{URL::to('news/category/')}}/"+id,formData)
+      axios.post("{{URL::to('crud_maker/update')}}",formData)
         .then(function (response){
           if(response.data.message){
               toastr.success(response.data.message);
@@ -76,19 +76,19 @@ window.formRequest= function(){
 }
 $(document).delegate("#modalBtn", "click", function(event){
     clear();
-    $('#exampleModalLabel').text('Add New Category');
+    $('#exampleModalLabel').text("Add New {{$form_name}}");
+    $('#id').val('');
 
 });
 $(document).delegate(".editRow", "click", function(){
-    $('#exampleModalLabel').text('Update Category');
+    $('#exampleModalLabel').text('Update {{$form_name}}');
     let route=$(this).data('url');
-    axios.get(route)
+    let id=$(this).data('id');
+    let form=$(this).data('form');
+    axios.post(route,{id:id,_name:form})
     .then((data)=>{
       var editKeys=Object.keys(data.data);
       editKeys.forEach(function(key){
-        if(key=='name'){
-          $('#'+'name').val(data.data[key]);
-        }
          $('#'+key).val(data.data[key]);
          $('#modal').modal('show');
          $('#id').val(data.data.id);
@@ -97,6 +97,8 @@ $(document).delegate(".editRow", "click", function(){
 });
 $(document).delegate(".deleteRow", "click", function(){
     let route=$(this).data('url');
+    let id=$(this).data('id');
+    let form=$(this).data('form');
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -107,7 +109,7 @@ $(document).delegate(".deleteRow", "click", function(){
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.value==true) {
-        axios.delete(route)
+        axios.post(route,{id:id,_name:form})
         .then((data)=>{
           if(data.data.message){
             toastr.success(data.data.message);
@@ -145,6 +147,5 @@ $('#parent_category').select2({
 function clear(){
   $("input").removeClass('is-invalid').val('');
   $(".invalid-feedback").text('');
-  $('form select').val('').niceSelect('update');
 }
 </script>

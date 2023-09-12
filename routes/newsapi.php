@@ -28,8 +28,8 @@ Route::group([
     Route::get('post-preview/{post_slug}', 'NewsController@getPostPreview')->middleware('auth:api');
     Route::get('post-preview-edit/{id}', 'NewsController@getPostPreviewEdit')->middleware('auth:api');
     Route::get('/view-count/{post_id}', 'ViewPostController@viewCount');
+    Route::get('meta/{slug}', 'MetaKeywordController@getMeta');
     Route::get('/{slug}', 'NewsController@getPostBySlug');
-    
     
 });
 

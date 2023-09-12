@@ -53,7 +53,7 @@ class FormMaker{
                  $html="
                  <div class='form-group'>
                     <label>".$label."</label>
-                    <input type='".$type."' class='".$classes."' style='".$styles."' placeholder='".$placeholder."' ".$attribute." name='".$name."'>
+                    <input type='".$type."' class='".$classes."' style='".$styles."' placeholder='".$placeholder."' ".$attribute." name='".$name."' id='".$name."'>
                     <div class='invalid-feedback' id='msg_".$name."'>
                     </div>
                  </div>
@@ -67,7 +67,7 @@ class FormMaker{
                  $html="
                  <div class='form-group'>
                     <label>".$label."</label>
-                    <select  class='".$classes."' style='".$styles."' ".$attribute." name='".$name."'>
+                    <select  class='".$classes."' style='".$styles."' ".$attribute." name='".$name."'  id='".$name."'>
                     ".$op."
                     </select>
                     <div class='invalid-feedback' id='msg_".$name."'>
@@ -78,7 +78,7 @@ class FormMaker{
           if($type=="radio" or $type=="checkbox"){
             $html="
             <div class='form-group'>
-               <input type='".$type."' class='".$classes."' style='".$styles."' ".$attribute." name='".$name."'>
+               <input type='".$type."' class='".$classes."' style='".$styles."' ".$attribute." name='".$name."'  id='".$name."'>
                <label>".$label."</label>
                <div class='invalid-feedback' id='msg_".$name."'>
                </div>

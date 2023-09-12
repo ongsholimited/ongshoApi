@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Carbon\Carbon;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\Admin\CrudMaker\CrudMakerController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +25,7 @@ Route::get('/test',[TestController::class,'test']);
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/crud_maker/{type}',[CrudMakerController::class,'call'])->name('crud_maker');
 
 Route::get('/login',[LoginController::class,'showLoginForm'])->name('login');
 Route::post('/login',[LoginController::class,'login'])->name('login');
@@ -52,7 +54,6 @@ Route::group([
     Route::post('/get-user-data','UserController@getUserData');
 });
 
-
 Route::group([
     "prefix"=>"news",
     "as"=>"news.",
@@ -71,8 +72,7 @@ Route::group([
     Route::get('/get-images/{folder}','ImagesController@getImages');
     Route::resource('/menu','MenuController');
     Route::resource('/section','SectionController');
-    Route::get('/meta_keyword','MetaKeywordController@index');
-
+    Route::get('/meta_keyword','MetaKeywordController@index')->name('meta_keyword');
 });
 
 Route::group([

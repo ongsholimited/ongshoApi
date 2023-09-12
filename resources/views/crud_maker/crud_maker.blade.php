@@ -3,7 +3,10 @@
  @section('link')
  <link rel="stylesheet" href="{{asset('storage/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
   <link rel="stylesheet" href="{{asset('storage/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
-  
+  @php
+     $form_name=str_replace('_',' ',$data['form']['name']); 
+
+  @endphp
  @endsection
  @section('content')
     <!-- Content Header (Page header) -->
@@ -11,12 +14,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">{{$data['form']['name']}}</h1>
+            <h1 class="m-0">{{$form_name}}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">{{$data['form']['name']}}</li>
+              <li class="breadcrumb-item active">{{$form_name}}</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -31,10 +34,10 @@
             <div class="card-header bg-dark">
               <div class="row">
                 <div class="col-6">
-                  <div class="card-title">{{$data['form']['name']}} </div>
+                  <div class="card-title">{{$form_name}} </div>
                 </div>
                 <div class="col-6">
-                  <button class="btn btn-primary float-right" data-toggle="modal" data-target="#modal" data-whatever="@mdo">Add New</button>
+                  <button class="btn btn-primary float-right" data-toggle="modal" data-target="#modal" data-whatever="@mdo" id="modalBtn">Add New</button>
                 </div>
               </div>
             </div>
@@ -43,10 +46,9 @@
                 <thead>
                   <tr>
                     <th>SL</th>
-                    @foreach ($data['fields'] as $field)
-                    <th>{{$field['name']}}</th>
+                    @foreach ($data['datatable'] as $th)
+                    <th>{{ucfirst($th)}}</th>
                     @endforeach
-                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>

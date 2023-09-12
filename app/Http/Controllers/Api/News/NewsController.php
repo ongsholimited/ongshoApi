@@ -338,7 +338,6 @@ class NewsController extends Controller
                 },'post.author.details.badges'])->whereHas('post',function($q)use ($request){
                    $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
                 })->orderBy('serial','asc')->get();
-            return $post;
             if($post->count()>0){
                 return SendDataApi::bind($post);
             }

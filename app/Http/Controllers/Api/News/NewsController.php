@@ -111,10 +111,9 @@ class NewsController extends Controller
                     'author_id'=> Auth::user()->id,
                 ]);
             });
-            
-            return response()->json(['status'=>true,'message'=>'Post Added Success','post_id'=>$this->post->id,'slug'=>$this->post->slug]);
+            return SendDataApi::bind(['message'=>'Post Added Success','post_id'=>$this->post->id,'slug'=>$this->post->slug]);
             }
-            return response()->json(['error'=>$validator->getMessageBag()]);
+            return SendDataApi::bind($validator->getMessageBag());
         }
         
     
@@ -212,9 +211,9 @@ class NewsController extends Controller
                 }
                     
             });
-                return response()->json(['status'=>true,'message'=>'Post Updated Success']);
+                return SendDataApi::bind(['message'=>'Post Updated Success'],200);
             }
-            return response()->json(['error'=>$validator->getMessageBag()]);
+            return SendDataApi::bind($validator->getMessageBag());
     }
 
     /**
@@ -232,11 +231,11 @@ class NewsController extends Controller
                 return response()->json(['status'=>true,'message'=>'Post Deleted Success']);
             }
         }
-        return response()->json(['status'=>false,'error'=>'Something Went Wrong']);
-
+        return SendDataApi::bind('failed to destroy',400);
     }
     public function getPostByCat(Request $request,$category_slug){
         
+       
         $validator=Validator::make($request->all(),[
             'limit'=>"required|numeric|min:0|max:50",
             'offset'=>"required|numeric|min:0|max:50",
@@ -246,11 +245,13 @@ class NewsController extends Controller
             $post=Category::with(['post'=>function($q) use($request){
                 $q->with('author.details.badges')->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('date','desc');
             }])->whereHas('post')->where('slug',$category_slug)->first();
-            
+            if($post!=null){
+                return SendDataApi::bind($post);
+            }
             // where('category_id',$category->id)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
-            return response()->json($post);
+            return SendDataApi::bind('data not found',404);
         }
-        return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
+        return SendDataApi::bind($validator->getMessageBag(),403);
     }
     public function getPostByUser(Request $request)
     {
@@ -262,9 +263,12 @@ class NewsController extends Controller
             $post=PostHasAuthor::with('post.categories.category')->whereHas('post',function($q){
                 $q->where('status','!=',Constant::POST_STATUS['deleted'])->orderBy('id','desc');
             })->where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->get();
-            return response()->json($post);
+            if($post->count()>0){
+                return SendDataApi::bind($post);
+            }
+            return SendDataApi::bind($post,404);
         }
-        return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
+        return SendDataApi::bind($validator->getMessageBag(),403);
     }
     public function getPost(Request $request)
     {
@@ -290,7 +294,7 @@ class NewsController extends Controller
         $get_slug=Slug::where('slug_name',$slug)->first();
         switch ($get_slug) {
             case null:
-              $data= ['status'=>false,'message'=>'data not found'];
+              $data= SendDataApi::bind('data not found',404);
                 break;
             case $get_slug->slug_type=='post':
                 $post=Post::with('author.details.badges','categories.category')->where('slug',$get_slug->slug_name)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->first();
@@ -298,20 +302,26 @@ class NewsController extends Controller
                 //     'post_id'=>$post->id,
                 //     'ip'=>Request::getClientIp(true),
                 // ]);
-                $data= ['status'=>($post!=null? true :false ),'slug_type'=>$get_slug->slug_type,'data'=>$post];
+                if($post!=null){
+                    $data=SendDataApi::bind(['slug_type'=>$get_slug->slug_type,'data'=>$post]);
+                }
+                $data= SendDataApi::bind('data not found',404);
                 break;
             case $get_slug->slug_type=='category':
                 
                 $post=Category::with(['post'=>function($q){
                     $q->with('author.details.badges')->where('date','<',time())->where('status',Constant::POST_STATUS['public'])->take(20);
-                }])->where('slug',$get_slug->slug_name)->get();
-                $data= ['status'=>($post!=null? true :false ),'slug_type'=>$get_slug->slug_type,'data'=>$post];
+                }])->where('slug',$get_slug->slug_name)->first();
+                if($post!=null){
+                    $data= SendDataApi::bind(['slug_type'=>$get_slug->slug_type,'data'=>$post]);
+                }
+                $data=SendDataApi::bind('data not found',404) ;
             break;
             default:
-                $data= ['status'=>false,'message'=>'data not found'];
+                $data= SendDataApi::bind('data not found',404);
                 break;
         }
-        return response()->json($data);
+        return $data;
     }
     public function getSection(Request $request,$serial){
         $validator=Validator::make($request->all(),[
@@ -323,9 +333,13 @@ class NewsController extends Controller
             $post=HomeSection::with(['post'=>function($query) use ($request){
                     $query->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->take($request->limit)->skip($request->offset)->orderBy('date','desc');
                 },'post.author.details.badges'])->whereHas('post')->where('serial',$serial)->first();
-            return response()->json($post);
+            if($post!=null){
+                return SendDataApi::bind($post);
+            }
+            return SendDataApi::bind('data not found',404);
+
         }
-        return response()->json(['status'=>false,'error'=>'something went wrong']);
+        return SendDataApi::bind($validator->getMessageBag(),403);
     }
     public function getPinPost(Request $request){
         $validator=Validator::make($request->all(),[
@@ -336,17 +350,21 @@ class NewsController extends Controller
             $post=Post::with(['categories.category','author.details'=>function($query){
                 $query->with('badges');
             }])->where('post_type',Constant::POST_TYPE['pinned_post'])->where('status',Constant::POST_STATUS['public'])->skip($request->offset)->take($request->limit)->where('date','<',time())->orderBy('id','desc')->get();
-            return response()->json($post);
-            
+            if($post!=null){
+                return SendDataApi::bind($post);
+            }
+            return SendDataApi::bind('data not found',404);
         }
-        return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
+        return SendDataApi::bind($validator->getMessageBag());
     }
     public function getPostPreview($post_slug){
         $post=Post::with(['categories.category','author.details'=>function($query){
                 $query->with('badges');
             }])->where('status','!=',Constant::POST_STATUS['deleted'])->where('slug',$post_slug)->first();
-        
-        return response()->json(['status'=>true,'data'=>$post]);
+        if($post!=null){
+           return  SendDataApi::bind($post);
+        }
+        return  SendDataApi::bind('data not found',404);
     }
     public function getPostPreviewEdit($id){
         $post=Post::with(['author.details'=>function($query){
@@ -354,7 +372,9 @@ class NewsController extends Controller
             }])->whereHas('author',function($q){
                 $q->where('author_id',Auth::user()->id);
             })->where('status','!=',Constant::POST_STATUS['deleted'])->where('id',$id)->first();
-        
-        return response()->json($post);
+        if($post!=null){
+           return  SendDataApi::bind($post);
+        }
+        return  SendDataApi::bind('data not found',404);
     }
 }

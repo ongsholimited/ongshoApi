@@ -11,6 +11,7 @@ use Auth;
 use App\Rules\OtpTokenCheck;
 use App\Rules\UserNotExistRule;
 use Illuminate\Support\Carbon;
+use App\Http\Traits\SendDataApi;
 class AuthController extends Controller
 {
     
@@ -57,10 +58,10 @@ class AuthController extends Controller
            $user->email_verified_at=Carbon::now()->toDateTimeString();
            $user->save();
            if($user){
-               return response()->json(['status'=>true,'message'=>'Your Sign Up Success']);
+               return SendDataApi::bind(['status'=>true,'message'=>'Your Sign Up Success']);
            }
        }
-       return response()->json(['error'=>$validator->getMessageBag()],422);
+       return SendDataApi::bind(['error'=>$validator->getMessageBag()],422);
         // return response()->json(
         //   ['error'=>$validator->getMessageBag()]  
         // ,422);
@@ -78,31 +79,31 @@ class AuthController extends Controller
                 $user=Auth::user();
                 $data['user']=$user;
                 $data['access_token']=$user->createToken('accessToken')->accessToken; 
-                return response()->json(['message'=>'You have successfully logged in','data'=>$data,'status'=>true],200);
+                return SendDataApi::bind(['message'=>'You have successfully logged in','data'=>$data,'status'=>true],200);
             }else{
-               return response()->json(['status'=>false,'error'=>['password'=>["Email or password did't match"]]]); 
+               return SendDataApi::bind(['status'=>false,'error'=>['password'=>["Email or password did't match"]]]); 
             }
         }
-        return response()->json(['status'=>false,'error'=>$validator->getMessageBag(),'message'=>'Unauthorized'],200);
+        return SendDataApi::bind(['status'=>false,'error'=>$validator->getMessageBag(),'message'=>'Unauthorized'],401);
     }
     public function checkUsername($username){
         $count=User::where('username',$username)->count();
         if($count>0){
-           return ['status'=>true,'message'=>"username already existed"]; 
+           return SendDataApi::bind(['status'=>true,'message'=>"username already existed"]); 
         }
-        return ['status'=>false,'message'=>"username available"];
+        return SendDataApi::bind(['status'=>false,'message'=>"username available"]);
     }
 
     public function logout()
     {
         $revoke = Auth::user()->token()->revoke();
-        return response()->json(['status'=>true,'message'=>'logout successfully done'],200);
+        return SendDataApi::bind(['status'=>true,'message'=>'logout successfully done'],200);
     }
     public function authCheck(){
         if(Auth::check()){
-            return ['status'=>true,'message'=>'User Authenticated'];
+            return SendDataApi::bind(['status'=>true,'message'=>'User Authenticated']);
         }
-        return ['status'=>false,'message'=>'User Unauthorized'];
+        return SendDataApi::bind(['status'=>false,'message'=>'User Unauthorized'],401);
     }
     
 }

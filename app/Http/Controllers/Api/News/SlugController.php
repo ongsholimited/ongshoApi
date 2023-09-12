@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\News;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\News\Slug;
+use App\Http\Traits\SendDataApi;
 class SlugController extends Controller
 {
     public function __construct()
@@ -20,8 +21,8 @@ class SlugController extends Controller
             $existance=Slug::where('slug_name','like',$slug.'%')->whereNotIn('post_id',[$post_id])->count();
         }
         if($existance>0){
-            return response()->json(['status'=>true,'count'=>$existance,'message'=>'the slug already exist']);
+            return SendDataApi::bind(['status'=>true,'count'=>$existance,'message'=>'the slug already exist']);
         }
-        return response()->json(['status'=>false,'count'=>$existance,'message'=>'the slug is not exist']);
+        return SendDataApi::bind(['status'=>false,'count'=>$existance,'message'=>'the slug is not exist']);
     }
 }

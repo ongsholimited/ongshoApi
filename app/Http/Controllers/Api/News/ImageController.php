@@ -23,7 +23,10 @@ class ImageController extends Controller
     public function index()
     {
         $image=Image::where('author_id',Auth::user()->id)->get();
-        return response()->json($image);
+        if($image->count()>0){
+            return SendDataApi::bind($image);
+        }
+        return SendDataApi::bind('data not found',404);
     }
 
     /**
@@ -70,10 +73,10 @@ class ImageController extends Controller
                $image->save();
                if($image){
                    Storage::putFileAs('public/media/images/news/',$img,$f_name.'.'.$ext);
-                   return response()->json(['message'=>'Photo Uploaded Success','image'=>$f_name.'.'.$ext]);
+                   return SendDataApi::bind(['message'=>'Photo Uploaded Success','image'=>$f_name.'.'.$ext]);
                 }
         }
-        return response()->json(['error'=>$validator->getMessagebag()]);
+        return SendDataApi::bind($validator->getMessagebag(),404);
     }
 
     /**
@@ -122,7 +125,7 @@ class ImageController extends Controller
                    return response()->json(['message'=>'Photo Updated Success']);
                 }
         }
-        return response()->json(['error'=>$validator->getMessagebag()]);
+        return SendDataApi::bind($validator->getMessagebag());
     }
 
     /**
@@ -137,7 +140,7 @@ class ImageController extends Controller
     }
     public function getImageByFolderId($folder_id){
         $image=Image::where('folder_id',$folder_id)->get();
-        return response()->json($image);
+        return SendDataApi::bind($image);
     }
     public function getImage(Request $request)
     {

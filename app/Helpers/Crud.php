@@ -6,6 +6,7 @@ class Crud{
     protected $register=[
         'Category'=>'App\Models\News\Category',
         'Meta_Keyword'=>'App\Models\News\MetaKeyword',
+        'News_Setting'=>'App\Models\News\NewsSetting',
     ];
     protected $validation=[
       'Meta_Keyword'=>[
@@ -15,7 +16,8 @@ class Crud{
         'keyword'=>'nullable|max:120',
         'robots'=>'nullable|max:120',
       ],
-      'Category'=>[]
+      'Category'=>[],
+      'News_Setting'=>[],
     ];
     public function store($data){
         // return $data;

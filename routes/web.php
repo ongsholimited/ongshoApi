@@ -73,6 +73,7 @@ Route::group([
     Route::resource('/menu','MenuController');
     Route::resource('/section','SectionController');
     Route::get('/meta_keyword','MetaKeywordController@index')->name('meta_keyword');
+    Route::get('/news_setting','NewsSettingController@index')->name('news_setting');
 });
 
 Route::group([

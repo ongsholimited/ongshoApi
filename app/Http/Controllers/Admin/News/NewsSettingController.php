@@ -29,13 +29,13 @@ class NewsSettingController extends Controller
                     'type'=>'options',
                     'classes'=>'form-control',
                     'options'=>[
-                        'Active'=>1,
                         'request_limit'=>'request_limit',
-                        'pin_post'=>'pin_post',
-                        'section_1'=>'section_1',
-                        'section_2'=>'section_2',
-                        'section_3'=>'section_3',
-                        'section_4'=>'section_4',
+                        'pin_post_limit'=>'pin_post',
+                        'latest_post_limit'=>'latest_post_limit',
+                        'section_1_limit'=>'section_1_limit',
+                        'section_2_limit'=>'section_2_limit',
+                        'section_3_limit'=>'section_3_limit',
+                        'section_4_limit'=>'section_4_limit',
                     ]
                 ],
                 [
@@ -49,7 +49,7 @@ class NewsSettingController extends Controller
         ];
         // return $get=Category::with('parent')->get();
         if(request()->ajax()){
-            $get=Category::all();
+            $get=NewsSetting::all();
             return DataTables::of($get)
             ->addIndexColumn()
             ->addColumn('action',function($get)use($data){

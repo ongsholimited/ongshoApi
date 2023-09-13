@@ -257,14 +257,15 @@ class NewsController extends Controller
     {
         $validator=Validator::make($request->all(),[
             'limit'=>"required|numeric|min:1|max:50",
-            'offset'=>"required|numeric|min:0|max:50",
+            'offset'=>"required|numeric|min:0",
         ]);
         if($validator->passes()){
+            $counter=PostHasAuthor::where('author_id',Auth::user()->id)->count();
             $post=PostHasAuthor::with('post.categories.category')->whereHas('post',function($q){
                 $q->where('status','!=',Constant::POST_STATUS['deleted'])->orderBy('id','desc');
             })->where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->get();
             if($post->count()>0){
-                return SendDataApi::bind($post);
+                return SendDataApi::bind(['data'=>$post,'count'=>$counter]);
             }
             return SendDataApi::bind($post,404);
         }
@@ -275,7 +276,7 @@ class NewsController extends Controller
         
         $validator=Validator::make($request->all(),[
             'limit'=>"required|numeric|min:1|max:50",
-            'offset'=>"required|numeric|min:0|max:50",
+            'offset'=>"required|numeric|min:0",
         ]);
         if($validator->passes()){
             $post=Post::with(['categories.category','author.details'=>function($query){
@@ -329,7 +330,7 @@ class NewsController extends Controller
     public function getSection(Request $request){
         $validator=Validator::make($request->all(),[
             'limit'=>"required|numeric|min:1|max:50",
-            'offset'=>"required|numeric|min:0|max:50",
+            'offset'=>"required|numeric|min:0",
         ]);
         if($validator->passes()){
             // return 'xx';
@@ -349,7 +350,7 @@ class NewsController extends Controller
     public function getPinPost(Request $request){
         $validator=Validator::make($request->all(),[
             'limit'=>"required|numeric|min:1|max:50",
-            'offset'=>"required|numeric|min:0|max:50",
+            'offset'=>"required|numeric|min:0",
         ]);
         if($validator->passes()){
             $post=Post::with(['categories.category','author.details'=>function($query){

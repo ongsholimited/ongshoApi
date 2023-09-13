@@ -159,9 +159,10 @@ class ImageController extends Controller
             'offset'=>"required|numeric|min:0|max:50",
         ]);
         if($validator->passes()){
+            $counter=Image::where('author_id',Auth::user()->id)->count();
             $image=Image::where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
             if($image->count()>0){
-                return SendDataApi::bind($image,200);
+                return SendDataApi::bind(['data'=>$image,'count'=>$counter],200);
             }
             return SendDataApi::bind('data not found',404);
         }

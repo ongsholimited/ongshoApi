@@ -8,6 +8,11 @@ class Crud{
         'Meta_Keyword'=>'App\Models\News\MetaKeyword',
         'News_Setting'=>'App\Models\News\NewsSetting',
     ];
+    protected $setting=[
+      "Category"=>[
+        'delete'=>false,
+      ],
+    ];
     protected $validation=[
       'Meta_Keyword'=>[
         'title'=>'required|max:120',

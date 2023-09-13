@@ -125,6 +125,33 @@
           </a>
         </li>
         <li class="nav-item">
+          <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-cog"></i>
+              <p>
+                  Setting
+                  <i class="fas fa-angle-left right"></i>
+              </p>
+          </a>
+          <ul class="nav nav-treeview ml-1">
+              <li class="nav-item">
+                  <a href="{{URL::to('/news/news_setting')}}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>
+                          General Setting
+                      </p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{URL::to('/news/meta_keyword')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>
+                        Meta Keyword
+                    </p>
+                </a>
+            </li>
+          </ul>
+      </li>
+        <li class="nav-item">
             <a href="{{ route('logout') }}"
             onclick="event.preventDefault();
                           document.getElementById('logout-form').submit();" class="nav-link">

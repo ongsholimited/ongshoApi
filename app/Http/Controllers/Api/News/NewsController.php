@@ -365,7 +365,9 @@ class NewsController extends Controller
     public function getPostPreview($post_slug){
         $post=Post::with(['categories.category','author.details'=>function($query){
                 $query->with('badges');
-            }])->where('status','!=',Constant::POST_STATUS['deleted'])->where('slug',$post_slug)->first();
+            }])->whereHas('author',function($q){
+                $q->where('author_id',Auth::user()->id);
+            })->where('status','!=',Constant::POST_STATUS['deleted'])->where('slug',$post_slug)->first();
         if($post!=null){
            return  SendDataApi::bind($post);
         }

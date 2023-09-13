@@ -9,6 +9,7 @@ use App\Models\News\Image;
 use Storage;
 use Str;
 use Auth;
+use App\Rules\AuthorValidation;
 use App\Http\Traits\SendDataApi;
 class ImageController extends Controller
 {
@@ -111,7 +112,7 @@ class ImageController extends Controller
     public function update(Request $request, $id)
     {
         $validator=Validator::make($request->all(),[
-            "alt"=>"nullable|max:250",
+            "alt"=>["nullable","max:250",new AuthorValidation],
             "title"=>"nullable|max:250",
             "caption"=>"nullable|max:250",
         ]);

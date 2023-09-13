@@ -112,7 +112,7 @@ class ImageController extends Controller
     public function update(Request $request, $id)
     {
         $validator=Validator::make($request->all(),[
-            "alt"=>["nullable","max:250",new AuthorValidation],
+            "alt"=>["nullable","max:250",new AuthorValidation($id)],
             "title"=>"nullable|max:250",
             "caption"=>"nullable|max:250",
         ]);

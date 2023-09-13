@@ -111,7 +111,6 @@ class ImageController extends Controller
     public function update(Request $request, $id)
     {
         $validator=Validator::make($request->all(),[
-            "alt"=>"nullable|max:20",
             "alt"=>"nullable|max:250",
             "title"=>"nullable|max:250",
             "caption"=>"nullable|max:250",
@@ -119,10 +118,11 @@ class ImageController extends Controller
         if($validator->passes()){
                $image=Image::find($id);
                $image->alt=$request->alt;
+               $image->title=$request->title;
+               $image->caption=$request->caption;
                $image->save();
                if($image){
-                  
-                   return response()->json(['message'=>'Photo Updated Success']);
+                   return SendDataApi::bind(['message'=>'Photo Updated Success']);
                 }
         }
         return SendDataApi::bind($validator->getMessagebag());
@@ -136,8 +136,17 @@ class ImageController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+        $image=Image::where('id',$id)->where('author_id',Auth::user()->id)->first();
+        if($image!=null){
+            unlink(storage_path('app/public/media/images/news/'.$image->name));
+        }
+        $image_del=$image->delete();
+        if($image_del){
+            return SendDataApi::bind(['message'=>'Image Deleted Success']);
+        }
+        return SendDataApi::bind('bad request',400);
+
+    }  
     public function getImageByFolderId($folder_id){
         $image=Image::where('folder_id',$folder_id)->get();
         return SendDataApi::bind($image);

@@ -98,7 +98,7 @@ class ImageController extends Controller
      */
     public function edit($id)
     {
-        //
+        return SendDataApi::bind(Image::find($id));
     }
 
     /**

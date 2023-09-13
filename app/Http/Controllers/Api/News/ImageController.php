@@ -139,9 +139,9 @@ class ImageController extends Controller
         $image=Image::where('id',$id)->where('author_id',Auth::user()->id)->first();
         if($image!=null){
             unlink(storage_path('app/public/media/images/news/'.$image->name));
+            $image_del=$image->delete();
         }
-        $image_del=$image->delete();
-        if($image_del){
+        if(isset($image_del)){
             return SendDataApi::bind(['message'=>'Image Deleted Success']);
         }
         return SendDataApi::bind('bad request',400);

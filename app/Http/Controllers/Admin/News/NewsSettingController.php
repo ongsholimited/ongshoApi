@@ -9,6 +9,10 @@ use DataTables;
 use App\Models\News\NewsSetting;
 class NewsSettingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
     public function index(){
         $data=
         [
@@ -20,13 +24,13 @@ class NewsSettingController extends Controller
             'value',
             'action',
            ],
-           'route'=>route('news_setting'),
+           'route'=>route('news.news_setting'),
            'fields'=> [
                 [
                     'name'=>'key',
                     'label'=>'Key Name',
                     'placeholder'=>'Select Key Name',
-                    'type'=>'options',
+                    'type'=>'select',
                     'classes'=>'form-control',
                     'options'=>[
                         'request_limit'=>'request_limit',
@@ -59,11 +63,9 @@ class NewsSettingController extends Controller
             $button.='</div>';
             return $button;
         })
-        ->addColumn('name',function($get){
-            if($get->parent!=null){
-                return $get->parent->name.'-'.$get->name;
-            }else{
-                return $get->name;
+        ->addColumn('key',function($get){
+            if($get->key){
+                return ucwords(str_replace('_',' ',$get->key));
             }
         })
         ->rawColumns(['action'])->make(true);

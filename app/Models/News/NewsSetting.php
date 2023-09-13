@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class NewsSetting extends Model
 {
     use HasFactory;
+    protected $connection='ongsho_news';
+    protected $fillable=['key','value'];
 }

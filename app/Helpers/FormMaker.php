@@ -62,7 +62,7 @@ class FormMaker{
           if($type=="select"){
                 $op="'<option value=''>".$placeholder."</option>";
                 foreach($options as $key=> $val){
-                    $op.="<option value='".$val."'>".$key."</option>";
+                    $op.="<option value='".$val."'>".ucwords(str_replace('_',' ',$key))."</option>";
                 }
                  $html="
                  <div class='form-group'>

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::connection('ongsho_news')->create('news_setting', function (Blueprint $table) {
+        Schema::connection('ongsho_news')->create('news_settings', function (Blueprint $table) {
             $table->id();
             $table->string('key',250)->unique();
             $table->string('value',250);
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::connection('ongsho_news')->dropIfExists('news_setting');
+        Schema::connection('ongsho_news')->dropIfExists('news_settings');
     }
 };

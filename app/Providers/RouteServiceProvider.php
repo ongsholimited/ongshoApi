@@ -7,7 +7,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
-
+use App\Models\News\NewsSetting;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
@@ -46,8 +46,13 @@ class RouteServiceProvider extends ServiceProvider
     protected function configureRateLimiting()
     {
         RateLimiter::for('api', function (Request $request) {
-            
-            return Limit::perMinute(1000)->by($request->user()?->id ?: $request->ip());
+            $setting=NewsSetting::where('key','request_limit')->first();
+            if($setting!=null){
+                $setting=$setting->value;
+            }else{
+                $setting=60;
+            }
+            return Limit::perMinute($setting)->by($request->user()?->id ?: $request->ip());
         });
     }
 }

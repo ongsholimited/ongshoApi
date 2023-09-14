@@ -340,13 +340,16 @@ class NewsController extends Controller
         if($validator->passes()){
             // return 'xx';
             $sections=HomeSection::orderBy('serial','asc')->get();
+            $posts=[];
             foreach($sections as $section){
                 $post=Category::with(['post'=>function($q)use($section){
                     $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->limit($section->limit)->orderBy('date','desc');
                 }])->whereHas('post',function($q){
                     $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
                 })->where('id',$section->category_id)->get();
-                $posts[]=$post;
+                if($post!=null and $post->post->count()>0){
+                    $posts['section'.$section->serial]=$post->post;
+                }
             }
             return SendDataApi::bind($posts);
 

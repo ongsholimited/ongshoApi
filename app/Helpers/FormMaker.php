@@ -50,7 +50,7 @@ class FormMaker{
         } 
           $html='';
           if($type!="select" and $type!="radio" and $type!="checkbox" and $type!="button" and $type!='textarea'){
-                 $html="
+                 $html.="
                  <div class='form-group'>
                     <label>".$label."</label>
                     <input type='".$type."' class='".$classes."' style='".$styles."' placeholder='".$placeholder."' ".$attribute." name='".$name."' id='".$name."'>
@@ -59,17 +59,17 @@ class FormMaker{
                  </div>
                  ";
           }
-          if($type=='textarea'){
+          if($type==='textarea'){
             $html="
                  <div class='form-group'>
                     <label>".$label."</label>
-                    <textarea type='".$type."' class='".$classes."' style='".$styles."' placeholder='".$placeholder."' ".$attribute." name='".$name."' id='".$name."'><textarea>
+                    <textarea class='".$classes."' style='".$styles."' placeholder='".$placeholder."' ".$attribute." name='".$name."' id='".$name."'></textarea>
                     <div class='invalid-feedback' id='msg_".$name."'>
                     </div>
                  </div>
                  ";
           }
-          if($type=="select"){
+          if($type==="select"){
                 $op="'<option value=''>".$placeholder."</option>";
                 foreach($options as $key=> $val){
                     $op.="<option value='".$val."'>".ucwords(str_replace('_',' ',$key))."</option>";
@@ -85,7 +85,7 @@ class FormMaker{
                  </div>
                  ";
           }
-          if($type=="radio" or $type=="checkbox"){
+          if($type==="radio" or $type==="checkbox"){
             $html="
             <div class='form-group'>
                <input type='".$type."' class='".$classes."' style='".$styles."' ".$attribute." name='".$name."'  id='".$name."'>
@@ -95,6 +95,7 @@ class FormMaker{
             </div>
             ";
           }
+          info($html);
         return $html;
     }
 }

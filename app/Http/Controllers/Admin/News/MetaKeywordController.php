@@ -45,7 +45,7 @@ class MetaKeywordController extends Controller
                     'placeholder'=>'Enter Title',
                     'type'=>'text',
                     'classes'=>'form-control text-danger',
-
+                    
                 ],
                 [
                     'name'=>'slug',
@@ -60,6 +60,7 @@ class MetaKeywordController extends Controller
                     'placeholder'=>'Enter Description',
                     'type'=>'textarea',
                     'classes'=>'form-control',
+                    'attribute'=>'rows="5"'
 
                 ],
                 [
@@ -73,7 +74,7 @@ class MetaKeywordController extends Controller
                 [
                     'name'=>'robots',
                     'label'=>'Robots',
-                    'placeholder'=>'Enter Robots',
+                    'placeholder'=>'Select Robots',
                     'type'=>'select',
                     'classes'=>'form-control',
                     'options'=>[
@@ -94,13 +95,6 @@ class MetaKeywordController extends Controller
             <a data-url="'.url('crud_maker/destroy').'" data-id="'.$get->id.'" data-form="'.$data['form']['name'].'" href="javascript:void(0)" class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
             $button.='</div>';
             return $button;
-        })
-        ->addColumn('name',function($get){
-            if($get->parent!=null){
-                return $get->parent->name.'-'.$get->name;
-            }else{
-                return $get->name;
-            }
         })
         ->rawColumns(['action'])->make(true);
         }

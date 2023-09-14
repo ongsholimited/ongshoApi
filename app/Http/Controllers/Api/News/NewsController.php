@@ -346,10 +346,11 @@ class NewsController extends Controller
                     $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->limit($section->limit)->orderBy('date','desc');
                 }])->whereHas('post',function($q){
                     $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
-                })->where('id',$section->category_id)->get();
-                if($post!=null and $post->post->count()>0){
-                    $posts['section'.$section->serial]=$post->post;
-                }
+                })->where('id',$section->category_id)->first();
+                
+                $posts['section'.$section->serial]=(isset($post->post) ? $post->post : []);
+                
+                
             }
             return SendDataApi::bind($posts);
 

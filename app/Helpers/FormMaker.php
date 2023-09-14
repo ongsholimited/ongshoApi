@@ -49,11 +49,21 @@ class FormMaker{
             $options = $array['options'];
         } 
           $html='';
-          if($type!="select" and $type!="radio" and $type!="checkbox" and $type!="button"){
+          if($type!="select" and $type!="radio" and $type!="checkbox" and $type!="button" and $type!='textarea'){
                  $html="
                  <div class='form-group'>
                     <label>".$label."</label>
                     <input type='".$type."' class='".$classes."' style='".$styles."' placeholder='".$placeholder."' ".$attribute." name='".$name."' id='".$name."'>
+                    <div class='invalid-feedback' id='msg_".$name."'>
+                    </div>
+                 </div>
+                 ";
+          }
+          if($type!='textarea'){
+            $html="
+                 <div class='form-group'>
+                    <label>".$label."</label>
+                    <textarea type='".$type."' class='".$classes."' style='".$styles."' placeholder='".$placeholder."' ".$attribute." name='".$name."' id='".$name."'><textarea>
                     <div class='invalid-feedback' id='msg_".$name."'>
                     </div>
                  </div>

@@ -55,6 +55,13 @@ class MetaKeywordController extends Controller
                     'classes'=>'form-control',
                 ],
                 [
+                    'name'=>'slogan',
+                    'label'=>'Slogan',
+                    'placeholder'=>'Enter Slogan',
+                    'type'=>'text',
+                    'classes'=>'form-control',
+                ],
+                [
                     'name'=>'description',
                     'label'=>'Description',
                     'placeholder'=>'Enter Description',

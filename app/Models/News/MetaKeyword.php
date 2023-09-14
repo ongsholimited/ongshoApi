@@ -9,5 +9,5 @@ class MetaKeyword extends Model
 {
     use HasFactory;
     protected $connection='ongsho_news';
-    protected $fillable=['title','slug','description','keyword','robots'];
+    protected $fillable=['title','slug','slogan','description','keyword','robots'];
 }

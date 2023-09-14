@@ -64,7 +64,7 @@ class MetaKeywordController extends Controller
                 ],
                 [
                     'name'=>'keyword',
-                    'label'=>'keyword',
+                    'label'=>'keyword (Separted By Comma)',
                     'placeholder'=>'Enter keyword',
                     'type'=>'text',
                     'classes'=>'form-control',
@@ -74,9 +74,12 @@ class MetaKeywordController extends Controller
                     'name'=>'robots',
                     'label'=>'Robots',
                     'placeholder'=>'Enter Robots',
-                    'type'=>'text',
+                    'type'=>'select',
                     'classes'=>'form-control',
-
+                    'options'=>[
+                        "Active"=>1,
+                        "Deactive"=>0,
+                    ]
                 ],
             ]
         ];

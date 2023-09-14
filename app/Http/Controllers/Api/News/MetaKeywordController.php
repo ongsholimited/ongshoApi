@@ -12,8 +12,8 @@ class MetaKeywordController extends Controller
     {
         $meta= MetaKeyword::where('slug',$slug)->first();
         if($meta!=null){
-            return SendDataApi::bind(true,$meta,200);
+            return SendDataApi::bind($meta,200);
         }
-        return SendDataApi::bind(true,'data not found',404);
+        return SendDataApi::bind('data not found',404);
     }
 }

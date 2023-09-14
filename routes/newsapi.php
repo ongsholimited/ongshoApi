@@ -16,7 +16,7 @@ Route::group([
     Route::get('get-image-by-folder/{folder_id}', 'ImageController@getImageByFolderId')->middleware('auth:api');
     Route::post('get-posts', 'NewsController@getPost');
    
-    Route::post('get-posts/section', 'NewsController@getSection');
+    Route::get('get-posts/section', 'NewsController@getSection');
     Route::post('get-posts/user/', 'NewsController@getPostByUser')->middleware('auth:api');
     Route::post('get-posts/{category_slug}', 'NewsController@getPostByCat');
     Route::post('get-pin-posts', 'NewsController@getPinPost');

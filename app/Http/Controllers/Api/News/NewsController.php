@@ -332,13 +332,7 @@ class NewsController extends Controller
         }
         return $data;
     }
-    public function getSection(Request $request){
-        $validator=Validator::make($request->all(),[
-            'limit'=>"required|numeric|min:1|max:50",
-            'offset'=>"required|numeric|min:0",
-        ]);
-        if($validator->passes()){
-            // return 'xx';
+    public function getSection(){
             $sections=HomeSection::orderBy('serial','asc')->get();
             $posts=[];
             foreach($sections as $section){
@@ -348,28 +342,9 @@ class NewsController extends Controller
                     $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
                 })->where('id',$section->category_id)->first();
                 
-                $posts['section'.$section->serial]=(isset($post->post) ? $post->post : []);
-                
-                
+                $posts['section'.$section->serial]=(isset($post->post) ? $post->post : []);   
             }
             return SendDataApi::bind($posts);
-
-
-
-            
-            
-            $post=HomeSection::with(['post'=>function($q)use($request){
-                $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->limit($request->limit)->offset($request->offset)->orderBy('date','desc');
-            },'post.author.details.badges'])->whereHas('post',function($q){
-                   $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
-                })->orderBy('serial','asc')->get();
-            if($post->count()>0){
-                return SendDataApi::bind($post);
-            }
-            return SendDataApi::bind('data not found',404);
-
-        }
-        return SendDataApi::bind($validator->getMessageBag(),403);
     }
     public function getPinPost(Request $request){
         $validator=Validator::make($request->all(),[

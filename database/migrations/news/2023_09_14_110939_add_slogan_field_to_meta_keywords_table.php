@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::connection('ongsho_news')->table('post_has_authors', function (Blueprint $table) {
-            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
+        Schema::connection('ongsho_news')->table('meta_keywords', function (Blueprint $table) {
+            $table->string('slogan',250)->nullable()->after('slug');
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::connection('ongsho_news')->table('post_has_authors', function (Blueprint $table) {
-            $table->dropForeign(['post_id']);
+        Schema::connection('ongsho_news')->table('meta_keywords', function (Blueprint $table) {
+            $table->dropColumn('slogan');
         });
     }
 };

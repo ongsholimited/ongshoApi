@@ -4,7 +4,7 @@ namespace App\Models\News;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Helpers\Constant;
 class PostHasAuthor extends Model
 {
     use HasFactory;
@@ -19,5 +19,9 @@ class PostHasAuthor extends Model
     public function post()
     {
         return $this->belongsTo(Post::class,'post_id','id');
+    }
+    public function postCount()
+    {
+        return $this->belongsTo(Post::class,'post_id','id')->where('status','!=',Constant::POST_STATUS['delete'])->count();
     }
 }

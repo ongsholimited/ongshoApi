@@ -343,7 +343,9 @@ class NewsController extends Controller
             foreach($sections as $section){
                 $post=Category::with(['post'=>function($q)use($section){
                     $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->limit($section->limit)->orderBy('date','desc');
-                }])->where('id',$section->category_id)->get();
+                }])->whereHas('post',function($q){
+                    $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
+                })->where('id',$section->category_id)->get();
                 $posts[]=$post;
             }
             return SendDataApi::bind($posts);

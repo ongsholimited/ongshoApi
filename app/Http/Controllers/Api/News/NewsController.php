@@ -260,7 +260,7 @@ class NewsController extends Controller
             'offset'=>"required|numeric|min:0",
         ]);
         if($validator->passes()){
-            $counter=DB::select("
+            $counter=DB::connection('ongsho_news')->select("
                 select count(post_has_authors.id) count from post_has_authors
                 inner join posts on posts.id=post_has_authors.post_id 
                 where post_has_authors.author_id=:user_id and posts.status!=:status

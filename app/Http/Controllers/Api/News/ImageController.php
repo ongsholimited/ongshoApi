@@ -54,9 +54,9 @@ class ImageController extends Controller
             "images"=>"required|max:2048|mimes:jpg,png,gif,jpeg,webp",
             "folder"=>"nullable|max:20",
             // "size"=>"required|max:20",
-            "alt"=>"nullable|max:250",
-            "title"=>"nullable|max:250",
-            "caption"=>"nullable|max:250",
+            "alt"=>"nullable|max:150",
+            "title"=>"nullable|max:150",
+            "caption"=>"nullable|max:150",
         ]);
         if($validator->passes()){
                $microtime=explode(' ',microtime(false));
@@ -112,9 +112,9 @@ class ImageController extends Controller
     public function update(Request $request, $id)
     {
         $validator=Validator::make($request->all(),[
-            "alt"=>["nullable","max:250",new AuthorValidation($id)],
-            "title"=>"nullable|max:250",
-            "caption"=>"nullable|max:250",
+            "alt"=>["nullable","max:140",new AuthorValidation($id)],
+            "title"=>"nullable|max:140",
+            "caption"=>"nullable|max:140",
         ]);
         if($validator->passes()){
                $image=Image::find($id);

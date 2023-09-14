@@ -20,8 +20,4 @@ class PostHasAuthor extends Model
     {
         return $this->belongsTo(Post::class,'post_id','id');
     }
-    public function postCount()
-    {
-        return $this->belongsTo(Post::class,'post_id','id')->where('status','!=',Constant::POST_STATUS['deleted'])->count();
-    }
 }

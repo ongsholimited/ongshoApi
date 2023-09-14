@@ -345,8 +345,8 @@ class NewsController extends Controller
                 $post=PostHasCategory::with(['post'=>function($q)use($section){
                     $q->where('status',Constant::POST_STATUS['public'])->take($section->limit)->where('date','<',time())->orderBy('date','desc');
                 }])->where('category_id',$section->category_id)->first();
-                if($post!=null){
-                    $posts[]=$post->post;
+                if($post->post!=null){
+                    $posts[$section->name][]=$post->post;
                 }
             }
 

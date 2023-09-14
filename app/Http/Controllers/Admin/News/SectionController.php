@@ -63,12 +63,14 @@ class SectionController extends Controller
             'category'=>"required|max:20|min:1",
             'name'=>"required|max:200|min:1|unique:ongsho_news.home_sections,name",
             'serial'=>"required|max:200|min:1",
+            'limit'=>"nullable|max:200|min:1",
         ]);
         if($validator->passes()){
            
             $menu=new HomeSection();
             $menu->name=$request->name;
             $menu->serial=$request->serial;
+            $menu->limit=$request->limit;
             $menu->category_id=$request->category;
             $menu->author_id=auth()->user()->id;
             $menu->status=1;
@@ -99,7 +101,7 @@ class SectionController extends Controller
      */
     public function edit($id)
     {
-        //
+        return response()->json(HomeSection::with('category')->where('id',$id)->first());
     }
 
     /**
@@ -113,14 +115,16 @@ class SectionController extends Controller
     {
         $validator=Validator::make($request->all(),[
             'category'=>"required|max:20|min:1",
-            'name'=>"required|max:200|min:1|unique:ongsho_news.menus,name",
+            'name'=>"required|max:200|min:1|unique:ongsho_news.home_sections,name,".$id,
             'serial'=>"required|max:200|min:1",
+            'limit'=>"nullable|max:200|min:1",
         ]);
         if($validator->passes()){
            
             $menu=HomeSection::find($id);
             $menu->name=$request->name;
             $menu->serial=$request->serial;
+            $menu->limit=$request->limit;
             $menu->category_id=$request->category;
             $menu->author_id=auth()->user()->id;
             $menu->status=1;

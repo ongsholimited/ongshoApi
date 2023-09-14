@@ -28,6 +28,10 @@
             name:'serial',
           },
           {
+            data:'limit',
+            name:'limit',
+          },
+          {
             data:'action',
             name:'action',
           }
@@ -41,11 +45,13 @@ window.formRequest= function(){
     let category=$('#category').val();
     let name=$('#name').val();
     let serial=$('#serial').val();
+    let limit=$('#limit').val();
     let id=$('#id').val();
     let formData= new FormData();
     formData.append('category',category);
     formData.append('name',name);
     formData.append('serial',serial);
+    formData.append('limit',limit);
     $('#exampleModalLabel').text('Add New Menu');
     if(id!=''){
       formData.append('_method','PUT');

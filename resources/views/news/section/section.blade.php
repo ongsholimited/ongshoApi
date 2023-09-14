@@ -46,6 +46,7 @@
                     <th>Name</th>
                     <th>Category</th>
                     <th>Serial</th>
+                    <th>limit</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -90,6 +91,14 @@
                       <label for="recipient-name" class="col-form-label">Serial:</label>
                       <input type="number" class="form-control" id="serial" placeholder="Enter Serial Number">
                       <div class="invalid-feedback" id="serial_msg">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-8 mr-auto ml-auto">
+                    <div class="form-group">
+                      <label for="recipient-name" class="col-form-label">Limit:</label>
+                      <input type="number" class="form-control" id="limit" placeholder="Enter Limit">
+                      <div class="invalid-feedback" id="limit_msg">
                       </div>
                     </div>
                   </div>

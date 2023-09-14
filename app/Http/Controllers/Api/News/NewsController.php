@@ -338,6 +338,24 @@ class NewsController extends Controller
         ]);
         if($validator->passes()){
             // return 'xx';
+            $sections=HomeSection::orderBy('serial','asc')->get();
+
+            $posts=[];
+            foreach($sections as $section){
+                $post=PostHasCategory::with(['post'=>function($q)use($section){
+                    $q->where('status',Constant::POST_STATUS['public'])->take($section->limit)->where('date','<',time())->orderBy('date','desc');
+                }])->where('category_id',$section->category_id)->first();
+                if($post!=null){
+                    $posts[]=$post->post;
+                }
+            }
+
+            return SendDataApi::bind($posts);
+
+
+
+            
+            
             $post=HomeSection::with(['post'=>function($q)use($request){
                 $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->limit($request->limit)->offset($request->offset)->orderBy('date','desc');
             },'post.author.details.badges'])->whereHas('post',function($q){

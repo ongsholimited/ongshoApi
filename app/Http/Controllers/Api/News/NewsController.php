@@ -27,6 +27,7 @@ class NewsController extends Controller
      * @return \Illuminate\Http\Response
      */
     private $post;
+    public $i;
     public function __construct() {
         $this->middleware('auth:api')->only(['store','destroy','update']);
     }
@@ -339,17 +340,12 @@ class NewsController extends Controller
         if($validator->passes()){
             // return 'xx';
             $sections=HomeSection::orderBy('serial','asc')->get();
-
-            $posts=[];
             foreach($sections as $section){
-                $post=PostHasCategory::with(['post'=>function($q)use($section){
-                    $q->where('status',Constant::POST_STATUS['public'])->take($section->limit)->where('date','<',time())->orderBy('date','desc');
-                }])->where('category_id',$section->category_id)->first();
-                if($post->post!=null){
-                    $posts[$section->name][]=$post->post;
-                }
+                $post=Category::with(['post'=>function($q)use($section){
+                    $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->limit($section->limit)->orderBy('date','desc');
+                }])->where('id',$section->category_id)->get();
+                $posts[]=$post;
             }
-
             return SendDataApi::bind($posts);
 
 

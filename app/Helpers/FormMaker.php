@@ -59,7 +59,7 @@ class FormMaker{
                  </div>
                  ";
           }
-          if($type!='textarea'){
+          if($type=='textarea'){
             $html="
                  <div class='form-group'>
                     <label>".$label."</label>

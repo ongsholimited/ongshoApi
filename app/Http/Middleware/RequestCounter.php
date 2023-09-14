@@ -17,7 +17,7 @@ class RequestCounter
     public function handle(Request $request, Closure $next)
     {
         
-        info($request->url().' ip: '.$request->ip());
+        info($request->url().' ip: '.$request->getClientIp());
         return $next($request);
     }
 }

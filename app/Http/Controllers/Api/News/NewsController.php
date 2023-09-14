@@ -269,7 +269,7 @@ class NewsController extends Controller
                 $q->where('status','!=',Constant::POST_STATUS['deleted'])->orderBy('id','desc');
             })->where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->get();
             if($post->count()>0){
-                return SendDataApi::bind(['data'=>$post,'count'=>$counter]);
+                return SendDataApi::bind(['data'=>$post,'count'=>$counter[0]->count]);
             }
             return SendDataApi::bind($post,404);
         }

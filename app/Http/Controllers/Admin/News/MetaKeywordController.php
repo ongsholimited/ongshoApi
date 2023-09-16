@@ -93,7 +93,7 @@ class MetaKeywordController extends Controller
         ];
         // return $get=Category::with('parent')->get();
         if(request()->ajax()){
-            $get=MetaKeyword::all();
+            $get=MetaKeyword::query();
             return DataTables::of($get)
             ->addIndexColumn()
             ->addColumn('action',function($get)use($data){

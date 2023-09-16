@@ -54,7 +54,7 @@ class FormMaker{
                  <div class='form-group'>
                     <label>".$label."</label>
                     <input type='".$type."' class='".$classes."' style='".$styles."' placeholder='".$placeholder."' ".$attribute." name='".$name."' id='".$name."'>
-                    <div class='invalid-feedback' id='msg_".$name."'>
+                    <div class='invalid-feedback' id='".$name."_msg'>
                     </div>
                  </div>
                  ";
@@ -64,7 +64,7 @@ class FormMaker{
                  <div class='form-group'>
                     <label>".$label."</label>
                     <textarea class='".$classes."' style='".$styles."' placeholder='".$placeholder."' ".$attribute." name='".$name."' id='".$name."'></textarea>
-                    <div class='invalid-feedback' id='msg_".$name."'>
+                    <div class='invalid-feedback' id='".$name."_msg'>
                     </div>
                  </div>
                  ";
@@ -80,7 +80,7 @@ class FormMaker{
                     <select  class='".$classes."' style='".$styles."' ".$attribute." name='".$name."'  id='".$name."'>
                     ".$op."
                     </select>
-                    <div class='invalid-feedback' id='msg_".$name."'>
+                    <div class='invalid-feedback' id='".$name."_msg'>
                     </div>
                  </div>
                  ";
@@ -90,7 +90,7 @@ class FormMaker{
             <div class='form-group'>
                <input type='".$type."' class='".$classes."' style='".$styles."' ".$attribute." name='".$name."'  id='".$name."'>
                <label>".$label."</label>
-               <div class='invalid-feedback' id='msg_".$name."'>
+               <div class='invalid-feedback' id='".$name."_msg'>
                </div>
             </div>
             ";

@@ -42,7 +42,7 @@ class CategoryController extends Controller
                     'placeholder'=>'Enter Name',
                     'type'=>'text',
                     'classes'=>'form-control',
-
+                    
                 ],
                 [
                     'name'=>'description',
@@ -63,18 +63,19 @@ class CategoryController extends Controller
             ]
         ];
         // return $get=Category::with('parent')->get();
-        if(request()->ajax()){
-            $get=Category::all();
+        if (request()->ajax()) {
+            $get = Category::query();
             return DataTables::of($get)
-            ->addIndexColumn()
-            ->addColumn('action',function($get)use($data){
-            $button  ='<div class="d-flex justify-content-center">';
-            $button.='<a data-url="'.url('crud_maker/edit').'" data-id="'.strval($get->id).'" data-form="'.$data['form']['name'].'"  href="javascript:void(0)" class="btn btn-primary shadow btn-xs sharp me-1 editRow"><i class="fas fa-pencil-alt"></i></a>
-            <a data-url="'.url('crud_maker/destroy').'" data-id="'.strval($get->id).'" data-form="'.$data['form']['name'].'" href="javascript:void(0)" class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
-            $button.='</div>';
-            return $button;
-        })
-        ->rawColumns(['action'])->make(true);
+                ->addIndexColumn()
+                ->addColumn('action', function ($get) use ($data) {
+                    $button = '<div class="d-flex justify-content-center">';
+                    $button .= '<a data-url="' . url('crud_maker/edit') . '" data-id="' . strval($get->id) . '" data-form="' . $data['form']['name'] . '"  href="javascript:void(0)" class="btn btn-primary shadow btn-xs sharp me-1 editRow"><i class="fas fa-pencil-alt"></i></a>';
+                    $button .= '<a data-url="' . url('crud_maker/destroy') . '" data-id="' . strval($get->id) . '" data-form="' . $data['form']['name'] . '" href="javascript:void(0)" class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
+                    $button .= '</div>';
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         }
         
         return view('crud_maker.crud_maker',compact('data'));

@@ -49,8 +49,8 @@ window.formRequest= function(){
                 datatable.ajax.reload();
                 clear();
                 $('#modal').modal('hide');
-            }else if(response.data.error){
-              var keys=Object.keys(response.data.error);
+            }else if(response.data.errors){
+              var keys=Object.keys(response.data.errors);
               keys.forEach(function(d){
                 $('#'+d).addClass('is-invalid');
                 $('#'+d+'_msg').text(response.data.error[d][0]);
@@ -64,8 +64,8 @@ window.formRequest= function(){
               toastr.success(response.data.message);
               datatable.ajax.reload();
               clear();
-          }else if(response.data.error){
-              var keys=Object.keys(response.data.error);
+          }else if(response.data.errors){
+              var keys=Object.keys(response.data.errors);
               keys.forEach(function(d){
                 $('#'+d).addClass('is-invalid')
                 $('#'+d+'_msg').text(response.data.error[d][0]);

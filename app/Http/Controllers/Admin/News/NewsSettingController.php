@@ -53,7 +53,7 @@ class NewsSettingController extends Controller
         ];
         // return $get=Category::with('parent')->get();
         if(request()->ajax()){
-            $get=NewsSetting::all();
+            $get=NewsSetting::query();
             return DataTables::of($get)
             ->addIndexColumn()
             ->addColumn('action',function($get)use($data){

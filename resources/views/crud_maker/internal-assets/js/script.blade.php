@@ -149,7 +149,7 @@ function clear(){
   $(".invalid-feedback").text('');
   $('input').val('');
   $('textarea').val('');
-  $('select').val('').change();
+  // $('select').val(null).change();
   $('#modal').modal('hide')
 }
 </script>

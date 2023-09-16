@@ -2,7 +2,7 @@
 namespace App\Helpers;
 
 use Validator;
-
+use Auth;
 class Crud
 {
     // formname  register with a Model;
@@ -15,7 +15,8 @@ class Crud
         "Category" => [
             'delete' => false,
             'addFields' => [
-                'slug' =>'<?php echo $crud["slug"]= \Str::slug($data["name"],"-");  ?>',
+                'slug' =>'$crud["slug"]= \Str::slug($data["name"],"-");
+                          $crud["author_id"]=Auth::user()->id;',
             ],
         ],
     ];
@@ -63,6 +64,11 @@ class Crud
         $crud = $data;
         unset($crud['_name']);
         unset($crud['form_data_id']);
+        if(isset($this->setting[$data['_name']]['addFields'])){
+          foreach($this->setting[$data['_name']]['addFields'] as $fields){
+            eval($fields);
+          }
+        }
         $validator = Validator::make($crud, $this->validation[$data['_name']]);
 
         if ($validator->passes()) {

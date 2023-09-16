@@ -51,7 +51,7 @@ class ImageController extends Controller
         // return response()->json(['message'=>'Photo Uploaded Success']);
         // return $request->file('images')->getSize();
         $validator=Validator::make($request->all(),[
-            "images"=>"required|max:2048|mimes:jpg,png,gif,jpeg,webp",
+            "images"=>"required|max:2048|mimes:jpg,png,gif,jpeg,webp|dimensions:min_width=960,min_height=540'",
             "folder"=>"nullable|max:20",
             // "size"=>"required|max:20",
             "alt"=>"nullable|max:150",

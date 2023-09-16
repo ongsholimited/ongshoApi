@@ -77,7 +77,7 @@ class ImageController extends Controller
                    return SendDataApi::bind(['message'=>'Photo Uploaded Success','image'=>$f_name.'.'.$ext]);
                 }
         }
-        return SendDataApi::bind($validator->getMessagebag(),404);
+        return SendDataApi::bind($validator->getMessagebag(),403);
     }
 
     /**

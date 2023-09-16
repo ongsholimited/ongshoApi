@@ -48,7 +48,7 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        return response()->json(['message'=>'Photo Uploaded Success','image'=>'fdsfdsf'],403);
+       
         // return $request->file('images')->getSize();
         $validator=Validator::make($request->all(),[
             "images"=>"required|max:2048|mimes:jpg,png,gif,jpeg,webp|dimensions:min_width=960,min_height=540",
@@ -71,9 +71,9 @@ class ImageController extends Controller
                $image->caption=$request->caption;
                $image->folder_id=$request->folder;
                $image->author_id=auth()->user()->id;
-               $image->save();
+            //    $image->save();
                if($image){
-                   Storage::putFileAs('public/media/images/news/',$img,$f_name.'.'.$ext);
+                //    Storage::putFileAs('public/media/images/news/',$img,$f_name.'.'.$ext);
                    return SendDataApi::bind(['message'=>'Photo Uploaded Success','image'=>$f_name.'.'.$ext]);
                 }
         }

@@ -337,7 +337,7 @@ class NewsController extends Controller
             $posts=[];
             foreach($sections as $section){
                 $post=Category::with(['post'=>function($q)use($section){
-                    $q->with('author.details')->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->limit($section->limit)->orderBy('date','desc');
+                    $q->with('author.details.badges')->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->limit($section->limit)->orderBy('date','desc');
                 }])->whereHas('post',function($q){
                     $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
                 })->where('id',$section->category_id)->first();

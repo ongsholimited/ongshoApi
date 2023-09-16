@@ -202,15 +202,7 @@ class NewsController extends Controller
                         }
                     }
                     PostHasCategory::where('post_id',$id)->whereNotIn('category_id',$request->category)->delete();
-                }
-                $auth_exist= PostHasAuthor::where('post_id',$id)->where('author_id',Auth::user()->id)->count();
-                if($auth_exist<1){
-                    PostHasAuthor::create([
-                        'post_id'=> $id,
-                        'author_id'=> Auth::user()->id,
-                    ]);
-                }
-                    
+                }  
             });
                 return SendDataApi::bind(['message'=>'Post Updated Success'],200);
             }

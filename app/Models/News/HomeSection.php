@@ -10,6 +10,7 @@ class HomeSection extends Model
 {
     use HasFactory;
     protected $connection='ongsho_news';
+    protected $appends=['description'];
     public function hasCategory()
     {
         return $this->hasMany(PostHasCategory::class,'category_id','category_id')->select('id','category_id','post_id');
@@ -21,5 +22,8 @@ class HomeSection extends Model
     }
     public function category(){
         return $this->belongsTo(Category::class,'category_id','id');
+    }
+    public function getCategoryAttribute(){
+        return $this->category->description;
     }
 }

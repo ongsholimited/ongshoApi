@@ -30,7 +30,6 @@ Route::group([
     Route::get('/view-count/{post_id}', 'ViewPostController@viewCount');
     Route::get('meta/{slug}', 'MetaKeywordController@getMeta');
     Route::get('/{slug}', 'NewsController@getPostBySlug');
-    
 });
 
   

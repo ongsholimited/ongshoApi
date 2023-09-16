@@ -147,5 +147,9 @@ $('#parent_category').select2({
 function clear(){
   $("input").removeClass('is-invalid').val('');
   $(".invalid-feedback").text('');
+  $('input').val('');
+  $('textarea').val('');
+  $('select').val('').change();
+  $('#modal').modal('hide')
 }
 </script>

@@ -69,17 +69,10 @@ class CategoryController extends Controller
             ->addIndexColumn()
             ->addColumn('action',function($get)use($data){
             $button  ='<div class="d-flex justify-content-center">';
-            $button.='<a data-url="'.url('crud_maker/edit').'" data-id="'.$get->id.'" data-form="'.$data['form']['name'].'"  href="javascript:void(0)" class="btn btn-primary shadow btn-xs sharp me-1 editRow"><i class="fas fa-pencil-alt"></i></a>
-            <a data-url="'.url('crud_maker/destroy').'" data-id="'.$get->id.'" data-form="'.$data['form']['name'].'" href="javascript:void(0)" class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
+            $button.='<a data-url="'.url('crud_maker/edit').'" data-id="'.strval($get->id).'" data-form="'.$data['form']['name'].'"  href="javascript:void(0)" class="btn btn-primary shadow btn-xs sharp me-1 editRow"><i class="fas fa-pencil-alt"></i></a>
+            <a data-url="'.url('crud_maker/destroy').'" data-id="'.strval($get->id).'" data-form="'.$data['form']['name'].'" href="javascript:void(0)" class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
             $button.='</div>';
             return $button;
-        })
-        ->addColumn('name',function($get){
-            if($get->parent!=null){
-                return $get->parent->name.'-'.$get->name;
-            }else{
-                return $get->name;
-            }
         })
         ->rawColumns(['action'])->make(true);
         }

@@ -214,7 +214,7 @@ class NewsController extends Controller
             });
                 return SendDataApi::bind(['message'=>'Post Updated Success'],200);
             }
-            return SendDataApi::bind($validator->getMessageBag());
+            return SendDataApi::bind($validator->getMessageBag(),403);
     }
 
     /**

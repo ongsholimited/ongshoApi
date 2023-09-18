@@ -298,12 +298,14 @@ class PostController extends Controller
             if(isset($data['author'])>0){
                 for($i=0;$i<count($data['author']);$i++){
                     $auth_exist= PostHasAuthor::where('post_id',$id)->where('author_id',$data['author'][$i])->count();
+                    info($auth_exist);
                         if($auth_exist<1){
+                            info($auth_exist);
                             PostHasAuthor::create([
-                            'post_id'=> $id,
-                            'author_id'=> $data['author'][$i],
-                        ]);
-                    }
+                                'post_id'=> $id,
+                                'author_id'=> $data['author'][$i],
+                            ]);
+                        }
                 }
                 PostHasAuthor::where('post_id',$id)->whereNotIn('author_id',$data['author'])->delete();
             }

@@ -114,6 +114,7 @@
                                      $category = App\Models\News\Category::all();
                                      $i = 0;
                                  @endphp
+                                 {{dd($post->categories)}}
                                  @foreach ($category as $cat)
                                      @php
                                          foreach ($post->categories as $pcat) {
@@ -165,7 +166,6 @@
                                     $status_arr=App\Helpers\Constant::POST_STATUS;
                                 @endphp
                                 @foreach($status_arr as $stats_key=> $stats)
-                                
                                 <option {{$stats==$post->status ? 'selected' : ''}} value="{{$stats}}">{{ucfirst(str_replace('_',' ',$stats_key))}}</option>
                                 @endforeach
                                 </select>
@@ -183,7 +183,6 @@
                                     $selected=App\Helpers\Constant::POST_TYPE['general'];
                                 @endphp
                                 @foreach($post_type as $stats_key=> $stats)
-                                
                                 <option {{$stats==$post->post_type ? "selected" : ''}} value="{{$stats}}">{{ucfirst(str_replace('_',' ',$stats_key))}}</option>
                                 @endforeach
                                 </select>

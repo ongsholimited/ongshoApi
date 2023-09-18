@@ -341,7 +341,9 @@ class NewsController extends Controller
                 }])->whereHas('post',function($q){
                     $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
                 })->where('id',$section->category_id)->first();
-                $posts['section'.$section->serial]=(isset($post->post) ? ['section'=>$section,'post'=>$post->post] : []);   
+                if(isset($post->post)){
+                    $posts['section'.$section->serial]=(isset($post->post) ? ['section'=>$section,'post'=>$post->post] : []);   
+                }
             }
             return SendDataApi::bind($posts);
     }

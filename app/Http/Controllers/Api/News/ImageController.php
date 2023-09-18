@@ -51,14 +51,14 @@ class ImageController extends Controller
        
         // return $request->file('images')->getSize();
         $validator=Validator::make($request->all(),[
-            "images"=>"required|size:2097152|mimes:jpg,png,gif,jpeg,webp|dimensions:min_width=960,min_height=540",
+            "images"=>"required|max:2048|mimes:jpg,png,gif,jpeg,webp|dimensions:min_width=960,min_height=540",
             "folder"=>"nullable|max:20",
             // "size"=>"required|max:20",
             "alt"=>"nullable|max:150",
             "title"=>"nullable|max:150",
             "caption"=>"nullable|max:150",
         ],[
-            'images.size'=>'file size limit exceeded max size 2048'
+            'images.max'=>'file size limit exceeded max size 2048'
         ]);
         if($validator->passes()){
                $microtime=explode(' ',microtime(false));

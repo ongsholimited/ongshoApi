@@ -342,7 +342,7 @@ class NewsController extends Controller
                     $q->where('status',Constant::POST_STATUS['public'])->where('date','<',time());
                 })->where('id',$section->category_id)->first();
                 if(isset($post->post)){
-                    $posts['section'.$section->serial]=(isset($post->post) ? ['section'=>$section,'post'=>$post->post] : []);   
+                    $posts['section'.$section->serial]=['section'=>$section,'post'=>$post->post];   
                 }
             }
             return SendDataApi::bind($posts);

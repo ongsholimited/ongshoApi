@@ -41,14 +41,6 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{URL::to('/news/post')}}" class="nav-link">
-              <i class="nav-icon fas fa-donate"></i>
-              <p>
-                Manage Post
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
             <a href="{{URL::to('/news/menu')}}" class="nav-link">
               <i class="nav-icon fas fa-donate"></i>
               <p>

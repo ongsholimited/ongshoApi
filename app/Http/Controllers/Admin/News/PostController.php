@@ -155,8 +155,7 @@ class PostController extends Controller
     // return $data;
     if($validator->passes()){
         DB::transaction(function() use($request,$data){
-            $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
-            
+            $existed_slug=Slug::where('slug_name','like',$request->slug.'%')->whereNotIn('post_id',[$id])->count();
             $post=Post::create([
                 'title'=>$request->title,
                 'meta_description'=>$request->meta_description,
@@ -262,7 +261,7 @@ class PostController extends Controller
     // return $data;
     if($validator->passes()){
         DB::transaction(function() use($request,$data,$id){
-            $existed_slug=Post::where('slug','like',$request->slug.'%')->count();
+            $existed_slug=Slug::where('slug_name','like',$request->slug.'%')->whereNotIn('post_id',[$id])->count();;
             
             $post=Post::where('id',$id)->update([
                 'title'=>$request->title,

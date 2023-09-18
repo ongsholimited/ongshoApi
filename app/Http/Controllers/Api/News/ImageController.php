@@ -156,7 +156,7 @@ class ImageController extends Controller
     {
         $validator=Validator::make($request->all(),[
             'limit'=>"required|numeric|min:1|max:50",
-            'offset'=>"required|numeric|min:0|max:50",
+            'offset'=>"required|numeric|min:0",
         ]);
         if($validator->passes()){
             $counter=Image::where('author_id',Auth::user()->id)->count();

@@ -45,7 +45,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
+    protected $appends=['contact'];
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
      *
@@ -65,5 +65,12 @@ class User extends Authenticatable
     // }
     public function contacts(){
         return $this->hasMany(Social::class,'user_id','id');
+    }
+    public function getContactAttribute(){
+        $arr=[];
+        foreach($this->contacts as $cn){
+           $arr[]=[$cn->type=>$cn->value];
+        }
+        return $arr;
     }
 }

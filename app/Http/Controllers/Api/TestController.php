@@ -11,9 +11,9 @@ class TestController extends Controller
     public function test(Request $request)
     {
        
-        // $post=new Post;
+        return Post::generateAndSetSlug('qwertyuiop');
         return Post::whereTitle('qwertyuiop')->latest('id')->skip(1)->value('slug');
-    //    return $post->generateAndSetSlug('qwertyuiop');
+    //    
         $x='App\Models\User'::find(1);
         return $x;
     //   XXXX

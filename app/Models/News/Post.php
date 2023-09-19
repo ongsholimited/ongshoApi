@@ -43,22 +43,22 @@ class Post extends Model
     //         $product->save();
     //     });
     // }
-    // private function createSlug($title){
-    //     if (static::whereSlug($slug = Str::slug($title))->exists()) {
-    //        $max = static::whereTitle($title)->latest('id')->skip(1)->value('slug');
+    private function createSlug($title){
+        if (static::whereSlug($slug = Str::slug($title))->exists()) {
+           $max = static::whereTitle($title)->latest('id')->skip(1)->value('slug');
   
-    //         if (is_numeric($max[-1])) {
-    //             return preg_replace_callback('/(\d+)$/', function ($mathces) {
-    //                 return $mathces[1] + 1;
-    //             }, $max);
-    //         }
+            if (is_numeric($max[-1])) {
+                return preg_replace_callback('/(\d+)$/', function ($mathces) {
+                    return $mathces[1] + 1;
+                }, $max);
+            }
   
-    //         return "{$slug}-2";
-    //     }
+            return "{$slug}-2";
+        }
   
-    //     return $slug;
-    // }
-    // public function generateAndSetSlug($title) {
-    //     return $this->createSlug($title);
-    // }
+        return $slug;
+    }
+    public function generateAndSetSlug($title) {
+        return $this->createSlug($title);
+    }
 }

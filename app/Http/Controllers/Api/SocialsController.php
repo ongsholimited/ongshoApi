@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Social;
 use Auth;
 use Validator;
+use App\Http\Traits\SendDataApi;
 class SocialsController extends Controller
 {
     /**
@@ -16,8 +17,7 @@ class SocialsController extends Controller
      */
     public function index()
     {
-        return request()->all();
-        return response()->json(Social::where('user_id',Auth::user()->id)->get());
+        return SendDataApi::bind(Social::where('user_id',Auth::user()->id)->get());
     }
 
     /**
@@ -52,10 +52,10 @@ class SocialsController extends Controller
             $user->status= $request->status;
             $user->save();
             if($user){
-                return response()->json(['status'=>true,'message'=>$request->type .' successfully added']);
+                return SendDataApi::bind(['status'=>true,'message'=>$request->type .' successfully added']);
             }
         }
-        return response()->json(['error'=>$validator->getMessageBag()],422);
+        return SendDataApi::bind($validator->getMessageBag(),403);
     }
 
     /**
@@ -66,7 +66,7 @@ class SocialsController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Social::where('id',$id)->where('user_id',Auth::user()->id));
+        return SendDataApi::bind(Social::where('id',$id)->where('user_id',Auth::user()->id));
     }
 
     /**
@@ -89,7 +89,24 @@ class SocialsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator=Validator::make($request->all(),[
+            'type'=>'required|max:100|min:1',
+            'value'=>'required|max:100|min:1',
+            'status'=>'required|max:1|min:1',
+        ]);
+ 
+        if($validator->passes()){
+            $user=Social::find($id);
+            $user->user_id=Auth::user()->id;
+            $user->type=$request->type;
+            $user->value= $request->value;
+            $user->status= $request->status;
+            $user->save();
+            if($user){
+                return SendDataApi::bind(['status'=>true,'message'=>$request->type .' successfully added']);
+            }
+        }
+        return SendDataApi::bind($validator->getMessageBag(),403);
     }
 
     /**

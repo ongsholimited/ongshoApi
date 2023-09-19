@@ -18,6 +18,7 @@ use App\Models\News\HomeSection;
 use App\Models\News\PostView;
 use App\Rules\PostStatusRule;
 use App\Http\Traits\SendDataApi;
+use App\Http\Traits\SlugableTrait;
 use DB;
 class NewsController extends Controller
 {
@@ -26,6 +27,7 @@ class NewsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    use SlugableTrait;
     private $post;
     public $i;
     public function __construct() {
@@ -86,7 +88,7 @@ class NewsController extends Controller
                     'meta_description'=>$request->meta_description,
                     'content'=>$request->content,
                     'focus_keyword'=>$request->focus_keyword,
-                    'slug'=>Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
+                    'slug'=>SlugableTrait::makeSlug($request->slug),
                     'date'=>(isset($request->date) ? strtotime($request->date) : strtotime(date('d-m-Y h:i:s'))  ),
                     'status'=>$request->status,
                     'feature_image'=>isset($request->feature_image)  ? $request->feature_image : 'no-image.jpg' ,
@@ -95,7 +97,7 @@ class NewsController extends Controller
                 ]);
                 $this->post=$post;
                 Slug::create([
-                    'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
+                    'slug_name'=> SlugableTrait::makeSlug($request->slug),
                     'slug_type'=> 'post',
                     'post_id'=> $post->id,
                 ]);
@@ -179,7 +181,7 @@ class NewsController extends Controller
                     'meta_description'=>$request->meta_description,
                     'content'=>$request->content,
                     'focus_keyword'=>$request->focus_keyword,
-                    'slug'=>Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
+                    'slug'=>SlugableTrait::makeSlug($request->slug),
                     'date'=>(isset($request->date) ? strtotime($request->date) : strtotime(date('d-m-Y h:i:s'))  ),
                     'status'=>$request->status,
                     'feature_image'=>isset($request->feature_image)  ? $request->feature_image : 'no-image.jpg' ,
@@ -187,7 +189,7 @@ class NewsController extends Controller
                     'is_scheduled'=>$request->is_scheduled,
                 ]);
                 Slug::where('post_id',$id)->update([
-                    'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
+                    'slug_name'=> SlugableTrait::makeSlug($request->slug),
                     'slug_type'=> 'post',
                     'post_id'=> $id,
                 ]);

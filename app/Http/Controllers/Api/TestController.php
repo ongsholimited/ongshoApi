@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\News\HomeSection;
 use App\Models\News\Post;
+use App\Http\Traits\SlugableTrait;
+
 class TestController extends Controller
 {
+    use SlugableTrait;
     public function test(Request $request)
     {
        
-        return Post::generateAndSetSlug('qwertyuiop');
+        return SlugableTrait::makeSlug('nam-officiis-fuga-magni-omnis-et-voluptatum-veritatis');
         return Post::whereTitle('qwertyuiop')->latest('id')->skip(1)->value('slug');
     //    
         $x='App\Models\User'::find(1);

@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\News\Slug;
 use App\Http\Traits\SendDataApi;
+use App\Http\Traits\SlugableTrait;
 class SlugController extends Controller
 {
+    use SlugableTrait;
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -16,9 +18,9 @@ class SlugController extends Controller
     {
         // this condition for store and update option for frontend post
         if($post_id==null){
-            $existance=Slug::where('slug_name','like',$slug.'%')->count();
+            $existance=SlugableTrait::slugCount($slug,$post_id);
         }else{
-            $existance=Slug::where('slug_name','like',$slug.'%')->whereNotIn('post_id',[$post_id])->count();
+            $existance=SlugableTrait::slugCount($slug,$post_id);
         }
         if($existance>0){
             return SendDataApi::bind(['status'=>true,'count'=>$existance,'message'=>'the slug already exist']);

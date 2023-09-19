@@ -69,7 +69,7 @@ class User extends Authenticatable
     public function getContactAttribute(){
         $arr=[];
         foreach($this->contacts as $cn){
-           $arr[]=[$cn->type=>$cn->value];
+           $arr[$cn->value]=$cn->value;
         }
         return $arr;
     }

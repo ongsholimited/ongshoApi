@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Validator;
 use Auth;
+use App\Http\Traits\SendDataApi;
 class ProfileController extends Controller
 {
 
@@ -64,5 +65,9 @@ class ProfileController extends Controller
     public function getProfile()
     {
         $user=User::with('contacts')->where('id',Auth::user()->id);
+        if($user){
+            return SendDataApi::bind($user);
+        }
+        return SendDataApi::bind('data not found',404);
     }
 }

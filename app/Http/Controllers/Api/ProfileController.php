@@ -64,7 +64,7 @@ class ProfileController extends Controller
     }
     public function getProfile()
     {
-        $user=User::with('contacts')->where('id',Auth::user()->id);
+        $user=User::with('contacts')->where('id',Auth::user()->id)->first();
         if($user){
             return SendDataApi::bind($user);
         }

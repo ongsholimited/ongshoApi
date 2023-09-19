@@ -45,13 +45,20 @@ class SocialsController extends Controller
         ]);
  
         if($validator->passes()){
-            $user=new Social;
-            $user->user_id=Auth::user()->id;
-            $user->type=$request->type;
-            $user->value= $request->value;
-            $user->status= $request->status;
-            $user->save();
-            if($user){
+            // $user=new Social;
+            // $user->user_id=Auth::user()->id;
+            // $user->type=$request->type;
+            // $user->value= $request->value;
+            // $user->status= $request->status;
+            // $user->save();
+            $social=Social::updateOrCreate([
+                'user_id'   => Auth::user()->id,
+                'type'=>$request->type,
+            ],[
+                'value'=>$request->value,
+                'status'=>$request->status,
+            ]);
+            if($social){
                 return SendDataApi::bind(['status'=>true,'message'=>$request->type .' successfully added']);
             }
         }

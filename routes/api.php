@@ -72,6 +72,7 @@ Route::group([
     'namespace' => 'App\Http\Controllers\Api'
 ], function ($router) {
     Route::post('profile-update', 'ProfileController@profileUpdate');
+    Route::get('get-profile', 'ProfileController@getProfile');
     Route::resource('social-account','SocialsController')->middleware('auth:api');
 });
 

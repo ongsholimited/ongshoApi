@@ -63,4 +63,7 @@ class User extends Authenticatable
     // public function news_verify(){
     //     return $this->belongsTo(UserHasBadge::class,'user_id','id');
     // }
+    public function contacts(){
+        return $this->hasMany(Social::class,'user_id','id');
+    }
 }

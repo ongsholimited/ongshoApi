@@ -12,6 +12,7 @@ use App\Rules\PostStatusRule;
 use App\Models\News\PostHasAuthor;
 use App\Models\News\PostHasCategory;
 use App\Models\News\Slug;
+use App\Http\Traits\SlugableTrait;
 use DB;
 use Str;
 use Auth;
@@ -89,7 +90,6 @@ class PostController extends Controller
                             <span class="dropdown-item dropdown-header">Aprove</span>
                             <div class="dropdown-divider"></div>
                         </div>';
-                        
          $button.='</span>';
           
         return $button;
@@ -251,7 +251,7 @@ class PostController extends Controller
         'meta_description'=>$isRequired."|max:250|min:1",
         'content'=>$isRequired."|max:60000|min:1",
         'focus_keyword'=>"nullable|max:500|min:1",
-        'slug'=>"required|max:250|min:1",
+        'slug'=>"required|max:250|min:1|unique:ongsho_news.slugs,slug_name,".$id,
         'status'=>['required','numeric','max:7','min:0'],
         'post_type'=>"required|max:250|min:1",
         'date'=>"required|max:30",
@@ -261,24 +261,24 @@ class PostController extends Controller
     // return $data;
     if($validator->passes()){
         DB::transaction(function() use($request,$data,$id){
-            $existed_slug=Slug::where('slug_name','like',$request->slug.'%')->whereNotIn('post_id',[$id])->count();
-            
+            // $existed_slug=Slug::where('slug_name','like',$request->slug.'%')->whereNotIn('post_id',[$id])->count();
+            $post_stats=Post::where('id',$id)->first()->status;
             $post=Post::where('id',$id)->update([
                 'title'=>$request->title,
                 'meta_description'=>$request->meta_description,
                 'content'=>$request->content,
                 'focus_keyword'=>$request->focus_keyword,
-                'slug'=>Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
+                'slug'=>SlugableTrait::makeSlug($request->slug,$id),
                 'date'=>(isset($request->date) ? strtotime($request->date) : strtotime(date('d-m-Y h:i:s'))  ),
                 'status'=>$request->status,
-                'is_public'=>Constant::POST_STATUS['public']==$request->status? 1 :0,
+                'is_public'=>(Constant::POST_STATUS['public']==$post_stats or Constant::POST_STATUS['public']==$request->status) ? 1 :0,
                 'feature_image'=>isset($request->feature_image)  ? $request->feature_image : 'no-image.jpg' ,
                 'post_type'=>$request->post_type,
                 'is_scheduled'=>$request->is_scheduled,
             ]);
             // $this->post=$post;
             Slug::where('post_id',$id)->update([
-                'slug_name'=> Str::slug($request->slug,'-').($existed_slug>0? '-'.($existed_slug+1):''),
+                'slug_name'=> SlugableTrait::makeSlug($request->slug,$id),
                 'slug_type'=> 'post',
                 'post_id'=> $id,
             ]);

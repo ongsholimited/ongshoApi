@@ -61,4 +61,8 @@ class ProfileController extends Controller
         //   ['error'=>$validator->getMessageBag()]  
         // ,422);
     }
+    public function getProfile()
+    {
+        $user=User::with('contacts')->where('id',Auth::user()->id);
+    }
 }

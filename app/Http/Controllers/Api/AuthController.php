@@ -105,5 +105,6 @@ class AuthController extends Controller
         }
         return SendDataApi::bind(['status'=>false,'message'=>'User Unauthorized'],401);
     }
+
     
 }

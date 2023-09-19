@@ -64,7 +64,7 @@ class ProfileController extends Controller
     }
     public function getProfile()
     {
-        $user=User::except('contacts')->where('id',Auth::user()->id)->first();
+        $user=User::where('id',Auth::user()->id)->first()->makeHidden('contacts');
         if($user){
             return SendDataApi::bind($user);
         }

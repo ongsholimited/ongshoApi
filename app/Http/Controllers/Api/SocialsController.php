@@ -40,7 +40,7 @@ class SocialsController extends Controller
     {
         $validator=Validator::make($request->all(),[
             'type'=>'required|max:100|min:1',
-            'value'=>'required|max:100|min:1',
+            'value'=>'required|max:250|min:1',
             'status'=>'required|max:1|min:1',
         ]);
  

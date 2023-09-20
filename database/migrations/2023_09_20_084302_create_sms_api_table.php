@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('socials', function (Blueprint $table) {
+        Schema::create('sms_apis', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('type',200);
-            $table->string('value',200)->nullable();
-            $table->enum('verify',['verified','unverified'])->default('unverified')->nullable();
+            $table->integer('api_no');
+            $table->string('short_name')->unique();
+            $table->string('short_code');
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('socials');
+        Schema::dropIfExists('sms_apis');
     }
 };

@@ -54,7 +54,7 @@ class ProfileController extends Controller
             }
            $user->save();
            if($user){
-               return response()->json(['message'=>'Profile Updated Success','user'=>Auth::user()]);
+               return response()->json(['message'=>'Profile Updated Success','user'=>User::find($request->user()->id)]);
            }
        }
        return response()->json(['error'=>$validator->getMessageBag()],422);

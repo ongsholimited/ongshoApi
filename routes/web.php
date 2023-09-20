@@ -83,3 +83,11 @@ Route::group([
 ],function () {
     Route::resource('/role','RoleController');
 });
+
+Route::group([
+    "prefix"=>"sms",
+    'namespace' => 'App\Http\Controllers\Admin\Sms',
+],function () {
+    Route::get('/dashbaord','SmsDashboardController@index');
+    Route::get('/sms_api','SmsApiSelectionController@index')->name('sms.smsapi');
+});

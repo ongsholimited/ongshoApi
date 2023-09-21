@@ -42,6 +42,8 @@ Route::group([
     Route::post('signup', 'AuthController@register');
     Route::post('logout', 'AuthController@logout')->middleware('auth:api');
     Route::get('auth-check', 'AuthController@AuthCheck')->middleware('auth:api');
+    Route::post('send-otp-sms', 'PhoneVerifyController@sendOtpSms')->middleware('auth:api');
+    Route::post('verify-otp-sms', 'PhoneVerifyController@OtpVerifySms')->middleware('auth:api');
 });
 
 Route::group([

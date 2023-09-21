@@ -47,7 +47,7 @@
                   <tr>
                     <th>SL</th>
                     @foreach ($data['datatable'] as $th)
-                    <th>{{ucfirst($th)}}</th>
+                    <th>{{ucwords(str_replace('_',' ',$th))}}</th>
                     @endforeach
                   </tr>
                 </thead>

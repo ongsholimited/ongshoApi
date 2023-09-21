@@ -4,15 +4,10 @@ namespace App\Http\Controllers\Admin\Sms;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Helpers\SmsConstant;
-use App\Models\SmsApi;
-
+use App\Models\OtpSmsTemplate;
 use libphonenumber\PhoneNumberUtil;
-use libphonenumber\PhoneNumberType;
-use libphonenumber\PhoneNumberFormat;
 use DataTables;
-
-class SmsApiSelectionController extends Controller
+class AddSmsTemplateController extends Controller
 {
     public function __construct()
     {
@@ -30,29 +25,26 @@ class SmsApiSelectionController extends Controller
             $countryCode = $phoneNumberUtil->getCountryCodeForRegion($countryCode);
         
             // Print the country short name and country code
-            $arr[$countryShortName]= $countryShortName.'|'.$countryCode;
+            $arr[$countryShortName]= $countryShortName;
         }
     $data=
         [
            'form'=>[
-            'name'=>'Sms_Api',
+            'name'=>'Sms_Otp_Template',
            ],
            'datatable'=>[
-            'api_no',
             'short_name',
-            'short_code',
+            'sms',
             'action',
            ],
-           'route'=>route('sms.smsapi'),
+           'route'=>route('sms.otp_sms_temlate'),
            'fields'=> [
                 [
-                    'name'=>'api_no',
-                    'label'=>'Api Area',
-                    'placeholder'=>'Select Key Name',
-                    'type'=>'select',
+                    'name'=>'sms',
+                    'label'=>'SMS (replace @otp_code@)',
+                    'placeholder'=>'Write Sms',
+                    'type'=>'textarea',
                     'classes'=>'form-control',
-                    'options'=>SmsConstant::API,
-
                 ],
                 [
                     'name'=>'short_name',
@@ -66,7 +58,7 @@ class SmsApiSelectionController extends Controller
         ];
         // return $get=Category::with('parent')->get();
         if(request()->ajax()){
-            $get=SmsApi::query();
+            $get=OtpSmsTemplate::query();
             return DataTables::of($get)
             ->addIndexColumn()
             ->addColumn('action',function($get)use($data){
@@ -76,15 +68,9 @@ class SmsApiSelectionController extends Controller
             $button.='</div>';
             return $button;
         })
-        ->addColumn('api_no',function($get){
-            $arr=array_flip(SmsConstant::API);
-            return $arr[$get->api_no];
-        })
         ->rawColumns(['action'])->make(true);
         }
         
         return view('crud_maker.crud_maker',compact('data')) ;
     }
-
-    
 }

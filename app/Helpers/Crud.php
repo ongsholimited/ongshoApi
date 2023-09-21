@@ -10,16 +10,32 @@ class Crud
         'Category' => 'App\Models\News\Category',
         'Meta_Keyword' => 'App\Models\News\MetaKeyword',
         'News_Setting' => 'App\Models\News\NewsSetting',
+        'Sms_Api' => 'App\Models\SmsApi',
+        'Sms_Otp_Template' => 'App\Models\OtpSmsTemplate',
     ];
     protected $setting = [
-        "Category" => [
-            'delete' => false,
-            'addFields' => [
-                'slug' =>'$crud["slug"]= \Str::slug($data["name"],"-");
-                          $crud["author_id"]=Auth::user()->id;',
+            "Category" => [
+                'delete' => false,
+                'addFields' => [
+                    'slug' =>'$crud["slug"]= \Str::slug($data["name"],"-");
+                            $crud["author_id"]=Auth::user()->id;',
+                ],
             ],
-        ],
-    ];
+            "Sms_Api"=>[
+                'delete' => false,
+                'addFields' => [
+                    'short_code' =>'$crud["short_code"]= explode("|",$data["short_name"])[1];
+                                    $crud["short_name"]= explode("|",$data["short_name"])[0];',
+                ],
+            ],
+            "Sms_Otp_Template"=>[
+                'delete' => false,
+                'addFields' => [
+                    'author_id' =>'$crud["author_id"]= auth()->user()->id;',
+                ],
+            ],
+        ];
+    
     protected $validation = [
         'Meta_Keyword' => [
             'title' => 'required|max:120',
@@ -34,6 +50,14 @@ class Crud
             'keyword' => 'nullable|max:120',
         ],
         'News_Setting' => [],
+        'Sms_Api' => [
+            'short_name' => 'required|max:120',
+            'api_no' => 'required|max:120',
+        ],
+        'Sms_Otp_Template' => [
+            'short_name' => 'required|max:120',
+            'sms' => 'required|min:1',
+        ],
     ];
     public function store($data)
     {

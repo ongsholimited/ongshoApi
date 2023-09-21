@@ -90,4 +90,5 @@ Route::group([
 ],function () {
     Route::get('/dashbaord','SmsDashboardController@index');
     Route::get('/sms_api','SmsApiSelectionController@index')->name('sms.smsapi');
+    Route::get('/otp_sms_template','AddSmsTemplateController@index')->name('sms.otp_sms_temlate');
 });

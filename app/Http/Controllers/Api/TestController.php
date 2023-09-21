@@ -7,15 +7,14 @@ use Illuminate\Http\Request;
 use App\Models\News\HomeSection;
 use App\Models\News\Post;
 use App\Http\Traits\SlugableTrait;
-
+use App\Http\Traits\SendSmsTrait;
 class TestController extends Controller
 {
-    use SlugableTrait;
+    use SlugableTrait,SendSmsTrait;
     public function test(Request $request)
     {
        
-        return SlugableTrait::makeSlug('nam-officiis-fuga-magni-omnis-et-voluptatum-veritatis');
-        return Post::whereTitle('qwertyuiop')->latest('id')->skip(1)->value('slug');
+       return $sms=$this->sendSms();
     //    
         $x='App\Models\User'::find(1);
         return $x;

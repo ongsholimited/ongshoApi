@@ -88,7 +88,7 @@ Route::group([
     "prefix"=>"sms",
     'namespace' => 'App\Http\Controllers\Admin\Sms',
 ],function () {
-    Route::get('/dashbaord','SmsDashboardController@index');
+    Route::get('/dashboard','SmsDashboardController@index');
     Route::get('/sms_api','SmsApiSelectionController@index')->name('sms.smsapi');
     Route::get('/otp_sms_template','AddSmsTemplateController@index')->name('sms.otp_sms_temlate');
 });

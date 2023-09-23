@@ -8,6 +8,7 @@ use App\Models\Social;
 use Auth;
 use Validator;
 use App\Http\Traits\SendDataApi;
+use App\Rules\SocialKeyCheck;
 class SocialsController extends Controller
 {
     /**
@@ -39,18 +40,11 @@ class SocialsController extends Controller
     public function store(Request $request)
     {
         $validator=Validator::make($request->all(),[
-            'type'=>'required|max:100|min:1',
-            'value'=>'required|max:250|min:1',
+            'type'=>'required','max:100','min:1',new SocialKeyCheck($request->otp_token,$request->value),
+            'value'=>'nullable|max:250|min:1',
             'status'=>'required|max:1|min:1',
         ]);
- 
         if($validator->passes()){
-            // $user=new Social;
-            // $user->user_id=Auth::user()->id;
-            // $user->type=$request->type;
-            // $user->value= $request->value;
-            // $user->status= $request->status;
-            // $user->save();
             $social=Social::updateOrCreate([
                 'user_id'   => Auth::user()->id,
                 'type'=>$request->type,

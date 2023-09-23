@@ -33,7 +33,7 @@ class ProfileController extends Controller
            'birth_date'=>'nullable|max:100|min:1',
            'gender'=>'nullable|regex:/^([0-9]+)$/',
            'phone'=>'nullable|regex:/^([0-9]+)$/',
-           'image'=>'nullable|mimes:jpeg,png,jpg,gif|max:2048',
+           'image'=>'nullable|max:250',
        ]);
 
        if($validator->passes()){
@@ -43,15 +43,7 @@ class ProfileController extends Controller
            $user->last_name=$requestData['last_name'];
            $user->gender=$requestData['gender'];
            $user->birth_date=($requestData['birth_date']!=null ? strtotime($requestData['birth_date']) : null);
-           if($request->hasFile('image')) {
-                if($user->photo!=null){
-                    unlink(storage_path('app/public/media/images/users/'.$user->photo));
-                }
-                $ext = $request->image->getClientOriginalExtension();
-                $name =auth()->user()->id  .'_'. time() . '.' . $ext;
-                $request->image->storeAs('public/media/images/users', $name);
-                $user->photo = $name;
-            }
+           $user->photo = $request->image;
            $user->save();
            if($user){
                return response()->json(['message'=>'Profile Updated Success','user'=>User::find($request->user()->id)]);

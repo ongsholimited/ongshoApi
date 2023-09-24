@@ -18,7 +18,7 @@ class Crud
                 'delete' => false,
                 'addFields' => [
                     'slug' =>'$crud["slug"]= \Str::slug($data["name"],"-");
-                            $crud["author_id"]=Auth::user()->id;',
+                              $crud["author_id"]=Auth::user()->id;',
                 ],
             ],
             "Sms_Api"=>[
@@ -70,6 +70,7 @@ class Crud
             eval($fields);
           }
         }
+        // return $crud;
         $validator = Validator::make($crud, $this->validation[$data['_name']]);
         if ($validator->passes()) {
             $store = $this->register[$data['_name']]::create($crud);

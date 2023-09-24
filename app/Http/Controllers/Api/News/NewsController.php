@@ -181,7 +181,7 @@ class NewsController extends Controller
                     'meta_description'=>$request->meta_description,
                     'content'=>$request->content,
                     'focus_keyword'=>$request->focus_keyword,
-                    'slug'=>SlugableTrait::makeSlug($request->slug),
+                    'slug'=>SlugableTrait::makeSlug($request->slug,$id),
                     'date'=>(isset($request->date) ? strtotime($request->date) : strtotime(date('d-m-Y h:i:s'))  ),
                     'status'=>$request->status,
                     'feature_image'=>isset($request->feature_image)  ? $request->feature_image : 'no-image.jpg' ,
@@ -189,7 +189,7 @@ class NewsController extends Controller
                     'is_scheduled'=>$request->is_scheduled,
                 ]);
                 Slug::where('post_id',$id)->update([
-                    'slug_name'=> SlugableTrait::makeSlug($request->slug),
+                    'slug_name'=> SlugableTrait::makeSlug($request->slug,$id),
                     'slug_type'=> 'post',
                     'post_id'=> $id,
                 ]);

@@ -23,8 +23,8 @@ class MenuController extends Controller
     {
         // return $get=Category::with('parent')->get();
         if(request()->ajax()){
-            $get=Menu::with('category')->get();
-            return DataTables::of($get)
+            $get=Menu::with('category');
+            return DataTables::eloquent($get)
               ->addIndexColumn()
               ->addColumn('action',function($get){
               $button  ='<div class="d-flex justify-content-center">';

@@ -12,7 +12,7 @@ trait SlugableTrait{
 
         $count = Slug::whereRaw("slug_name RLIKE '^{$slug}(-[0-9]+)?$'")->count();
 
-        return $count ? "{$slug}-{($count+1)}" : $slug;
+        return $count ? $slug.'-'.($count+1) : $slug;
     }
     public static function slugCount($value,$post_id=null)
     {

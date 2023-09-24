@@ -241,7 +241,7 @@ class PostController extends Controller
         $data['category_delete']=array_filter(explode(',',$request->category_delete));
         $data['author']=array_filter(explode(',',$request->author));
         $data['author_delete']=array_filter(explode(',',$request->author_delete));
-        
+        $slug=Slug::where('post_id',$id)->first();
         // return $data;
         $validator=Validator::make($data,[
         'feature_image'=>$isRequired."|max:250|min:1",
@@ -251,7 +251,7 @@ class PostController extends Controller
         'meta_description'=>$isRequired."|max:250|min:1",
         'content'=>$isRequired."|max:60000|min:1",
         'focus_keyword'=>"nullable|max:500|min:1",
-        'slug'=>"required|max:250|min:1|unique:ongsho_news.slugs,slug_name,".$id,
+        'slug'=>"required|max:250|min:1|unique:ongsho_news.slugs,slug_name,".$slug->id,
         'status'=>['required','numeric','max:7','min:0'],
         'post_type'=>"required|max:250|min:1",
         'date'=>"required|max:30",

@@ -58,7 +58,6 @@ class CategoryController extends Controller
                     'placeholder'=>'Enter Keyword',
                     'type'=>'textarea',
                     'classes'=>'form-control',
-
                 ],
             ]
         ];

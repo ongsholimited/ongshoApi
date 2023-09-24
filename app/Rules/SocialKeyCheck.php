@@ -16,6 +16,7 @@ class SocialKeyCheck implements Rule
     public $number;
     public function __construct($otp_token,$number)
     {
+        info('init');
         $this->otp_token=$otp_token;
         $this->number=$number;
 
@@ -30,10 +31,12 @@ class SocialKeyCheck implements Rule
      */
     public function passes($attribute, $value)
     {
+        info('init');
         $otp_token=$this->otp_token;
         $string = $value;
         $pattern = "/\bphone\b/i";
-        if (preg_match($pattern, $string)) {
+        if (!preg_match($pattern, $string)) {
+            info('checked');
             if($otp_token!=null or $otp_token!=''){
                $this->msg='otp token required.';
                return false;
@@ -54,7 +57,6 @@ class SocialKeyCheck implements Rule
      */
     public function message()
     {
-
         return $this->msg;
     }
 }

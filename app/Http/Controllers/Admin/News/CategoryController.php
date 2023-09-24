@@ -10,6 +10,7 @@ use DataTables;
 use DB;
 use Validator;
 use Str;
+use App\Http\Traits\SlugableTrait;
 class CategoryController extends Controller
 {
     /**
@@ -17,6 +18,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    use SlugableTrait;
     public function __construct()
     {
         $this->middleware('auth:admin');
@@ -121,7 +123,7 @@ class CategoryController extends Controller
                     ]);
                 }
                 Slug::create([
-                    'slug_name'=>Str::slug($request->name,'-'),
+                    'slug_name'=>SlugableTrait::makeSlug($request->name),
                     'slug_type'=>'category',
                     'category_id'=>$category->id,
                     'status'=>1,
@@ -171,7 +173,7 @@ class CategoryController extends Controller
             if($request->parent_category=='null'){
                 $cat=new Category;
                 $cat->name=$request->name;
-                $cat->slug=Str::slug($request->name,'-');
+                $cat->slug=SlugableTrait::makeSlug($request->name);
                 $cat->author_id=auth()->user()->id;
                 $cat->status=1;
                 $cat->save();

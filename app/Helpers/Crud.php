@@ -17,9 +17,23 @@ class Crud
             "Category" => [
                 'delete' => false,
                 'addFields' => [
-                    'slug' =>'$crud["slug"]= \Str::slug($data["name"],"-");
+                    'slug' =>'$slug=\App\Models\News\Slug::where("category_id",$data["form_data_id"])->first();
+                              $slug_id=null;
+                              if($slug!=null){
+                                $slug_id=$slug->id;
+                              }
+                              $crud["slug"]= \App\Http\Traits\SlugableTrait::makeSlug($data["name"],$slug_id);
                               $crud["author_id"]=Auth::user()->id;',
                 ],
+                'after_added'=>'
+                \App\Models\News\Slug::updateOrCreate([
+                    "slug_type"=>"category",
+                    "category_id"=>$store->id,
+                ],[
+                    "slug_name"=>App\Http\Traits\SlugableTrait::makeSlug($data["name"],$slug_id),
+                    "status"=>1,
+                ]);
+                ',
             ],
             "Sms_Api"=>[
                 'delete' => false,
@@ -74,9 +88,13 @@ class Crud
         $validator = Validator::make($crud, $this->validation[$data['_name']]);
         if ($validator->passes()) {
             $store = $this->register[$data['_name']]::create($crud);
+            if(isset($this->setting[$data['_name']]['after_added'])){
+                eval($this->setting[$data['_name']]['after_added']);
+            }
             if ($store) {
                 return response()->json(['status' => true, 'message' => str_replace('_', ' ', $data['_name']) . ' Added Succes']);
             }
+            
         }
         return response()->json(['status' => false, 'errors' => $validator->getMessageBag()]);
     }
@@ -97,8 +115,12 @@ class Crud
         $validator = Validator::make($crud, $this->validation[$data['_name']]);
 
         if ($validator->passes()) {
-            $update = $this->register[$data['_name']]::where('id', $data['form_data_id'])->update($crud);
-            if ($update) {
+            $store=$this->register[$data['_name']]::find($data['form_data_id']);
+            $get = $store->update($crud);
+            if(isset($this->setting[$data['_name']]['after_added'])){
+                eval($this->setting[$data['_name']]['after_added']);
+            }
+            if ($get) {
                 return response()->json(['status' => true, 'message' => str_replace('_', ' ', $data['_name']) . ' Updated Succes']);
             }
         }

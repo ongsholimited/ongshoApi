@@ -43,9 +43,8 @@
                 "targets": [1, 2, 3]
             }]
         });
-       post_date= unixTimestampToFormattedDate(parseInt("{{$post->date}}"));
-       $('#date').val(post_date)
-
+       
+     
     })
 
     // $('#content').trumbowyg();
@@ -426,7 +425,8 @@
         // timePickerIncrement: 30,
         locale: {
             format: 'DD-MM-YYYY h:mm A'
-        }
+        },
+        startDate: unixTimestampToFormattedDate(parseInt("{{$post->date}}")),
     });
 
     function convertToUtc(dateString) {

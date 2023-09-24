@@ -31,7 +31,7 @@ class PostController extends Controller
     public function postList()
     {
       if(request()->ajax()){
-        $get=Post::with('categories','author.details')->get();
+        $get=Post::with('categories','author.details')->orderBy('id','desc')->get();
         return DataTables::of($get)
           ->addIndexColumn()
           ->addColumn('action',function($get){

@@ -82,7 +82,6 @@ class NewsController extends Controller
         if($validator->passes()){
             DB::transaction(function() use($request){
                 $existed_slug=Slug::where('slug_name','like',$request->slug.'%')->count();
-                
                 $post=Post::create([
                     'title'=>$request->title,
                     'meta_description'=>$request->meta_description,

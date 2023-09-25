@@ -174,13 +174,13 @@ class NewsController extends Controller
         if($validator->passes()){
 
             DB::transaction(function() use($request,$id){
-                $existed_slug=Slug::where('slug_name','like',$request->slug.'%')->whereNotIn('post_id',[$id])->count();
+                $slug=Slug::where('post_id',$id)->first();
                 $post=Post::where('id',$id)->update([
                     'title'=>$request->title,
                     'meta_description'=>$request->meta_description,
                     'content'=>$request->content,
                     'focus_keyword'=>$request->focus_keyword,
-                    'slug'=>SlugableTrait::makeSlug($request->slug,$id),
+                    'slug'=>SlugableTrait::makeSlug($request->slug,$slug->id),
                     'date'=>(isset($request->date) ? strtotime($request->date) : strtotime(date('d-m-Y h:i:s'))  ),
                     'status'=>$request->status,
                     'feature_image'=>isset($request->feature_image)  ? $request->feature_image : 'no-image.jpg' ,
@@ -188,7 +188,7 @@ class NewsController extends Controller
                     'is_scheduled'=>$request->is_scheduled,
                 ]);
                 Slug::where('post_id',$id)->update([
-                    'slug_name'=> SlugableTrait::makeSlug($request->slug,$id),
+                    'slug_name'=> SlugableTrait::makeSlug($request->slug,$slug->id),
                     'slug_type'=> 'post',
                     'post_id'=> $id,
                 ]);

@@ -261,6 +261,7 @@ class PostController extends Controller
     // return $data;
     if($validator->passes()){
         DB::transaction(function() use($request,$data,$id){
+            $slug=Slug::where('post_id',$id)->first();
             // $existed_slug=Slug::where('slug_name','like',$request->slug.'%')->whereNotIn('post_id',[$id])->count();
             $post_stats=Post::where('id',$id)->first()->status;
             $post=Post::where('id',$id)->update([
@@ -268,7 +269,7 @@ class PostController extends Controller
                 'meta_description'=>$request->meta_description,
                 'content'=>$request->content,
                 'focus_keyword'=>$request->focus_keyword,
-                'slug'=>SlugableTrait::makeSlug($request->slug,$id),
+                'slug'=>SlugableTrait::makeSlug($request->slug,$slug->id),
                 'date'=>(isset($request->date) ? strtotime($request->date) : strtotime(date('d-m-Y h:i:s'))  ),
                 'status'=>$request->status,
                 'is_public'=>(Constant::POST_STATUS['public']==$post_stats or Constant::POST_STATUS['public']==$request->status) ? 1 :0,
@@ -278,7 +279,7 @@ class PostController extends Controller
             ]);
             // $this->post=$post;
             Slug::where('post_id',$id)->update([
-                'slug_name'=> SlugableTrait::makeSlug($request->slug,$id),
+                'slug_name'=> SlugableTrait::makeSlug($request->slug,$slug->id),
                 'slug_type'=> 'post',
                 'post_id'=> $id,
             ]);

@@ -17,7 +17,7 @@ class Crud
             "Category" => [
                 'delete' => false,
                 'addFields' => [
-                    'slug' =>'$slug=\App\Models\News\Slug::where("category_id",$data["form_data_id"])->first();
+                    'slug' =>'$slug=\App\Models\News\Slug::where("category_id",isset($data["form_data_id"])? $data["form_data_id"] : null)->first();
                               $slug_id=null;
                               if($slug!=null){
                                 $slug_id=$slug->id;

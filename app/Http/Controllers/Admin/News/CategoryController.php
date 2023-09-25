@@ -25,6 +25,12 @@ class CategoryController extends Controller
     }
     public function index()
     {
+
+        $categoryall=Category::all();
+        $catArr=[];
+        foreach($categoryall as $cat){
+            $catArr[$cat->name]=$cat->id;
+        }
         $data=
         [
            'form'=>[
@@ -34,10 +40,20 @@ class CategoryController extends Controller
             'name',
             'description',
             'keyword',
+            'parent',
             'action',
            ],
            'route'=>route('news.category.index'),
            'fields'=> [
+                [
+                    'name'=>'parent_id',
+                    'label'=>'Parent',
+                    'placeholder'=>'Enter Name',
+                    'type'=>'select',
+                    'classes'=>'form-control',
+                    'options'=>$catArr,
+                    
+                ],
                 [
                     'name'=>'name',
                     'label'=>'Name',
@@ -65,7 +81,7 @@ class CategoryController extends Controller
         ];
         // return $get=Category::with('parent')->get();
         if (request()->ajax()) {
-            $get = Category::query();
+            $get = Category::with('parent')->get();
             return DataTables::of($get)
                 ->addIndexColumn()
                 ->addColumn('action', function ($get) use ($data) {
@@ -74,6 +90,9 @@ class CategoryController extends Controller
                     $button .= '<a data-url="' . url('crud_maker/destroy') . '" data-id="' . strval($get->id) . '" data-form="' . $data['form']['name'] . '" href="javascript:void(0)" class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
                     $button .= '</div>';
                     return $button;
+                })
+                ->addColumn('parent', function ($get) use ($data) {
+                    return isset($get->parent->name) ?$get->parent->name: '' ;
                 })
                 ->rawColumns(['action'])
                 ->make(true);

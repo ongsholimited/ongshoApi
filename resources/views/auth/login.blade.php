@@ -19,7 +19,7 @@
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="www.ongsho.com"><b>Ongsho </b></a>
+            <a href="url('/')"><b>Ongsho </b></a>
         </div>
 
         <div class="card">

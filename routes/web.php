@@ -15,6 +15,13 @@ use App\Http\Controllers\Admin\CrudMaker\CrudMakerController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::group([
+    'middleware' => ['adminCheck'],
+],function (){
+
+Route::get('/login', function () {
+    return redirect()->route('login');
+});
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -22,7 +29,6 @@ Route::get('/', function () {
 });
 
 Route::get('/test',[TestController::class,'test']);
-
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -92,3 +98,8 @@ Route::group([
     Route::get('/sms_api','SmsApiSelectionController@index')->name('sms.smsapi');
     Route::get('/otp_sms_template','AddSmsTemplateController@index')->name('sms.otp_sms_temlate');
 });
+});
+
+Route::get('/404',function(){
+    return view('errors.404');
+})->name('404');

@@ -244,7 +244,7 @@ class NewsController extends Controller
         ]);
         if($validator->passes()){
             // return 'xx';
-            $post=Category::with(['post'=>function($q) use($request){
+            $post=Category::with(['children','post'=>function($q) use($request){
                 $q->with('author.details.badges')->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('date','desc');
             }])->whereHas('post')->where('slug',$category_slug)->first();
             if($post!=null){
@@ -318,7 +318,7 @@ class NewsController extends Controller
                 break;
             case $get_slug->slug_type=='category':
                 
-                $post=Category::with(['children','post'=>function($q){
+                $post=Category::with(['post'=>function($q){
                     $q->with('author.details.badges')->where('date','<',time())->where('status',Constant::POST_STATUS['public'])->take(20);
                 }])->where('slug',$get_slug->slug_name)->first();
                 if($post!=null){

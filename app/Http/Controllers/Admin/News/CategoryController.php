@@ -41,6 +41,7 @@ class CategoryController extends Controller
             'description',
             'keyword',
             'parent',
+            'serial',
             'action',
            ],
            'route'=>route('news.category.index'),
@@ -75,6 +76,13 @@ class CategoryController extends Controller
                     'label'=>'Keyword',
                     'placeholder'=>'Enter Keyword',
                     'type'=>'textarea',
+                    'classes'=>'form-control',
+                ],
+                [
+                    'name'=>'serial',
+                    'label'=>'Serial',
+                    'placeholder'=>'Enter Keyword',
+                    'type'=>'number',
                     'classes'=>'form-control',
                 ],
             ]

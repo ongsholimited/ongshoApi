@@ -248,7 +248,7 @@ class NewsController extends Controller
                 $q->orderBy('serial','asc');
             },'post'=>function($q) use($request){
                 $q->with('author.details.badges')->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('date','desc');
-            }])->whereHas('post')->where('slug',$category_slug)->first();
+            }])->where('slug',$category_slug)->first();
             if($post!=null){
                 return SendDataApi::bind($post);
             }

@@ -49,13 +49,14 @@ class EmailVerificationController extends Controller
             if($otp_type=='email'){
                 $code=Otp::generate('email:'.$request->email);
                 $message="<p style='background: #e5e5e5; padding: 10px; display: inline-block; margin: 4px 0px;'>".$code."</p>";
-                Mail::send('email.sendmail',[
+                $send=Mail::send('email.sendmail',[
                     'data'=>$message,
                     'name'=>'Ongsho'
                   ],function($message) use ($request,$fromEmail){
                     $message->to($request->email);
                     $message->subject("Email Verification");
                   });
+                  return $send;
                   return response()->json(['status'=>true,'message'=>"send email success"]);
             }
             

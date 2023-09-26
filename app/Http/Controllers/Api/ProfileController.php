@@ -27,7 +27,7 @@ class ProfileController extends Controller
        $requestData['phone']=$request->phone;
 
        $validator=Validator::make($requestData,[
-           'username'=>'required|max:100|min:1|unique:users,username,'.$request->user()->id,
+           'username'=>'nullable|max:100|min:1|unique:users,username,'.$request->user()->id,
            'first_name'=>'nullable|max:100|min:1',
            'last_name'=>'nullable|max:100|min:1',
            'birth_date'=>'nullable|max:100|min:1',
@@ -38,12 +38,16 @@ class ProfileController extends Controller
 
        if($validator->passes()){
            $user=User::find($request->user()->id);
-           $user->username=$requestData['username'];
-           $user->first_name=$requestData['first_name'];
-           $user->last_name=$requestData['last_name'];
-           $user->gender=$requestData['gender'];
-           $user->birth_date=($requestData['birth_date']!=null ? strtotime($requestData['birth_date']) : null);
-           $user->photo = $request->image;
+           if($requestData['username']!=null){
+                $user->username=$requestData['username'];
+                $user->first_name=$requestData['first_name'];
+                $user->last_name=$requestData['last_name'];
+                $user->gender=$requestData['gender'];
+                $user->birth_date=($requestData['birth_date']!=null ? strtotime($requestData['birth_date']) : null);
+           }
+           if($requestData['image']!=null){
+            $user->photo = $request->image;
+           }
            $user->save();
            if($user){
                return response()->json(['message'=>'Profile Updated Success','user'=>User::find($request->user()->id)]);

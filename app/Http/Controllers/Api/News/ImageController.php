@@ -58,7 +58,8 @@ class ImageController extends Controller
             "title"=>"nullable|max:150",
             "caption"=>"nullable|max:150",
         ],[
-            'images.max'=>'file size limit exceeded max size 2MB'
+            'images.max'=>'file size limit exceeded max size 2MB',
+            'images.dimensions'=>'the image dimension required minimum 960x540px'
         ]);
         if($validator->passes()){
                $microtime=explode(' ',microtime(false));

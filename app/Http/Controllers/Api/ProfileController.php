@@ -27,9 +27,9 @@ class ProfileController extends Controller
        $requestData['phone']=$request->phone;
 
        $validator=Validator::make($requestData,[
-           'username'=>'nullable|max:100|min:1|unique:users,username,'.$request->user()->id,
-           'first_name'=>'required|max:100|min:1',
-           'last_name'=>'required|max:100|min:1',
+           'username'=>'required|max:100|min:1|unique:users,username,'.$request->user()->id,
+           'first_name'=>'nullable|max:100|min:1',
+           'last_name'=>'nullable|max:100|min:1',
            'birth_date'=>'nullable|max:100|min:1',
            'gender'=>'nullable|regex:/^([0-9]+)$/',
            'phone'=>'nullable|regex:/^([0-9]+)$/',

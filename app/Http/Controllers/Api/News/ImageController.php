@@ -75,7 +75,8 @@ class ImageController extends Controller
                $image->author_id=auth()->user()->id;
                $image->save();
                if($image){
-                   Storage::putFileAs('public/media/images/news/',$img,$f_name.'.'.$ext);
+                   $up=  Storage::putFileAs('public/media/images/news/',$img,$f_name.'.'.$ext);
+                   info($up);
                    return SendDataApi::bind(['message'=>'Photo Uploaded Success','image'=>$f_name.'.'.$ext]);
                 }
         }

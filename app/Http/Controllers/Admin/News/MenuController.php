@@ -118,7 +118,6 @@ class MenuController extends Controller
             'serial'=>"required|max:200|min:1",
         ]);
         if($validator->passes()){
-           
             $menu=Menu::find($id);
             $menu->name=$request->name;
             $menu->slug=Str::slug($request->name,'-');

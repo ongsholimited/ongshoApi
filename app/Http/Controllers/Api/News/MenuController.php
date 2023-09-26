@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\News;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\News\Menu;
+use App\Models\News\Category;
 use App\Http\Traits\SendDataApi;
 class MenuController extends Controller
 {
@@ -14,10 +14,10 @@ class MenuController extends Controller
     }
     public function getMenu()
     {
-        $data=Menu::with('category')->get();
+        $data=Category::where('parent_id',null)->orderBy('serial','asc')->get();
         if($data->count()>0){
             return SendDataApi::bind($data,200);
         }
-        // return SendDataApi::bind('data not found',404);
+        return SendDataApi::bind('data not found',404);
     }
 }

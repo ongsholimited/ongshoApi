@@ -66,4 +66,5 @@ class ProfileController extends Controller
         }
         return SendDataApi::bind('data not found',404);
     }
+    
 }

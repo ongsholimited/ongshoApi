@@ -42,6 +42,7 @@ class CategoryController extends Controller
             'keyword',
             'parent',
             'serial',
+            'slug',
             'action',
            ],
            'route'=>route('news.category.index'),
@@ -49,7 +50,7 @@ class CategoryController extends Controller
                 [
                     'name'=>'parent_id',
                     'label'=>'Parent',
-                    'placeholder'=>'Enter Name',
+                    'placeholder'=>'Select Parent',
                     'type'=>'select',
                     'classes'=>'form-control',
                     'options'=>$catArr,

@@ -12,7 +12,7 @@ use Google\Service\Gmail\SendAs;
 class CategoryController extends Controller
 {
     public function getCategory(){
-        $category=Category::with('children')->where('status',1)->get();
+        $category=Category::where('status',1)->where('parent_id',null)->get();
         if($category->count()>0){
             return SendDataApi::bind($category,200);
         }

@@ -244,7 +244,9 @@ class NewsController extends Controller
         ]);
         if($validator->passes()){
             // return 'xx';
-            $post=Category::with(['children','post'=>function($q) use($request){
+            $post=Category::with(['children'=>function($q){
+                $q->orderBy('serial','asc');
+            },'post'=>function($q) use($request){
                 $q->with('author.details.badges')->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('date','desc');
             }])->whereHas('post')->where('slug',$category_slug)->first();
             if($post!=null){

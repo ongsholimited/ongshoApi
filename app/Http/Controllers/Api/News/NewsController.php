@@ -318,7 +318,7 @@ class NewsController extends Controller
                 break;
             case $get_slug->slug_type=='category':
                 
-                $post=Category::with(['post'=>function($q){
+                $post=Category::with(['children','post'=>function($q){
                     $q->with('author.details.badges')->where('date','<',time())->where('status',Constant::POST_STATUS['public'])->take(20);
                 }])->where('slug',$get_slug->slug_name)->first();
                 if($post!=null){

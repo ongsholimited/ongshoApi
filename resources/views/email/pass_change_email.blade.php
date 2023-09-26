@@ -23,22 +23,22 @@
             <div style="margin: auto;text-align:center">
                 <span>
                     <a style="display:inline-block; padding:4px" href="https://twitter.com/ongsho" target="_blank" rel="noopener noreferrer">
-                        <img style="height:32px; margin:0px 4px" src="https://api.ongsho.com/storage/social_logo/twitter.png" alt="ongsho twitter">
+                        <img style="height:32px; margin:0px 4px" src="https://api.ongsho.com/storage/media/social_logo/twitter.png" alt="ongsho twitter">
                     </a>
                 </span>
                 <span>
                     <a style="display:inline-block; padding:4px" href="https://facebook.com/ongsho" target="_blank" rel="noopener noreferrer">
-                        <img style="height:32px; margin:0px 4px" src="https://api.ongsho.com/storage/social_logo/facebook.png" alt="ongsho facebook">
+                        <img style="height:32px; margin:0px 4px" src="https://api.ongsho.com/storage/media/social_logo/facebook.png" alt="ongsho facebook">
                     </a>
                 </span>
                 <span>
                     <a style="display:inline-block; padding:4px" href="https://youtube.com/ongsho" target="_blank" rel="noopener noreferrer">
-                        <img style="height:32px; margin:0px 4px" src="https://api.ongsho.com/storage/social_logo/youtube.png" alt="ongsho youtube">
+                        <img style="height:32px; margin:0px 4px" src="https://api.ongsho.com/storage/media/social_logo/youtube.png" alt="ongsho youtube">
                     </a>
                 </span>
                 <span>
                     <a style="display:inline-block; padding:4px" href="https://linkedin.com/company/ongsho" target="_blank" rel="noopener noreferrer">
-                        <img style="height:32px; margin:0px 4px" src="https://api.ongsho.com/storage/social_logo/linkedin.png" alt="ongsho linkedin">
+                        <img style="height:32px; margin:0px 4px" src="https://api.ongsho.com/storage/media/social_logo/linkedin.png" alt="ongsho linkedin">
                     </a>
                 </span>
             </div>

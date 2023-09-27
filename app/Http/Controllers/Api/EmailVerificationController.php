@@ -35,9 +35,9 @@ class EmailVerificationController extends Controller
         // Construct the email message
         $message = "<p style='background: #e5e5e5; padding: 10px; display: inline-block; margin: 4px 0px;'>$code</p>";
         $emailView = ($otp_type == 'password_change') ? 'email.pass_change_email' : 'email.sendmail';
-        $emailSubject = ($otp_type == 'password_change') ? 'Please reset your Ongsho password' : 'Email Verification';
+        $emailSubject = ucwords(str_replace('_',' ',$otp_type)).' Email Verification';
         // Send the email
-        Mail::send($emailView, [
+        $send=Mail::send($emailView, [
             'data' => $message,
             'name' => 'Ongsho'
         ], function ($message) use ($request, $fromEmail, $emailSubject) {

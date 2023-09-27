@@ -407,15 +407,15 @@ class NewsController extends Controller
                 inner join posts on posts.id=post_has_authors.post_id 
                 where post_has_authors.author_id=:user_id and posts.status!=:status
                 ",['status'=>Constant::POST_STATUS['deleted'],'user_id'=>$user->id]);
-                $post_user=PostHasAuthor::with('details.badges','post.categories.category')->whereHas('post',function($q){
+                $post_user=PostHasAuthor::with('post.categories.category')->whereHas('post',function($q){
                     $q->where('status','!=',Constant::POST_STATUS['deleted'])->orderBy('id','desc');
                 })->where('author_id',$user->id)->skip($request->offset)->take($request->limit)->get();
                 if($post_user->count()>0){
                     $d=[];
                     foreach($post_user as $p){
                         $d[]=$p;
-                        
                     }
+                    $post['posts']=$d;
                     return SendDataApi::bind(['data'=>$post,'count'=>$counter[0]->count]);
                 }
             }

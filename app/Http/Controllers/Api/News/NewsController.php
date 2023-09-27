@@ -408,7 +408,7 @@ class NewsController extends Controller
                 where post_has_authors.author_id=:user_id and posts.status!=:status
                 ",['status'=>Constant::POST_STATUS['deleted'],'user_id'=>$user->id]);
                 $post_user=PostHasAuthor::with('post.categories.category')->whereHas('post',function($q){
-                    $q->where('status','!=',Constant::POST_STATUS['deleted'])->orderBy('id','desc');
+                    $q->where('status','=',Constant::POST_STATUS['public'])->orderBy('id','desc');
                 })->where('author_id',$user->id)->skip($request->offset)->take($request->limit)->get();
                 if($post_user->count()>0){
                     $d=[];

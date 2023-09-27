@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::connection('ongsho_news')->table('categories', function (Blueprint $table) {
-            $table->integer('serial');
+            $table->integer('serial')->nullable();
         });
     }
 

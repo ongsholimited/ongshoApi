@@ -16,10 +16,12 @@ use App\Models\News\Slug;
 use App\Helpers\Constant;
 use App\Models\News\HomeSection;
 use App\Models\News\PostView;
+use App\Models\User;
 use App\Rules\PostStatusRule;
 use App\Http\Traits\SendDataApi;
 use App\Http\Traits\SlugableTrait;
 use DB;
+
 class NewsController extends Controller
 {
     /**
@@ -390,21 +392,26 @@ class NewsController extends Controller
     }
 
     public function getAuthorProfile(Request $request,$username){
+    
         $validator=Validator::make($request->all(),[
             'limit'=>"required|numeric|min:1|max:50",
             'offset'=>"required|numeric|min:0",
         ]);
         if($validator->passes()){
-            $counter=DB::connection('ongsho_news')->select("
+            $user=User::where('username',$username)->first();
+            $post=[];
+            if($user!=null){
+                $counter=DB::connection('ongsho_news')->select("
                 select count(post_has_authors.id) count from post_has_authors
                 inner join posts on posts.id=post_has_authors.post_id 
                 where post_has_authors.author_id=:user_id and posts.status!=:status
-            ",['status'=>Constant::POST_STATUS['deleted'],'user_id'=>Auth::user()->id]);
-            $post=PostHasAuthor::with('post.categories.category')->whereHas('post',function($q){
-                $q->where('status','!=',Constant::POST_STATUS['deleted'])->orderBy('id','desc');
-            })->where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->get();
-            if($post->count()>0){
-                return SendDataApi::bind(['data'=>$post,'count'=>$counter[0]->count]);
+                ",['status'=>Constant::POST_STATUS['deleted'],'user_id'=>$user->id]);
+                $post=PostHasAuthor::with('details.badges','post.categories.category')->whereHas('post',function($q){
+                    $q->where('status','!=',Constant::POST_STATUS['deleted'])->orderBy('id','desc');
+                })->where('author_id',$user->id)->skip($request->offset)->take($request->limit)->get();
+                if($post->count()>0){
+                    return SendDataApi::bind(['data'=>$post,'count'=>$counter[0]->count]);
+                }
             }
             return SendDataApi::bind($post,404);
         }

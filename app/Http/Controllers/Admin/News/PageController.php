@@ -21,9 +21,13 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
     public function index()
     {
-        //
+        return view('news.pages.pages');
     }
 
     /**
@@ -74,10 +78,7 @@ class PageController extends Controller
 
     // return $data;
     if($validator->passes()){
-        DB::transaction(function() use($request,$data,$id){
-            
-            // $existed_slug=Slug::where('slug_name','like',$request->slug.'%')->whereNotIn('post_id',[$id])->count();
-            $post_stats=Post::where('id',$id)->first()->status;
+        DB::transaction(function() use($request,$data){
             $post=Post::create([
                 'title'=>$request->title,
                 'meta_description'=>$request->meta_description,

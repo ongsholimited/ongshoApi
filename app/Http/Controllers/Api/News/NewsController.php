@@ -413,7 +413,7 @@ class NewsController extends Controller
                 if($post_user->count()>0){
                     $d=[];
                     foreach($post_user as $p){
-                        $d[]=$p;
+                        $d[]=$p->post;
                     }
                     $post['posts']=$d;
                     return SendDataApi::bind(['data'=>$post,'count'=>$counter[0]->count]);

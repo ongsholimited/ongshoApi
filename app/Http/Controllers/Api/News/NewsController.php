@@ -398,7 +398,7 @@ class NewsController extends Controller
             'offset'=>"required|numeric|min:0",
         ]);
         if($validator->passes()){
-            $user=User::with('details.badges')->where('username',$username)->first();
+            $user=User::with('badges')->where('username',$username)->first();
             $post=[];
             if($user!=null){
                 $post['user']=$user;

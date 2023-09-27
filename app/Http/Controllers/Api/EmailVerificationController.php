@@ -20,50 +20,75 @@ class EmailVerificationController extends Controller
         }
     }
 
-
-    public function sendEmailOtp(Request $request,$otp_type){
-        info('mail start');
-        // return $request->all();
-       if($otp_type=='email'){
-        $exist='unique:users,email';
-       }else{
-        $exist='';
-       }
-        $validator=Validator::make($request->all(),[
-            'email'=>["required","email","max:100","min:1",$exist],
+    public function sendEmailOtp(Request $request, $otp_type)
+    {
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'email', 'max:100', 'min:1', ($otp_type == 'email' ? 'unique:users,email' : '')],
         ]);
-        if($validator->passes()){
-            $fromEmail='noreply@ongsho.com';
-
-            if($otp_type=='password_change'){
-                $code=Otp::generate('change_pass:'.$request->email);
-                $message="<p style='background: #e5e5e5; padding: 10px; display: inline-block; margin: 4px 0px;'>".$code."</p>";
-                Mail::send('email.pass_change_email',[
-                    'data'=>$message,
-                    'name'=>'Ongsho'
-                ],function($message) use ($request,$fromEmail){
-                    $message->to($request->email);
-                    $message->subject("Please reset your Ongsho password");
-                });
-                return response()->json(['status'=>true,'message'=>"send email success"]);
-            }
-            if($otp_type=='email'){
-                $code=Otp::generate('email:'.$request->email);
-                $message="<p style='background: #e5e5e5; padding: 10px; display: inline-block; margin: 4px 0px;'>".$code."</p>";
-                $send=Mail::send('email.sendmail',[
-                    'data'=>$message,
-                    'name'=>'Ongsho'
-                  ],function($message) use ($request,$fromEmail){
-                    $message->to($request->email);
-                    $message->subject("Email Verification");
-                  });
-                //   return $send;
-                  return response()->json(['status'=>true,'message'=>"send email success"]);
-            }
-            
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'error' => $validator->getMessageBag()]);
         }
-        return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
+        $fromEmail = 'noreply@ongsho.com';
+        // Generate the OTP code
+        $code = ($otp_type == 'password_change') ? Otp::generate('change_pass:' . $request->email) : Otp::generate('email:' . $request->email);
+        // Construct the email message
+        $message = "<p style='background: #e5e5e5; padding: 10px; display: inline-block; margin: 4px 0px;'>$code</p>";
+        $emailView = ($otp_type == 'password_change') ? 'email.pass_change_email' : 'email.sendmail';
+        $emailSubject = ($otp_type == 'password_change') ? 'Please reset your Ongsho password' : 'Email Verification';
+        // Send the email
+        Mail::send($emailView, [
+            'data' => $message,
+            'name' => 'Ongsho'
+        ], function ($message) use ($request, $fromEmail, $emailSubject) {
+            $message->to($request->email);
+            $message->subject($emailSubject);
+        });
+        return response()->json(['status' => true, 'message' => 'send email success']);
     }
+    // public function sendEmailOtp(Request $request,$otp_type){
+    //     info('mail start');
+    //     // return $request->all();
+    //    if($otp_type=='email'){
+    //     $exist='unique:users,email';
+    //    }else{
+    //     $exist='';
+    //    }
+    //     $validator=Validator::make($request->all(),[
+    //         'email'=>["required","email","max:100","min:1",$exist],
+    //     ]);
+    //     if($validator->passes()){
+    //         $fromEmail='noreply@ongsho.com';
+
+    //         if($otp_type=='password_change'){
+    //             $code=Otp::generate('change_pass:'.$request->email);
+    //             $message="<p style='background: #e5e5e5; padding: 10px; display: inline-block; margin: 4px 0px;'>".$code."</p>";
+    //             Mail::send('email.pass_change_email',[
+    //                 'data'=>$message,
+    //                 'name'=>'Ongsho'
+    //             ],function($message) use ($request,$fromEmail){
+    //                 $message->to($request->email);
+    //                 $message->subject("Please reset your Ongsho password");
+    //             });
+    //             return response()->json(['status'=>true,'message'=>"send email success"]);
+    //         }
+    //         if($otp_type=='email'){
+    //             $code=Otp::generate('email:'.$request->email);
+    //             $message="<p style='background: #e5e5e5; padding: 10px; display: inline-block; margin: 4px 0px;'>".$code."</p>";
+    //             Mail::send('email.sendmail',[
+    //                 'data'=>$message,
+    //                 'name'=>'Ongsho'
+    //               ],function($message) use ($request,$fromEmail){
+    //                 $message->to($request->email);
+    //                 $message->subject("Email Verification");
+    //               });
+    //             //   return $send;
+    //               return response()->json(['status'=>true,'message'=>"send email success"]);
+    //         }
+            
+    //     }
+    //     return response()->json(['status'=>false,'error'=>$validator->getMessageBag()]);
+    // }
     public function varifyEmail(Request $request)
     {
         $validator=Validator::make($request->all(),[

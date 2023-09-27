@@ -22,6 +22,7 @@ class EmailVerificationController extends Controller
 
 
     public function sendEmailOtp(Request $request,$otp_type){
+        info('mail start');
         // return $request->all();
        if($otp_type=='email'){
         $exist='unique:users,email';

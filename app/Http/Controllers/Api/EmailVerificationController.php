@@ -57,7 +57,6 @@ class EmailVerificationController extends Controller
                     $message->subject("Email Verification");
                   });
                 //   return $send;
-
                   return response()->json(['status'=>true,'message'=>"send email success"]);
             }
             

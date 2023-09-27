@@ -398,18 +398,24 @@ class NewsController extends Controller
             'offset'=>"required|numeric|min:0",
         ]);
         if($validator->passes()){
-            $user=User::where('username',$username)->first();
+            $user=User::with('details.badges')->where('username',$username)->first();
             $post=[];
             if($user!=null){
+                $post['user']=$user;
                 $counter=DB::connection('ongsho_news')->select("
                 select count(post_has_authors.id) count from post_has_authors
                 inner join posts on posts.id=post_has_authors.post_id 
                 where post_has_authors.author_id=:user_id and posts.status!=:status
                 ",['status'=>Constant::POST_STATUS['deleted'],'user_id'=>$user->id]);
-                $post=PostHasAuthor::with('details.badges','post.categories.category')->whereHas('post',function($q){
+                $post_user=PostHasAuthor::with('details.badges','post.categories.category')->whereHas('post',function($q){
                     $q->where('status','!=',Constant::POST_STATUS['deleted'])->orderBy('id','desc');
                 })->where('author_id',$user->id)->skip($request->offset)->take($request->limit)->get();
-                if($post->count()>0){
+                if($post_user->count()>0){
+                    $d=[];
+                    foreach($post_user as $p){
+                        $d[]=$p;
+                        
+                    }
                     return SendDataApi::bind(['data'=>$post,'count'=>$counter[0]->count]);
                 }
             }

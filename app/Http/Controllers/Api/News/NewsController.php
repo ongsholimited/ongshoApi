@@ -315,7 +315,7 @@ class NewsController extends Controller
                     'post_id'=>$post->id,
                     'ip'=>request()->ip(),
                 ]);
-                $view_count=PostView::where('post_id')->count();
+                $view_count=PostView::where('post_id',$post->id)->count();
                 if($post!=null){
                     $data=SendDataApi::bind(['slug_type'=>$get_slug->slug_type,'data'=>$post,'view_count'=>$view_count]);
                 }else{

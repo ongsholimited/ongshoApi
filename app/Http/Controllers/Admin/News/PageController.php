@@ -78,7 +78,7 @@ class PageController extends Controller
                 'page_id'=> $post->id,
             ]);
         });
-        return response()->json(['status'=>true,'message'=>'Post Added Success']);
+        return response()->json(['status'=>true,'message'=>'Page Added Success']);
         }
         return response()->json(['error'=>$validator->getMessageBag()]);
     }
@@ -144,7 +144,7 @@ class PageController extends Controller
                 'slug_type'=> 'page',
             ]);
         });
-        return response()->json(['status'=>true,'message'=>'Post Added Success']);
+        return response()->json(['status'=>true,'message'=>'Page Updated Success']);
         }
         return response()->json(['error'=>$validator->getMessageBag()]);
     }

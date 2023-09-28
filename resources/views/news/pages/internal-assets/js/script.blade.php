@@ -3,6 +3,7 @@
   var gallery_selector;
   var cat_del=[];
   var author_del=[];
+  var img_url;
   $(document).ready(function() {
       datatable = $('#datatable').DataTable({
           processing: true,
@@ -334,8 +335,19 @@
   }
 
   function addImage(url) {
-      console.log(url);
-      $('.ck-content').text(url);
+      image_url=url;
+      $('#insert').attr('disabled',false);
+  }
+  function insert(){
+        console.log(image_url);
+        const imageHtml = `<img src="${image_url}" alt="Inserted Image" />`;
+        editorInstance.model.change(writer => {
+            const imageElement = writer.createElement('image', {
+                src: image_url,
+                alt: 'Inserted Image',
+            });
+            editorInstance.model.insertContent(imageElement);
+        });
   }
   $(document).on('click', '.removeAuthor', function() {
       event.preventDefault();

@@ -155,7 +155,7 @@
                      </div>
                      <div class="modal-footer">
                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                         <button type="button" class="btn btn-primary" onclick="formRequest()">Insert</button>
+                         <button type="button" disabled id='insert' class="btn btn-primary" onclick="insert()">Insert</button>
                      </div>
                  </div>
              </div>

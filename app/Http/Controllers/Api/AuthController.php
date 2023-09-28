@@ -77,7 +77,7 @@ class AuthController extends Controller
             $credential=$request->only('email','password');
             if(Auth::guard('web')->attempt($credential)){
                 $user=Auth::user();
-                $data['user']=$user;
+                $data['user']=$user->makeHidden('contacts');
                 $data['access_token']=$user->createToken('accessToken')->accessToken; 
                 return SendDataApi::bind(['message'=>'You have successfully logged in','data'=>$data,'status'=>true],200);
             }else{

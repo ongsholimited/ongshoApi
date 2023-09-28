@@ -274,7 +274,7 @@ class NewsController extends Controller
             ",['status'=>Constant::POST_STATUS['deleted'],'user_id'=>Auth::user()->id]);
             $post=PostHasAuthor::with('post.categories.category')->whereHas('post',function($q){
                 $q->where('status','!=',Constant::POST_STATUS['deleted'])->orderBy('id','desc');
-            })->where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->get();
+            })->where('author_id',Auth::user()->id)->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
             if($post->count()>0){
                 return SendDataApi::bind(['data'=>$post,'count'=>$counter[0]->count]);
             }

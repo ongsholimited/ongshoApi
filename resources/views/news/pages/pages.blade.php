@@ -73,9 +73,9 @@
                                 </div>
                               </div>
                                  <div class="col-md-10 mr-auto ml-auto">
-                                     {{-- <button type='button' class="btn btn-danger" data-toggle="modal" data-target="#modal">
-                                         UPLOAD IMAGES
-                                     </button> --}}
+                                     <button type='button' class="btn btn-danger" data-toggle="modal" data-target="#modal" onclick="showImage()">
+                                         Add Image
+                                     </button>
 
                                      <div class="form-group">
                                          <label for="recipient-name" class="col-form-label">Content:</label>
@@ -140,12 +140,7 @@
                          </button>
                      </div>
                      <div class="modal-body">
-                         <button class="btn btn-sm btn-primary "><i class="fas fa-folder"></i> <i
-                                 class="fas fa-plus"></i></button>
-                         <input type="text" class="form-control-sm" id='folder_name'>
-                         <div class="invalid-feedback" id="name_msg"></div>
-                         <button class="btn btn-sm btn-primary" onclick="createFolder()">Add</button>
-                         <span id="all-folders"></span>
+                         
                          <div class="row all-images mt-2 p-2">
 
                          </div>

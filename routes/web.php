@@ -69,6 +69,7 @@ Route::group([
     Route::get('/dashboard','NewsDashboardController@homePage');
     Route::resource('/category','CategoryController');
     Route::resource('/page','PageController');
+    Route::get('/page-list','PageController@list');
     Route::resource('/badge','BadgeController');
     Route::post('/get-category','CategoryController@getCategory');
     Route::resource('/post','PostController');

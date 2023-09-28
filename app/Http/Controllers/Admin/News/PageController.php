@@ -13,7 +13,7 @@ use DB;
 use Str;
 use Auth;
 use Validator;
-
+use DataTables;
 class PageController extends Controller
 {
     /**
@@ -129,8 +129,9 @@ class PageController extends Controller
     }
     public function list()
     {
+        // return $get=Page::with('slug')->get();
         if(request()->ajax()){
-            $get=Page::query();
+            $get=Page::with('slug')->get();
             return DataTables::of($get)
               ->addIndexColumn()
               ->addColumn('action',function($get){
@@ -140,11 +141,14 @@ class PageController extends Controller
               $button.='</div>';
             return $button;
           })
-          ->addColumn('user',function($get){
-            return $get->user->first_name.' '.$get->user->last_name;
+          ->addColumn('slug',function($get){
+            return $get->slug->slug_name;
+        })
+        ->addColumn('status',function($get){
+            return $get->status ? 'Active' : 'Deactive';
         })
           ->rawColumns(['action'])->make(true);
         }
-        return view('news.badge.badge');
+        return view('news.pages.list');
     }
 }

@@ -9,7 +9,7 @@
           serverSide: true,
           responsive: true,
           ajax: {
-              url: "{{ URL::to('news/post-list') }}"
+              url: "{{ URL::to('news/page-list') }}"
           },
           columns: [{
                   data: 'DT_RowIndex',

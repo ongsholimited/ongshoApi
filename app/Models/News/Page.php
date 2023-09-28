@@ -11,4 +11,7 @@ class Page extends Model
     protected $connection='ongsho_news';
     protected $fillable=['title','description','keyword','content','status','author_id'];
 
+    public function slug(){
+        return $this->belongsTo(Slug::class,'id','page_id');
+    }
 }

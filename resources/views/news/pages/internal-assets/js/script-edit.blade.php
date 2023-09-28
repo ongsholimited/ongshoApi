@@ -1,8 +1,8 @@
 <script>
     var datatable;
     var gallery_selector;
-    var cat_del = [];
-    var author_del = [];
+    var cat_del=[];
+    var author_del=[];
     var img_url;
     $(document).ready(function() {
         datatable = $('#datatable').DataTable({
@@ -41,13 +41,13 @@
             ],
             "columnDefs": [{
                 className: "text-left",
-                "targets": [1, 2, 3]
+                "targets": [1,2,3]
             }]
         });
-
-
+       
+     
     })
-
+  
     // $('#content').trumbowyg();
     window.formRequest = function() {
         $('input,select').removeClass('is-invalid');
@@ -62,7 +62,7 @@
         }
         formData.append('galary', galary);
         $('#exampleModalLabel').text('Add New Category');
-
+  
         //axios post request
         axios.post("", formData)
             .then(function(response) {
@@ -78,9 +78,9 @@
                 }
             })
     }
-
+  
     function submitPost() {
-        console.log('xx')
+          console.log('xx')
         $('input,select').removeClass('is-invalid');
         let title = $("#title").val();
         let slug = $("#slug").val();
@@ -90,13 +90,13 @@
         let focus_keyword = $("#focus_keyword").val();
         let status = $("#status").val();
         tag = '';
-        if (focus_keyword != '') {
-            focus_keyword = JSON.parse(focus_keyword);
-            focus_keyword.map((item, index) => {
-                tag += item.value + (focus_keyword.length !== (index + 1) ? ',' : '');
-            })
-        }
-
+       if(focus_keyword!=''){
+          focus_keyword = JSON.parse(focus_keyword);
+          focus_keyword.map((item, index) => {
+              tag += item.value + (focus_keyword.length !== (index + 1) ? ',' : '');
+          })
+       }
+        
         var formData = new FormData();
         formData.append('title', title);
         formData.append('slug', slug);
@@ -104,10 +104,10 @@
         formData.append('content', content);
         formData.append('keyword', tag);
         formData.append('status', status);
-        //   formData.append('_method', 'PUT');
+        formData.append('_method', 'PUT');
         $('#exampleModalLabel').text('Add New Post');
         //axios post request
-        axios.post("{{ route('news.page.store') }}", formData)
+        axios.post("{{route('news.page.update',$post->id)}}", formData)
             .then(function(response) {
                 if (response.data.message) {
                     toastr.success(response.data.message)
@@ -120,7 +120,7 @@
                     })
                 }
             })
-
+  
     }
     $(document).delegate("#modalBtn", "click", function(event) {
         clear();
@@ -189,13 +189,13 @@
             cache: true,
         }
     })
-
+  
     function clear() {
         $("input").removeClass('is-invalid').val('');
         $(".invalid-feedback").text('');
         $('form select').val('').niceSelect('update');
     }
-
+  
     // var valData;
     // ClassicEditor
     //     .create(document.querySelector('#content'))
@@ -203,19 +203,19 @@
     //         editor.model.insertContent('asdflkjnksdjlkfj');
     //         editor.model.document.on('change:data', () => {
     //             valData = editor.getData();
-
+  
     //         });
     //     })
     //     .catch(error => {
     //       console.error(error);
     //     });
     $(document).ready(function() {
-
+  
         showFolder()
         showImage();
         var input = document.querySelector('#focus_keyword');
         tagify = new Tagify(input, {
-
+  
             maxTags: 10,
             dropdown: {
                 maxItems: 20, // <- mixumum allowed rendered suggestions
@@ -225,7 +225,7 @@
             }
         })
     })
-
+  
     function uploadImage(file) {
         $('#content').summernote('insertImage',
             'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png'
@@ -233,7 +233,7 @@
         // console.log(file)
         var formData = new FormData();
         formData.append('file', file);
-
+  
         $.ajax({
             url: '/upload/image',
             method: 'POST',
@@ -245,7 +245,7 @@
             }
         });
     }
-
+  
     var imagesFiles = [];
     let ajaxConfig = {
         ajaxRequester: function(config, uploadFile, pCall, sCall, eCall) {
@@ -275,7 +275,7 @@
         multiple: false,
         ajaxConfig: ajaxConfig,
     })
-
+  
     function createFolder() {
         name = $('#folder_name').val();
         axios.post("{{ URL::to('news/folder') }}", {
@@ -290,7 +290,7 @@
                 }
             })
     }
-
+  
     function showFolder() {
         axios.get("{{ URL::to('news/get-folder') }}")
             .then(res => {
@@ -299,18 +299,18 @@
                 res.data.forEach(function(d) {
                     // html+="<button class='btn btn-sm btn-warning mr-1'><i class='fas fa-folder'></i> "+d.name+"</button>"
                     html += `<div class="btn-group">
-                <button type="button" class="btn btn-sm btn-warning ">` + d.name + `</button>
-                <button type="button" class="btn btn-sm btn-warning mr-1 dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(78px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
-                  <a class="dropdown-item" href="#">Rename</a>
-                  <a class="dropdown-item" href="#">Copy</a>
-                  <a class="dropdown-item" href="#">Delete</a>
+                  <button type="button" class="btn btn-sm btn-warning ">` + d.name + `</button>
+                  <button type="button" class="btn btn-sm btn-warning mr-1 dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(78px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+                    <a class="dropdown-item" href="#">Rename</a>
+                    <a class="dropdown-item" href="#">Copy</a>
+                    <a class="dropdown-item" href="#">Delete</a>
+                  </div>
                 </div>
-              </div>
-              <input type='radio' name='folder[]' value='` + d.id + `'/>
-              `
+                <input type='radio' name='folder[]' value='` + d.id + `'/>
+                `
                 })
                 $('#all-folders').html(html)
             })
@@ -318,7 +318,7 @@
     $(document).on('click', '.file-delete', function() {
         imagesFiles = [];
     })
-
+  
     function showImage(folder = null) {
         axios.get("{{ URL::to('news/get-images') }}/" + folder)
             .then(res => {
@@ -326,45 +326,44 @@
                 res.data.forEach(function(d) {
                     html +=
                         `<div class="col-12 col-md-3">
-              <img style="max-height:150px;" onclick='addImage(this.src)' src="{{ asset('storage/media/images/news') }}/` +
+                <img style="max-height:150px;" onclick='addImage(this.src)' src="{{ asset('storage/media/images/news') }}/` +
                         d.name + `" alt="image" class='img-fluid'>
-             </div>`
+               </div>`
                 })
                 $('.all-images').html(html);
             })
     }
-
+  
     function addImage(url) {
-        image_url = url;
-        $('#insert').attr('disabled', false);
+        image_url=url;
+        $('#insert').attr('disabled',false);
     }
-
-    function insert() {
-        console.log(image_url);
-        const imageHtml = `<img src="${image_url}" alt="Inserted Image" />`;
-        editorInstance.model.change(writer => {
-            const imageElement = writer.createElement('image', {
-                src: image_url,
-                alt: 'Inserted Image',
-            });
-            editorInstance.model.insertContent(imageElement);
-        });
+    function insert(){
+          console.log(image_url);
+          const imageHtml = `<img src="${image_url}" alt="Inserted Image" />`;
+          editorInstance.model.change(writer => {
+              const imageElement = writer.createElement('image', {
+                  src: image_url,
+                  alt: 'Inserted Image',
+              });
+              editorInstance.model.insertContent(imageElement);
+          });
     }
     $(document).on('click', '.removeAuthor', function() {
         event.preventDefault();
-        let author = $(this).prev().prev("input[name='author[]']").val();
+        let author=$(this).prev().prev("input[name='author[]']").val();
         console.log(author);
         author_del.push(author)
         $(this).parent().remove();
     })
     $("input[name='category[]']").change(function() {
-        var ischecked = $(this).is(':checked');
-        if (ischecked) {
+        var ischecked= $(this).is(':checked');
+        if(ischecked){
             const index = cat_del.indexOf($(this).val());
             if (index > -1) { // only splice array when item is found
                 cat_del.splice(index, 1); // 2nd parameter means remove one item only
             }
-        } else {
+        }else{
             cat_del.push($(this).val())
         }
         console.log($(this).val())
@@ -374,29 +373,29 @@
             return $(this).val();
         }).get();
         user = $('#user').val();
-        if (!author.includes(user)) {
+        if(!author.includes(user)){
             usertext = $('#user option:selected').text();
             console.log(usertext)
             html = `<div class='m-1'>
-                      <input type="hidden" value='` + user + `' name='author[]'>
-                      <span class>` + usertext + `</span>
-                      <button class="btn btn-xs btn-danger ml-1 float-right removeAuthor">X</button>
-                  </div>
-                  `
+                        <input type="hidden" value='` + user + `' name='author[]'>
+                        <span class>` + usertext + `</span>
+                        <button class="btn btn-xs btn-danger ml-1 float-right removeAuthor">X</button>
+                    </div>
+                    `
             $('#all_users').append(html)
             const index = author_del.indexOf(user);
             if (index > -1) { // only splice array when item is found
                 author_del.splice(index, 1); // 2nd parameter means remove one item only
             }
         }
-
+        
     })
-
+  
     $(document).on('focus', '.ck-content', function(event) {
         if (editorInstance) {
             const imageUrl =
                 "https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png"; // Replace with the actual image URL
-
+  
             editorInstance.model.change(writer => {
                 // Create a new image element and set its attributes
                 const imageElement = writer.createElement('image', {
@@ -410,7 +409,7 @@
             });
         }
     })
-
+  
     $("#date").daterangepicker({
         singleDatePicker: true,
         timePicker: true,
@@ -421,7 +420,7 @@
         },
         startDate: unixTimestampToFormattedDate(parseInt("")),
     });
-
+  
     function convertToUtc(dateString) {
         var inputDateString = dateString;
         // Split the input string into components
@@ -439,10 +438,10 @@
         console.log(unixTimestamp);
         return formatUnixToUtc(unixTimestamp);
     }
-
+  
     function formatUnixToUtc(unixTime) {
         const dateObj = new Date(unixTime * 1000);
-
+  
         // Extract date and time components
         const dd = String(dateObj.getUTCDate()).padStart(2, '0');
         const mm = String(dateObj.getUTCMonth() + 1).padStart(2, '0'); // Months are zero-based
@@ -450,13 +449,12 @@
         const h = String(dateObj.getUTCHours()).padStart(2, '0');
         const i = String(dateObj.getUTCMinutes()).padStart(2, '0');
         const s = String(dateObj.getUTCSeconds()).padStart(2, '0');
-
+  
         // Create the formatted UTC time string
         const utcTimeString = `${dd}-${mm}-${yyyy} ${h}:${i}:${s}`;
         console.log(utcTimeString)
         return utcTimeString;
     }
-
     function unixTimestampToFormattedDate(unixTimestamp) {
         const date = new Date(unixTimestamp * 1000); // Convert to milliseconds
         const day = String(date.getDate()).padStart(2, '0');
@@ -468,4 +466,6 @@
         const formattedDate = `${day}-${month}-${year} ${hours}:${minutes} ${amOrPm}`;
         return formattedDate;
     }
-</script>
+    
+  </script>
+  

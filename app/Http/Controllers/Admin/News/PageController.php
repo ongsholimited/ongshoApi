@@ -55,7 +55,7 @@ class PageController extends Controller
         'title'=>"required|max:250|min:1",
         'meta_description'=>"nullable|max:250|min:1",
         'content'=>"nullable|max:500000|min:1",
-        'focus_keyword'=>"nullable|max:500|min:1",
+        'keyword'=>"nullable|max:500|min:1",
         'slug'=>"required|max:250|min:1|unique:ongsho_news.slugs,slug_name,",
         'status'=>['required','numeric','max:2','min:0'],
     ]);
@@ -65,9 +65,9 @@ class PageController extends Controller
         DB::transaction(function() use($request,$data){
             $post=Page::create([
                 'title'=>$request->title,
-                'meta_description'=>$request->meta_description,
+                'description'=>$request->meta_description,
                 'content'=>$request->content,
-                'focus_keyword'=>$request->focus_keyword,
+                'keyword'=>$request->focus_keyword,
                 'status'=>$request->status,
                 'author_id'=>auth()->user()->id,
             ]);
@@ -102,7 +102,8 @@ class PageController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post=Page::with('slug')->where('id',$id)->first();
+        return view('news.pages.pages-edit',compact('post'));
     }
 
     /**
@@ -114,7 +115,38 @@ class PageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //    return $request->all();
+        $slug=Slug::where('page_id',$id)->first();
+        $data=$request->all();
+        $validator=Validator::make($data,[
+        'title'=>"required|max:250|min:1",
+        'description'=>"nullable|max:250|min:1",
+        'content'=>"nullable|max:500000|min:1",
+        'keyword'=>"nullable|max:500|min:1",
+        'slug'=>"required|max:250|min:1|unique:ongsho_news.slugs,slug_name,".$slug->id,
+        'status'=>['required','numeric','max:2','min:0'],
+    ]);
+
+    // return $data;
+    if($validator->passes()){
+        DB::transaction(function() use($request,$id,$slug){
+            $post=Page::where('id',$id)->update([
+                'title'=>$request->title,
+                'description'=>$request->description,
+                'content'=>$request->content,
+                'keyword'=>$request->keyword,
+                'status'=>$request->status,
+                'author_id'=>auth()->user()->id,
+            ]);
+            
+            Slug::where('page_id',$id)->update([
+                'slug_name'=> SlugableTrait::makeSlug($request->slug,$slug->id),
+                'slug_type'=> 'page',
+            ]);
+        });
+        return response()->json(['status'=>true,'message'=>'Post Added Success']);
+        }
+        return response()->json(['error'=>$validator->getMessageBag()]);
     }
 
     /**
@@ -136,8 +168,8 @@ class PageController extends Controller
               ->addIndexColumn()
               ->addColumn('action',function($get){
               $button  ='<div class="d-flex justify-content-center">';
-              $button.='<a href="'.route('news.badge.edit',$get->id).'"   class="btn btn-primary shadow btn-xs sharp me-1 editRow"><i class="fas fa-pencil-alt"></i></a>';
-              $button.='<a href="'.route('news.badge.destroy',$get->id).'"  class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
+              $button.='<a href="'.route('news.page.edit',$get->id).'"   class="btn btn-primary shadow btn-xs sharp me-1 editRow"><i class="fas fa-pencil-alt"></i></a>';
+              $button.='<a href="'.route('news.page.destroy',$get->id).'"  class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
               $button.='</div>';
             return $button;
           })

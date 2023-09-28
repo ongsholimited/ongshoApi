@@ -40,7 +40,7 @@
           ],
           "columnDefs": [{
               className: "text-left",
-              "targets": [1, 2, 3]
+              "targets": [1,2,3]
           }]
       });
      
@@ -63,7 +63,7 @@
       $('#exampleModalLabel').text('Add New Category');
 
       //axios post request
-      axios.post("{{ route('news.images.store') }}", formData)
+      axios.post("", formData)
           .then(function(response) {
               if (response.data.message) {
                   toastr.success(response.data.message)
@@ -79,54 +79,34 @@
   }
 
   function submitPost() {
+        console.log('xx')
       $('input,select').removeClass('is-invalid');
       let title = $("#title").val();
-      let date = convertToUtc($("#date").val());
-      console.log($("#date").val())
       let slug = $("#slug").val();
       let feature_image = $("#feature_image").val();
-      let short_description = $("#short_description").val();
+      let description = $("#description").val();
       let content = editorInstance.getData();
       let focus_keyword = $("#focus_keyword").val();
-      let category = $("input[name='category[]']:checked").map(function() {
-          return $(this).val();
-      }).get();
-      let author = $("input[name='author[]']").map(function() {
-          return $(this).val();
-      }).get();
-      let status = $('#status').val();
-      let is_scheduled = $('#is_scheduled').prop("checked") ? 1 : 0;
-      console.log('is', is_scheduled);
-      let post_type = $('#post_type').val();
-      console.log(title, slug, short_description, content, focus_keyword, category, author, status, post_type)
+      let status = $("#status").val();
       tag = '';
-      focus_keyword = JSON.parse(focus_keyword);
-      focus_keyword.map((item, index) => {
-          tag += item.value + (focus_keyword.length !== (index + 1) ? ',' : '');
-      })
-      console.log(tag)
+     if(focus_keyword!=''){
+        focus_keyword = JSON.parse(focus_keyword);
+        focus_keyword.map((item, index) => {
+            tag += item.value + (focus_keyword.length !== (index + 1) ? ',' : '');
+        })
+     }
+      
       var formData = new FormData();
-
-      formData.append('category', category);
-      formData.append('category_delete', cat_del);
       formData.append('title', title);
       formData.append('slug', slug);
-      formData.append('meta_description', short_description);
+      formData.append('description', description);
       formData.append('content', content);
       formData.append('focus_keyword', tag);
-      formData.append('author', author);
-      formData.append('author_delete', author_del);
       formData.append('status', status);
-      formData.append('post_type', post_type);
-      formData.append('date', date);
-      formData.append('feature_image', feature_image);
-      formData.append('is_scheduled', is_scheduled);
-      formData.append('_method', 'PUT');
-      
+    //   formData.append('_method', 'PUT');
       $('#exampleModalLabel').text('Add New Post');
-
       //axios post request
-      axios.post("", formData)
+      axios.post("{{route('news.page.store')}}", formData)
           .then(function(response) {
               if (response.data.message) {
                   toastr.success(response.data.message)

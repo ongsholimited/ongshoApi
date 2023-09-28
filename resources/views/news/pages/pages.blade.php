@@ -95,6 +95,17 @@
                                          </div>
                                      </div>
                                  </div>
+                                 <div class="col-md-10 mr-auto ml-auto">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Focus Keyword:</label>
+                                        <select class="form-control" name="status" id="status">
+                                            <option value="1">Active</option>
+                                            <option value="0">Deactive</option>
+                                        </select>
+                                        <div class="invalid-feedback" id="focus_keyword_msg">
+                                        </div>
+                                    </div>
+                                </div>
                              </div>
                              <div class="mt-5">
                                 {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Clear</button> --}}

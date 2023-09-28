@@ -13,6 +13,7 @@ use App\Models\News\Category;
 use App\Models\News\PostHasCategory;
 use App\Models\News\PostHasAuthor;
 use App\Models\News\Slug;
+use App\Models\News\Page;
 use App\Helpers\Constant;
 use App\Models\News\HomeSection;
 use App\Models\News\PostView;
@@ -325,6 +326,14 @@ class NewsController extends Controller
                 $post=Category::with(['post'=>function($q){
                     $q->with('author.details.badges')->where('date','<',time())->where('status',Constant::POST_STATUS['public'])->take(20);
                 }])->where('slug',$get_slug->slug_name)->first();
+                if($post!=null){
+                    $data= SendDataApi::bind(['slug_type'=>$get_slug->slug_type,'data'=>$post]);
+                }else{
+                    $data=SendDataApi::bind('data not found',404) ;
+                }
+            break;
+            case $get_slug->slug_type=='page':
+                $post=Page::where('id',$get_slug->id)->first();
                 if($post!=null){
                     $data= SendDataApi::bind(['slug_type'=>$get_slug->slug_type,'data'=>$post]);
                 }else{

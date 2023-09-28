@@ -14,7 +14,7 @@ class MenuController extends Controller
     }
     public function getMenu()
     {
-        $data=Category::where('parent_id',null)->orderBy('serial','asc')->get();
+        $data=Category::where('parent_id',null)->where('serial','<>',null)->orderBy('serial','asc')->get();
         if($data->count()>0){
             return SendDataApi::bind($data,200);
         }

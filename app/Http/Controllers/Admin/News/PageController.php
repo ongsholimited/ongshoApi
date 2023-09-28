@@ -4,16 +4,16 @@ namespace App\Http\Controllers\Admin\News;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\News\Post;
+
 use App\Helpers\Constant;
-use App\Rules\PostStatusRule;
-use App\Models\News\PostHasAuthor;
-use App\Models\News\PostHasCategory;
+use App\Models\News\Page;
 use App\Models\News\Slug;
 use App\Http\Traits\SlugableTrait;
 use DB;
 use Str;
 use Auth;
+use Validator;
+
 class PageController extends Controller
 {
     /**
@@ -49,58 +49,36 @@ class PageController extends Controller
     public function store(Request $request)
     {
          //    return $request->all();
-       if($request->status==Constant::POST_STATUS['public']){
-        $isRequired='required';
-        }else{
-            $isRequired='nullable';
-        }
+      
         $data=$request->all();
-        $data['category']=array_filter(explode(',',$request->category));
-        $data['category_delete']=array_filter(explode(',',$request->category_delete));
-        $data['author']=array_filter(explode(',',$request->author));
-        $data['author_delete']=array_filter(explode(',',$request->author_delete));
-        $slug=Slug::where('post_id',$id)->first();
-        // return $data;
         $validator=Validator::make($data,[
-        'feature_image'=>$isRequired."|max:250|min:1",
-        'category'=>$isRequired."|array",
-        'category.*'=>$isRequired."|regex:/^([0-9]+)$/",
         'title'=>"required|max:250|min:1",
-        'meta_description'=>$isRequired."|max:250|min:1",
-        'content'=>$isRequired."|max:60000|min:1",
+        'meta_description'=>"nullable|max:250|min:1",
+        'content'=>"nullable|max:500000|min:1",
         'focus_keyword'=>"nullable|max:500|min:1",
-        'slug'=>"required|max:250|min:1|unique:ongsho_news.slugs,slug_name,".$slug->id,
-        'status'=>['required','numeric','max:7','min:0'],
-        'post_type'=>"required|max:250|min:1",
-        'date'=>"required|max:30",
-        'is_scheduled'=>"required|numeric|min:0|max:1",
+        'slug'=>"required|max:250|min:1|unique:ongsho_news.slugs,slug_name,",
+        'status'=>['required','numeric','max:2','min:0'],
     ]);
 
     // return $data;
     if($validator->passes()){
         DB::transaction(function() use($request,$data){
-            $post=Post::create([
+            $post=Page::create([
                 'title'=>$request->title,
                 'meta_description'=>$request->meta_description,
                 'content'=>$request->content,
                 'focus_keyword'=>$request->focus_keyword,
-                'slug'=>SlugableTrait::makeSlug($request->slug,$slug->id),
-                'date'=>(isset($request->date) ? strtotime($request->date) : strtotime(date('d-m-Y h:i:s'))  ),
                 'status'=>$request->status,
-                'is_public'=>(Constant::POST_STATUS['public']==$post_stats or Constant::POST_STATUS['public']==$request->status) ? 1 :0,
-                'feature_image'=>isset($request->feature_image)  ? $request->feature_image : 'no-image.jpg' ,
-                'post_type'=>$request->post_type,
-                'is_scheduled'=>$request->is_scheduled,
+                'author_id'=>auth()->user()->id,
             ]);
-            // $this->post=$post;
-            Slug::where('post_id')->update([
+            
+            Slug::create([
                 'slug_name'=> SlugableTrait::makeSlug($request->slug),
-                'slug_type'=> 'post',
-                'post_id'=> $post->id,
+                'slug_type'=> 'page',
+                'page_id'=> $post->id,
             ]);
         });
-        
-        return response()->json(['status'=>true,'message'=>'Post Added Success','post'=>$this->post]);
+        return response()->json(['status'=>true,'message'=>'Post Added Success']);
         }
         return response()->json(['error'=>$validator->getMessageBag()]);
     }
@@ -148,5 +126,25 @@ class PageController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function list()
+    {
+        if(request()->ajax()){
+            $get=Page::query();
+            return DataTables::of($get)
+              ->addIndexColumn()
+              ->addColumn('action',function($get){
+              $button  ='<div class="d-flex justify-content-center">';
+              $button.='<a href="'.route('news.badge.edit',$get->id).'"   class="btn btn-primary shadow btn-xs sharp me-1 editRow"><i class="fas fa-pencil-alt"></i></a>';
+              $button.='<a href="'.route('news.badge.destroy',$get->id).'"  class="btn btn-danger shadow btn-xs sharp ml-1 deleteRow"><i class="fa fa-trash"></i></a>';
+              $button.='</div>';
+            return $button;
+          })
+          ->addColumn('user',function($get){
+            return $get->user->first_name.' '.$get->user->last_name;
+        })
+          ->rawColumns(['action'])->make(true);
+        }
+        return view('news.badge.badge');
     }
 }

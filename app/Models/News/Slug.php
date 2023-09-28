@@ -13,6 +13,7 @@ class Slug extends Model
                     'slug_name',
                     'slug_type',
                     'post_id',
+                    'page_id',
                     'category_id'
                 ];
 }

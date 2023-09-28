@@ -41,10 +41,10 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{URL::to('/news/menu')}}" class="nav-link">
+            <a href="{{URL::to('/news/page')}}" class="nav-link">
               <i class="nav-icon fas fa-donate"></i>
               <p>
-                Manage Menu
+                Manage Page
               </p>
             </a>
           </li>

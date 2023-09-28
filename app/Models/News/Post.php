@@ -31,7 +31,9 @@ class Post extends Model
     public function getCategoryAttribute(){
         return $this->categories->pluck('category_id');
     }
-
+    public function view_count(){
+        
+    }
 
     // custom logic by ongsho dev
     // protected static function boot()

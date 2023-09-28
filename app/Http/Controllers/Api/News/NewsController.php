@@ -239,8 +239,7 @@ class NewsController extends Controller
         return SendDataApi::bind('failed to destroy',400);
     }
     public function getPostByCat(Request $request,$category_slug){
-        
-       
+
         $validator=Validator::make($request->all(),[
             'limit'=>"required|numeric|min:0|max:50",
             'offset'=>"required|numeric|min:0|max:50",
@@ -310,13 +309,15 @@ class NewsController extends Controller
 
                 break;
             case $get_slug->slug_type=='post':
+                
                 $post=Post::with('author.details.badges','categories.category')->where('slug',$get_slug->slug_name)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->first();
-                // PostView::create([
-                //     'post_id'=>$post->id,
-                //     'ip'=>Request::getClientIp(true),
-                // ]);
+                PostView::create([
+                    'post_id'=>$post->id,
+                    'ip'=>request()->ip(),
+                ]);
+                $view_count=PostView::where('post_id')->count();
                 if($post!=null){
-                    $data=SendDataApi::bind(['slug_type'=>$get_slug->slug_type,'data'=>$post]);
+                    $data=SendDataApi::bind(['slug_type'=>$get_slug->slug_type,'data'=>$post,'view_count'=>$view_count]);
                 }else{
                     $data= SendDataApi::bind('data not found',404);
                 }

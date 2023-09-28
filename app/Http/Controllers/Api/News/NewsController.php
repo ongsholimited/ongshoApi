@@ -333,7 +333,7 @@ class NewsController extends Controller
                 }
             break;
             case $get_slug->slug_type=='page':
-                $post=Page::where('id',$get_slug->id)->first();
+                $post=Page::where('id',$get_slug->page_id)->first();
                 if($post!=null){
                     $data= SendDataApi::bind(['slug_type'=>$get_slug->slug_type,'data'=>$post]);
                 }else{

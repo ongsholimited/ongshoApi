@@ -254,6 +254,7 @@ class NewsController extends Controller
             if($post!=null){
                 return SendDataApi::bind($post);
             }
+            
             // where('category_id',$category->id)->where('status',Constant::POST_STATUS['public'])->where('date','<',time())->skip($request->offset)->take($request->limit)->orderBy('id','desc')->get();
             return SendDataApi::bind('data not found',404);
         }

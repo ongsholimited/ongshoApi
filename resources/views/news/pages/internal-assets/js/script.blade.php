@@ -64,7 +64,7 @@
         $('#exampleModalLabel').text('Add New Category');
 
         //axios post request
-        axios.post("", formData)
+        axios.post("{{route('news.images.store')}}", formData)
             .then(function(response) {
                 if (response.data.message) {
                     toastr.success(response.data.message)
@@ -341,16 +341,13 @@
 
     function insert() {
         console.log(image_url);
-        // const imageHtml = `<img src="${image_url}" alt="Inserted Image" />`;
-        var imageUrl = image_url;
 
-        // Create HTML for the image
-        var imageHtml = `<img src="${imageUrl}" alt="Your Image Alt Text">`;
-        // Insert the HTML into the editor
-        editorInstance.model.change(writer => {
-            console.log('writer')
-            writer.insertHtml(imageHtml, editorInstance.model.document.selection);
-        });
+        const htmlDP = editorInstance.data.processor;
+        const viewFragment = htmlDP.toView("<img src='"+image_url+"' />");
+        const modelFragment = editorInstance.data.toModel( viewFragment );
+            // Insert the image at the current selection or at the end of the document
+        editorInstance.model.insertContent(modelFragment);
+
     }
     $(document).on('click', '.removeAuthor', function() {
         event.preventDefault();

@@ -354,8 +354,19 @@
     }
 
     function addImage(url) {
-        console.log(url);
-        $('.ck-content').text(url);
+        image_url = url;
+        $('#insert').attr('disabled', false);
+    }
+
+    function insert() {
+        console.log(image_url);
+
+        const htmlDP = editorInstance.data.processor;
+        const viewFragment = htmlDP.toView("<img src='"+image_url+"' />");
+        const modelFragment = editorInstance.data.toModel( viewFragment );
+            // Insert the image at the current selection or at the end of the document
+        editorInstance.model.insertContent(modelFragment);
+
     }
     $(document).on('click', '.removeAuthor', function() {
         event.preventDefault();

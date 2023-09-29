@@ -235,12 +235,12 @@
                          </button>
                      </div>
                      <div class="modal-body">
-                         <button class="btn btn-sm btn-primary "><i class="fas fa-folder"></i> <i
+                         {{-- <button class="btn btn-sm btn-primary "><i class="fas fa-folder"></i> <i
                                  class="fas fa-plus"></i></button>
                          <input type="text" class="form-control-sm" id='folder_name'>
                          <div class="invalid-feedback" id="name_msg"></div>
                          <button class="btn btn-sm btn-primary" onclick="createFolder()">Add</button>
-                         <span id="all-folders"></span>
+                         <span id="all-folders"></span> --}}
                          <div class="row all-images mt-2 p-2">
 
                          </div>
@@ -255,7 +255,7 @@
                      </div>
                      <div class="modal-footer">
                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                         <button type="button" class="btn btn-primary" onclick="formRequest()">Insert</button>
+                         <button type="button" class="btn btn-primary" onclick="insert()">Insert</button>
                      </div>
                  </div>
              </div>

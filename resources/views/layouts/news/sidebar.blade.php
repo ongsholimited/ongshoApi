@@ -40,14 +40,43 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+          {{-- <li class="nav-item">
             <a href="{{URL::to('/news/page')}}" class="nav-link">
               <i class="nav-icon fas fa-donate"></i>
               <p>
                 Manage Page
               </p>
             </a>
+          </li> --}}
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-file"></i>
+                <p>
+                    Manage Page
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview ml-1">
+              <li class="nav-item">
+                <a href="{{URL::to('/news/page')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>
+                        Page
+                    </p>
+                </a>
+            </li>
+                <li class="nav-item">
+                    <a href="{{URL::to('/news/page-list')}}" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>
+                            Page List
+                        </p>
+                    </a>
+                </li>
+            </ul>
           </li>
+
+          {{--  --}}
           <li class="nav-item">
             <a href="{{URL::to('/news/section')}}" class="nav-link">
               <i class="nav-icon fas fa-donate"></i>

@@ -112,6 +112,7 @@
                 if (response.data.message) {
                     toastr.success(response.data.message)
                     showImage()
+                    // window.location="{{url('news/page-list')}}"
                 } else if (response.data.error) {
                     var keys = Object.keys(response.data.error);
                     keys.forEach(function(d) {

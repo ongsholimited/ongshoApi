@@ -341,13 +341,15 @@
 
     function insert() {
         console.log(image_url);
-        const imageHtml = `<img src="${image_url}" alt="Inserted Image" />`;
+        // const imageHtml = `<img src="${image_url}" alt="Inserted Image" />`;
+        var imageUrl = image_url;
+
+        // Create HTML for the image
+        var imageHtml = `<img src="${imageUrl}" alt="Your Image Alt Text">`;
+        // Insert the HTML into the editor
         editorInstance.model.change(writer => {
-            const imageElement = writer.createElement('image', {
-                src: image_url,
-                alt: 'Inserted Image',
-            });
-            editorInstance.model.insertContent(imageElement);
+            console.log('writer')
+            writer.insertHtml(imageHtml, editorInstance.model.document.selection);
         });
     }
     $(document).on('click', '.removeAuthor', function() {

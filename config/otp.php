@@ -77,7 +77,7 @@ return [
      * Demo mode for development purposes, no need to use real password to validate.
      */
 
-    'demo' => env('OTP_DEMO', true),
+    'demo' => env('OTP_DEMO', false),
     'demo_passwords' => ['1234','123456','12345678']
 
 ];

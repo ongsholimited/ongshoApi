@@ -15,7 +15,6 @@ class TestController extends Controller
     {
        
        return $sms=$this->sendSms();
-    //    
         $x='App\Models\User'::find(1);
         return $x;
     //   XXXX

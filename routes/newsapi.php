@@ -31,13 +31,14 @@ Route::group([
         Route::get('get-post-types', 'CategoryController@getPostType');
         // Route::get('get-post/{limit}/{offset}', 'NewsController@getPost');
         Route::get('get-section', 'SectionController@getSection');
-        
+        Route::get('/dashboard', 'DashboardController@index');
         Route::get('/check-slug/{slug}/{post_id?}', 'SlugController@checkSlug');
         Route::get('post-preview/{post_slug}', 'NewsController@getPostPreview')->middleware('auth:api');
         Route::get('post-preview-edit/{id}', 'NewsController@getPostPreviewEdit')->middleware('auth:api');
         Route::get('/view-count/{post_id}', 'ViewPostController@viewCount');
         Route::get('meta/{slug}', 'MetaKeywordController@getMeta');
         Route::get('/{slug}', 'NewsController@getPostBySlug');
+        
     });
 
 });

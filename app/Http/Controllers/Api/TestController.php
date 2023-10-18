@@ -13,7 +13,7 @@ class TestController extends Controller
     use SlugableTrait,SendSmsTrait;
     public function test(Request $request)
     {
-       
+       return $request->ip();
        return $sms=$this->sendSms();
         $x='App\Models\User'::find(1);
         return $x;

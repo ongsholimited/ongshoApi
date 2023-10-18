@@ -68,6 +68,7 @@ Route::group([
 ],function () {
     Route::get('/dashboard','NewsDashboardController@homePage');
     Route::resource('/category','CategoryController');
+    Route::resource('/test','TestController');
     Route::resource('/page','PageController');
     Route::get('/page-list','PageController@list');
     Route::resource('/badge','BadgeController');

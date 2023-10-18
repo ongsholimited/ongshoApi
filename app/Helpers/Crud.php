@@ -12,6 +12,7 @@ class Crud
         'News_Setting' => 'App\Models\News\NewsSetting',
         'Sms_Api' => 'App\Models\SmsApi',
         'Sms_Otp_Template' => 'App\Models\OtpSmsTemplate',
+        'Test' => 'App\Models\News\Test',
     ];
     protected $setting = [
             "Category" => [
@@ -71,6 +72,10 @@ class Crud
         'Sms_Otp_Template' => [
             'short_name' => 'required|max:120',
             'sms' => 'required|min:1',
+        ],
+        'Test' => [
+            'name' => 'required|max:120',
+            'roll' => 'required|min:1',
         ],
     ];
     public function store($data)
